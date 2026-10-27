@@ -3,13 +3,15 @@
   checkout buttons with PayPal / Google Pay and "We Accept", "Have questions?" box.
   Gift card and discount panels use the checkout's "Apply Discount Code" field design
   (Checkout 34799:87986). State: Alpine.data("cartPage").
+  Phones (14714:103652): 32px under the cart buttons, blocks 20px apart, square Summary box with a
+  60px Medium 20/28 title, 20px padding in "Have questions?".
 #}
 {% import "macros/ui.njk" as ui with context %}
 {% import "pdp-cart/graphics.njk" as gfx %}
 {% set row = "flex min-h-14 w-full items-center justify-between gap-2 border-t border-outline px-6 py-4 text-left text-base text-heading hover:text-primary-500" %}
-<aside aria-label="Order summary" class="flex flex-col gap-6" data-figma="14714:103199">
-  <div class="overflow-hidden rounded bg-secondary-100" data-figma="14714:103200">
-    <h2 class="flex h-16 items-center px-6 text-h3 font-medium text-heading">Summary</h2>
+<aside aria-label="Order summary" class="mt-8 flex flex-col gap-5 md:mt-0 md:gap-6" data-figma="14714:103199">
+  <div class="overflow-hidden bg-secondary-100 md:rounded" data-figma="14714:103200">
+    <h2 class="flex h-[60px] items-center px-6 text-h4 font-medium text-heading md:h-16 md:text-h3">Summary</h2>
 
     <button type="button" data-proto class="{{ row }}" data-figma="14714:103204">
       Estimate shipping and Tax {% icon "dropdown", "h-6 w-6" %}
@@ -47,13 +49,13 @@
     <div class="flex items-center gap-3 text-sm text-body" aria-hidden="true"><span class="h-px flex-1 bg-outline"></span>Or<span class="h-px flex-1 bg-outline"></span></div>
     <button type="button" data-proto aria-label="Pay with PayPal" class="flex h-[52px] w-full items-center justify-center rounded bg-[#ffc439] hover:brightness-95">{{ gfx.paypal() }}</button>
     <button type="button" data-proto aria-label="Pay with Google Pay" class="flex h-[52px] w-full items-center justify-center rounded bg-[#1f1f1f] hover:bg-black">{{ gfx.gpay() }}</button>
-    <div class="relative mt-3 flex justify-center rounded border border-outline pb-6 pt-6" data-figma="14714:103246">
+    <div class="relative mt-3 flex justify-center rounded border border-outline py-[23px] md:pb-6 md:pt-6" data-figma="14714:103246">
       <span class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-sm text-ink">We Accept</span>
       {{ gfx.cardBadges() }}
     </div>
   </div>
 
-  <div class="flex flex-col gap-5 rounded bg-secondary-100 p-6" data-figma="14714:103255">
+  <div class="flex flex-col gap-5 rounded bg-secondary-100 p-5 md:p-6" data-figma="14714:103255">
     <p class="text-base text-ink">Have questions?<br><span class="text-body">Expert help just one click away</span></p>
     <a href="/contact/" class="btn-secondary w-full">Contact Us</a>
   </div>

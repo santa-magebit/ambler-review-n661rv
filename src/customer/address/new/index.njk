@@ -8,16 +8,17 @@ accountNavActive: /customer/address/
 {% import "macros/ui.njk" as ui with context %}
 {% import "account/macros.njk" as acc with context %}
 {% set selectCls = "input cursor-pointer appearance-none pr-14 invalid:text-body" %}
-<div class="flex flex-col gap-10" data-figma="14714:137413">
-  {{ acc.pageTitle("New Address") }}
+{# Phones: "Mobile - Address Book - Add New Address" 14714:138751 (back button by the title, 20/28 headings). #}
+<div class="flex flex-col gap-8 md:gap-10" data-figma="14714:137413">
+  {{ acc.pageTitle("New Address", "/customer/address/") }}
   <form x-data="addressForm" @submit.prevent="submit" novalidate
         class="flex w-full max-w-[600px] flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" data-figma="14714:137416">
-    <h2 class="text-h3 font-medium text-heading">Contact Information</h2>
+    <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Contact Information</h2>
     {{ ui.field("First Name", "firstname", "text", true, "given-name", "Enter first name") }}
     {{ ui.field("Last Name", "lastname", "text", true, "family-name", "Enter last name") }}
     {{ ui.field("Phone Number", "telephone", "tel", false, "tel", "Enter phone number") }}
 
-    <h2 class="text-h3 font-medium text-heading">Address</h2>
+    <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Address</h2>
     {{ ui.field("Street Address 1", "street[0]", "text", true, "address-line1", "Enter street address") }}
     {{ ui.field("Street Address 2", "street[1]", "text", false, "address-line2", "Enter street address") }}
     <div>

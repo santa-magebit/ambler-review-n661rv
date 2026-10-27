@@ -11,24 +11,25 @@ permalink: /repair-services/
 
 {{ ui.breadcrumbs([{ label: "Repair Services" }]) }}
 
-{# Hero: instruments photo on the right, navy fade from the left over white. #}
+{# Hero: instruments photo on the right, navy fade from the left over white.
+   Phones (mobile 34897:7756): 40/32 padding, 20px gap, 16/24 intro. #}
 <section class="relative isolate overflow-hidden bg-white" data-figma="34799:68558">
   <img src="{{ '91e2c639' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover md:inset-auto md:right-0 md:top-[3px] md:h-[484px] md:w-[67.14%]">
-  <div aria-hidden="true" class="absolute inset-0 -z-10" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/70 md:hidden"></div>
-  <div class="container-page flex min-h-[360px] items-center py-12 lg:min-h-[480px]">
-    <div class="flex max-w-[593px] flex-col items-start gap-7">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
+  <div class="container-page flex items-center pb-8 pt-10 md:min-h-[360px] md:py-12 lg:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col items-start gap-5 md:gap-7">
       {{ c.heroTitle("Repair Services") }}
-      <p class="text-lg text-white">{{ r.intro }}</p>
+      <p class="text-base text-white md:text-lg">{{ r.intro }}</p>
     </div>
   </div>
 </section>
 
-{# The six repair services. #}
+{# The six repair services. Phones (mobile 34897:7756): Medium 28/36 title, 16px under it, cards 8px apart. #}
 <section class="bg-white" data-figma="34799:68567">
-  <div class="container-page flex flex-col gap-8 py-10">
-    <h2 class="text-h2 font-bold text-heading lg:text-h1">Expert Surgical Instrument Repair Services</h2>
-    <ul class="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3" data-figma="34799:68570">
+  <div class="container-page flex flex-col gap-4 py-10 md:gap-8">
+    <h2 class="text-mobile-h1 font-medium text-heading md:text-h2 md:font-bold lg:text-h1">Expert Surgical Instrument Repair Services</h2>
+    <ul class="grid gap-2 sm:grid-cols-2 md:gap-x-6 md:gap-y-8 lg:grid-cols-3" data-figma="34799:68570">
       {% for s in r.services %}
       <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard({ title: s.title, image: s.image, id: s.slug, figma: s.figma, imgClass: s.imgClass }, "large") }}</li>
       {% endfor %}
@@ -36,13 +37,13 @@ permalink: /repair-services/
   </div>
 </section>
 
-{{ c.trustBand("34799:68578") }}
+{{ c.trustBand("34799:68578", "py-10") }}
 
-{# Why Choose Ambler for Instrument Repair? #}
+{# Why Choose Ambler for Instrument Repair? Phones (mobile 34897:7756): Bold 28/36 title, 24px under it, cards 16px apart. #}
 <section class="bg-white" data-figma="34799:68583">
-  <div class="container-page flex flex-col gap-8 py-10">
-    <h2 class="text-h3 font-bold text-heading md:text-h2">Why Choose Ambler for Instrument Repair?</h2>
-    <div class="grid gap-6 md:grid-cols-2 md:[&>*]:min-h-[176px]" data-figma="34799:68588">
+  <div class="container-page flex flex-col gap-6 py-10 md:gap-8">
+    <h2 class="text-mobile-h1 font-bold text-heading md:text-h2">Why Choose Ambler for Instrument Repair?</h2>
+    <div class="grid gap-4 md:grid-cols-2 md:gap-6 md:[&>*]:min-h-[176px]" data-figma="34799:68588">
       {% for w in r.whyChoose %}
       {% if w.link %}
       {% call c.descriptionCard(w.title, w.text, "", w.figma) %} <a href="#" data-proto class="link">{{ w.link }}</a>.{% endcall %}
@@ -54,24 +55,26 @@ permalink: /repair-services/
   </div>
 </section>
 
-{# Surgical Instrument Repair for Every Need: technician photo band, text on the right. #}
+{# Surgical Instrument Repair for Every Need: technician photo band, text on the right.
+   Phones (mobile 34897:7756): a 132px photo strip above the navy text block, Medium 24/32 title, 16/24 text 16px apart. #}
 <section class="relative isolate overflow-hidden bg-primary-500" data-figma="34799:68611">
-  <img src="{{ 'de7cda38' | img }}" alt="" loading="lazy" class="absolute inset-0 -z-10 h-full w-full object-cover object-left">
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/80 lg:hidden"></div>
+  <img src="{{ 'de7cda38' | img }}" alt="" loading="lazy" class="relative -z-10 block h-[132px] w-full object-cover object-left md:absolute md:inset-0 md:h-full">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden bg-primary-500/80 md:block lg:hidden"></div>
   <div class="container-page flex py-10 lg:min-h-[424px] lg:items-center">
-    <div class="flex max-w-[886px] flex-col gap-7 lg:ml-auto" data-figma="34799:68612">
-      <h2 class="text-h3 font-bold text-white md:text-h2">Surgical Instrument Repair for Every Need<br><span class="text-accent">Restore Precision. Extend Instrument Life.</span></h2>
-      <div class="flex flex-col gap-3 text-lg text-white">
+    <div class="flex max-w-[886px] flex-col gap-6 md:gap-7 lg:ml-auto" data-figma="34799:68612">
+      <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Surgical Instrument Repair for Every Need<br><span class="text-accent">Restore Precision. Extend Instrument Life.</span></h2>
+      <div class="flex flex-col gap-4 text-base text-white md:gap-3 md:text-lg">
         {% for p in r.everyNeed %}<p>{{ p }}</p>{% endfor %}
       </div>
     </div>
   </div>
 </section>
 
-{# Frequently Asked Questions + contact card. #}
+{# Frequently Asked Questions + contact card. Phones (mobile 34897:7756): Medium 24/32 title 16px above the list;
+   the navy card runs edge to edge under the section, 32px padding, full-width button. #}
 <section class="bg-menu" data-figma="34799:68629">
-  <div class="container-page flex flex-col gap-8 py-10">
-    <h2 class="text-h2 font-bold text-heading">Frequently Asked Questions</h2>
+  <div class="container-page flex flex-col gap-4 py-10 md:gap-8">
+    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Frequently Asked Questions</h2>
     <div class="grid items-start gap-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">
       <div x-data="faq" class="min-w-0" data-figma="34799:68632">
         {% for f in r.faq %}
@@ -101,12 +104,12 @@ permalink: /repair-services/
         </div>
         {% endfor %}
       </div>
-      <div class="flex min-w-0 flex-col items-start gap-6 rounded bg-primary-500 p-7" data-figma="34799:68654">
+      <div class="-mx-5 -mb-10 flex min-w-0 flex-col items-start gap-6 bg-primary-500 px-5 py-8 md:mx-0 md:mb-0 md:rounded md:p-7" data-figma="34799:68654">
         <div class="flex flex-col gap-4">
-          <h2 class="text-h3 font-bold text-white md:text-h2">Can't find your answer?</h2>
-          <p class="text-lg text-[#d3dce5]">Our instrument specialists respond within one business day.</p>
+          <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Can't find your answer?</h2>
+          <p class="text-base text-[#d3dce5] md:text-lg">Our instrument specialists respond within one business day.</p>
         </div>
-        {{ c.arrowButton("Contact Our Team", "/contact/") }}
+        {{ c.arrowButton("Contact Our Team", "/contact/", "", "w-full md:w-auto") }}
       </div>
     </div>
   </div>

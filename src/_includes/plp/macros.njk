@@ -10,6 +10,7 @@
 
 {#
   Hero (PLP heroes, e.g. 34719:11294): 480px, photo + navy gradient, text column 593px.
+  Phones (mobile PLP heroes, e.g. 34726:18657): content height, padding 40/32, title Medium 32/40, text 16/24.
   h: { eyebrow?, title, text?, image (hash8), flip?, placement? ("right": photo on the right half), wide? (navy reaches further) }
 #}
 {% macro hero(h, figma) %}
@@ -21,22 +22,22 @@
   {% endif %}
   <div class="absolute inset-0" style="background-image: {{ plp.gradients.heroWide if h.wide else plp.gradients.hero }}"></div>
   <div class="absolute inset-0 bg-primary-500/70 md:hidden"></div>
-  <div class="container-page relative flex min-h-[320px] items-center py-12 md:min-h-[480px]">
-    <div class="flex max-w-[593px] flex-col gap-7">
+  <div class="container-page relative flex items-center pb-8 pt-10 md:min-h-[480px] md:py-12">
+    <div class="flex max-w-[593px] flex-col {{ 'gap-3' if h.eyebrow else 'gap-5' }} md:gap-7">
       <div class="flex flex-col gap-3">
-        {% if h.eyebrow %}<p class="text-lg font-medium text-white">{{ h.eyebrow }}</p>{% endif %}
-        <h1 class="self-start bg-bottom bg-no-repeat pb-2.5 text-h1 font-medium text-white md:text-hero" style="background-image: {{ plp.gradients.titleLine }}; background-size: 100% 2px">{{ h.title }}</h1>
+        {% if h.eyebrow %}<p class="text-base text-white md:text-lg md:font-medium">{{ h.eyebrow }}</p>{% endif %}
+        <h1 class="self-start bg-bottom bg-no-repeat pb-2 text-h2 font-medium text-white md:pb-2.5 md:text-hero" style="background-image: {{ plp.gradients.titleLine }}; background-size: 100% 2px">{{ h.title }}</h1>
       </div>
-      {% if h.text %}<p class="text-lg text-white">{{ h.text }}</p>{% endif %}
+      {% if h.text %}<p class="text-base text-white md:text-lg">{{ h.text }}</p>{% endif %}
     </div>
   </div>
 </section>
 {% endmacro %}
 
-{# Section title row: h2 (Bold 40/48 or 32/40) with an optional control on the right (caller). #}
+{# Section title row: h2 (Bold 40/48 or 32/40; phones Medium 28/36 or 24/32) with an optional control on the right (caller), below it on phones. #}
 {% macro titleRow(title, size="lg") %}
 <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
-  <h2 class="font-bold text-heading {{ 'text-h2 md:text-h1' if size == 'lg' else 'text-h3 md:text-h2' }}">{{ title }}</h2>
+  <h2 class="font-medium text-heading md:font-bold {{ 'text-mobile-h1 md:text-h1' if size == 'lg' else 'text-h3 md:text-h2' }}">{{ title }}</h2>
   {% if caller %}{{ caller() }}{% endif %}
 </div>
 {% endmacro %}
@@ -45,6 +46,9 @@
 {% set panelClass = "absolute right-0 top-full z-30 mt-1 max-h-[480px] w-full min-w-[240px] overflow-y-auto rounded border border-outline bg-white py-2 shadow-[0_8px_24px_0_rgba(13,48,84,0.12)]" %}
 {% set optionClass = "block w-full px-5 py-2.5 text-left text-base text-body hover:bg-secondary-100 hover:font-medium hover:text-[#0d3155] focus:bg-secondary-100 focus:outline-none" %}
 {% set controlClass = "flex h-[52px] w-full items-center justify-between gap-3 rounded border bg-white px-5 text-left text-lg font-medium" %}
+{# The same control on phones reads like a secondary button: label centred in navy ("quick-select" 34726:18657). Pair with mControlState. #}
+{% set mControlClass = "flex h-[52px] w-full items-center justify-center gap-2 rounded border bg-white px-5 text-lg font-medium text-primary-500 md:justify-between md:gap-3 md:text-left" %}
+{% set mControlState = "open ? 'border-primary-500 md:text-ink' : 'border-secondary-200 md:text-body hover:border-grayscale-400'" %}
 
 {#
   Quick Select (34873:118749): label + 240px control that opens a list of links.
@@ -52,12 +56,13 @@
   proto: the targets are not designed (adds data-proto).
 #}
 {% macro quickSelect(items, placeholder="All Categories", figma="34873:118749", proto=false) %}
-<div class="flex items-center gap-5" data-figma="{{ figma }}" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
-  <span class="shrink-0 text-base text-body" id="qs-{{ figma | slugify }}">Quick Select:</span>
-  <div class="relative w-[240px] max-w-full">
+<div class="flex w-full items-center gap-5 md:w-auto" data-figma="{{ figma }}" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+  <span class="sr-only shrink-0 text-base text-body md:not-sr-only" id="qs-{{ figma | slugify }}">Quick Select:</span>
+  <div class="relative w-full md:w-[240px] md:max-w-full">
     <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="qs-{{ figma | slugify }} qs-{{ figma | slugify }}-v"
-            class="{{ controlClass }}" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
-      <span id="qs-{{ figma | slugify }}-v" class="truncate">{{ placeholder }}</span>
+            class="{{ mControlClass }}" :class="{{ mControlState }}">
+      <span class="md:hidden" aria-hidden="true">Quick Select</span>
+      <span id="qs-{{ figma | slugify }}-v" class="hidden truncate md:inline">{{ placeholder }}</span>
       <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
     </button>
     <ul x-show="open" x-cloak x-transition.opacity class="{{ panelClass }}">
@@ -72,14 +77,15 @@
 {#
   Category card for a type / product line (styleguide "Category card" 14714:57254, 34719:11312):
   366x366, navy border, 56px strip (title 24/32 + "N products"), photo. Hover: navy strip,
-  and the description replaces the photo when Figma draws one.
+  and the description replaces the photo when Figma draws one. Phones ("category-card" 34726:18657):
+  350x200, 44px strip with title 20/28 and count 16/24.
   c: { name, href, count?, image, fit ("cover"|"contain"), hover?: [paragraphs] }
 #}
 {% macro categoryCard(c, figma="34719:11312") %}
-<a href="{{ c.href }}" {% if c.proto %}data-proto{% endif %} class="card-hover group flex aspect-square min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white" data-figma="{{ figma }}">
-  <span class="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-transparent bg-[#f5f8fa] px-5 group-hover:bg-primary-500 group-focus-visible:bg-primary-500">
-    <span class="truncate text-h3 font-medium tracking-title text-primary-500 group-hover:text-white group-focus-visible:text-white">{{ c.name }}</span>
-    {% if c.count %}<span class="shrink-0 text-lg text-primary-500 group-hover:text-secondary-100 group-focus-visible:text-secondary-100">{{ c.count }} product{{ "s" if c.count != 1 }}</span>{% endif %}
+<a href="{{ c.href }}" {% if c.proto %}data-proto{% endif %} class="card-hover group flex h-[200px] min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white md:aspect-square md:h-auto" data-figma="{{ figma }}">
+  <span class="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-transparent bg-[#f5f8fa] px-3 group-hover:bg-primary-500 group-focus-visible:bg-primary-500 md:h-14 md:px-5">
+    <span class="truncate text-h4 font-medium tracking-title text-primary-500 group-hover:text-white group-focus-visible:text-white md:text-h3">{{ c.name }}</span>
+    {% if c.count %}<span class="shrink-0 text-base text-primary-500 group-hover:text-secondary-100 group-focus-visible:text-secondary-100 md:text-lg">{{ c.count }} product{{ "s" if c.count != 1 }}</span>{% endif %}
   </span>
   <span class="relative block min-h-0 flex-1 overflow-hidden">
     <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'group-hover:opacity-0 group-focus-visible:opacity-0' if c.hover }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
@@ -92,9 +98,9 @@
 </a>
 {% endmacro %}
 
-{# 4-up grid of category cards (34719:11310). #}
+{# 4-up grid of category cards (34719:11310); one column, gap 8 on phones. #}
 {% macro cardGrid(cards, figma="34719:11310") %}
-<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-figma="{{ figma }}">
+<ul class="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4" data-figma="{{ figma }}">
   {% for c in cards %}<li class="min-w-0">{{ categoryCard(c) }}</li>{% endfor %}
 </ul>
 {% endmacro %}
@@ -102,19 +108,20 @@
 {#
   "Shop By Categories" card on the specialty page (34777:59000): strip with title + arrow, photo,
   and a "Select a Category" menu at the bottom listing the category's instrument types.
+  Phones (34777:58812): 350x200, 44px strip (title 20/28), 40px menu row (16/24).
   c: { title, href, image, fit, menu: [{ label, href }] }
 #}
 {% macro navCard(c) %}
-<div class="card-hover group/card relative flex aspect-square min-w-0 flex-col rounded border border-primary-500 bg-white" data-figma="34777:59000" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
-  <a href="{{ c.href }}" class="group flex h-14 shrink-0 items-center gap-3 rounded-t bg-[#f5f8fa] px-5 hover:bg-primary-500">
-    <span class="truncate text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ c.title }}</span>
+<div class="card-hover group/card relative flex h-[200px] min-w-0 flex-col rounded border border-primary-500 bg-white md:aspect-square md:h-auto" data-figma="34777:59000" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+  <a href="{{ c.href }}" class="group flex h-11 shrink-0 items-center gap-3 rounded-t bg-[#f5f8fa] px-3 hover:bg-primary-500 md:h-14 md:px-5">
+    <span class="truncate text-h4 font-medium tracking-title text-primary-500 group-hover:text-white md:text-h3">{{ c.title }}</span>
     {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
   </a>
   <a href="{{ c.href }}" tabindex="-1" aria-hidden="true" class="block min-h-0 flex-1 overflow-hidden">
     <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
   </a>
   {% if c.menu.length %}
-  <button type="button" @click="open = !open" :aria-expanded="open" class="flex h-[52px] shrink-0 items-center justify-between rounded-b bg-white px-5 text-lg text-primary-500 hover:bg-secondary-100">
+  <button type="button" @click="open = !open" :aria-expanded="open" class="flex h-10 shrink-0 items-center justify-between rounded-b bg-white px-3 text-base text-primary-500 hover:bg-secondary-100 md:h-[52px] md:px-5 md:text-lg">
     Select a Category
     <span x-show="!open">{% icon "dropdown", "h-6 w-6" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
   </button>
@@ -122,26 +129,28 @@
     {% for i in c.menu %}<li><a href="{{ i.href }}" class="{{ optionClass }}">{{ i.label }}</a></li>{% endfor %}
   </ul>
   {% else %}
-  <a href="{{ c.href }}" class="flex h-[52px] shrink-0 items-center justify-between rounded-b bg-white px-5 text-lg text-primary-500 hover:bg-secondary-100">Select a Category{% icon "dropdown", "h-6 w-6" %}</a>
+  <a href="{{ c.href }}" class="flex h-10 shrink-0 items-center justify-between rounded-b bg-white px-3 text-base text-primary-500 hover:bg-secondary-100 md:h-[52px] md:px-5 md:text-lg">Select a Category{% icon "dropdown", "h-6 w-6" %}</a>
   {% endif %}
 </div>
 {% endmacro %}
 
 {#
   "Popular Products" (34777:59002): title + "Show all Products", a grid of `count` product cards.
-  "Show all Products" reveals the rest of the page's products in place.
+  "Show all Products" reveals the rest of the page's products in place. Phones (34777:58812): one column,
+  gap 8, the button full width under the list and no bottom padding (the next section has 32px on top).
 #}
 {% macro popularProducts(products, count, figma, top=false) %}
 <section class="bg-white" data-figma="{{ figma }}" x-data="{ all: false }">
-  <div class="container-page pb-10 {{ 'pt-10' if top }}">
+  <div class="container-page md:pb-10 {{ 'pt-8 md:pt-10' if top }}">
     {% call titleRow("Popular Products", "md") %}
-      {% if products.length > count %}<button type="button" x-show="!all" @click="all = true" class="btn-secondary">Show all Products</button>{% endif %}
+      {% if products.length > count %}<button type="button" x-show="!all" @click="all = true" class="btn-secondary hidden md:inline-flex">Show all Products</button>{% endif %}
     {% endcall %}
-    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-8 md:gap-6 lg:grid-cols-3 xl:grid-cols-4">
       {% for p in products %}
       <li class="min-w-0" {% if loop.index > count %}x-show="all" x-cloak{% endif %}>{{ ui.productCard(p) }}</li>
       {% endfor %}
     </ul>
+    {% if products.length > count %}<button type="button" x-show="!all" @click="all = true" class="btn-secondary mt-4 w-full md:hidden">Show all Products</button>{% endif %}
   </div>
 </section>
 {% endmacro %}
@@ -151,12 +160,15 @@
   "Products N results" toolbar with search within + sort, the product grid and pagination with "Show".
   All product cards are rendered here; Alpine.data("plpListing") shows the current page's cards
   (x-show) in the sorted order (CSS order). l: plp.js listing().
+  Phones (Product Type Page 34730:7891): no filter panel; under the title a full-width search and
+  "Filters" + "Sort By" buttons, one column of cards (gap 8) and a centred 3-page pager.
+  "Filters" opens the filter screen (mobile-filters 34731:36331). pad: phone padding of the products section.
 #}
-{% macro listing(l, figma="34723:17181", cloak=false) %}
+{% macro listing(l, figma="34723:17181", cloak=false, pad="py-8") %}
 <div x-data="plpListing({{ l.cfg | json }})" {% if cloak %}x-cloak{% endif %} @plp-filter.window="only($event.detail)" id="{{ l.id }}" class="scroll-mt-4">
   {% if l.filters.length %}
-  {# Filter panel #}
-  <section class="bg-white py-10" data-figma="34793:65750" aria-label="Filters" x-show="found.length">
+  {# Filter panel (768px and up) #}
+  <section class="hidden bg-white py-10 md:block" data-figma="34793:65750" aria-label="Filters" x-show="found.length">
     <div class="container-page">
       <div class="rounded border border-card bg-white" data-figma="34793:65752">
         <div class="flex flex-wrap items-start gap-x-4 gap-y-2 border-b border-card px-4 py-3 md:px-6" data-figma="34793:65753">
@@ -216,24 +228,88 @@
       </div>
     </div>
   </section>
+
+  {#
+    Filter screen on phones (mobile-filters 34731:36331): "Now Shopping by" with the applied filters,
+    then one row per attribute that opens its groups of checkboxes. Ticking a box filters straight away,
+    like the panel; Apply Filters closes the screen, Cancel puts back the filters it opened with.
+  #}
+  <div x-show="sheet" x-cloak x-trap="sheet" x-effect="lockScroll('mobile-filters', sheet)" @keydown.escape="sheet = false"
+       class="fixed inset-0 z-50 flex flex-col bg-white md:hidden" role="dialog" aria-modal="true" aria-labelledby="{{ l.id }}-sheet-title" data-figma="34731:36331">
+    <div class="flex h-14 shrink-0 items-center justify-between border-b border-outline pl-5">
+      <h2 id="{{ l.id }}-sheet-title" class="text-h3 font-medium text-heading">Filters</h2>
+      <button type="button" @click="sheet = false" aria-label="Close filters" class="flex h-14 w-14 items-center justify-center border-l border-outline text-primary-500 hover:text-accent">{% icon "close-x", "h-6 w-6" %}</button>
+    </div>
+    <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div x-show="applied.length" class="flex flex-col gap-3 border-b border-secondary-200 bg-secondary-100 p-5">
+        <p class="text-lg font-medium text-heading">Now Shopping by</p>
+        <ul class="flex flex-col gap-1" aria-label="Active filters">
+          <template x-for="key in applied" :key="key">
+            <li class="flex items-center gap-1 text-base text-body">
+              <span><span class="font-medium text-heading" x-text="groupLabel(key) + ':'"></span> <span x-text="valueLabel(key)"></span></span>
+              <button type="button" @click="remove(key)" :aria-label="'Remove filter ' + groupLabel(key) + ' ' + valueLabel(key)" class="flex h-6 w-6 items-center justify-center text-heading hover:text-accent">{% icon "close-x", "h-4 w-4" %}</button>
+            </li>
+          </template>
+        </ul>
+        <button type="button" @click="clearAll()" class="btn-secondary w-full">Clear All Filters</button>
+      </div>
+      {% for a in l.filters %}
+      <div class="border-b border-secondary-200 last:border-b-0">
+        <button type="button" @click="sheetAttr = sheetAttr === '{{ a.key }}' ? null : '{{ a.key }}'" :aria-expanded="sheetAttr === '{{ a.key }}'" aria-controls="{{ l.id }}-m-{{ a.key }}"
+                class="flex w-full items-center gap-2 border-l-[3px] py-5 pl-[17px] pr-5 text-left text-lg font-medium"
+                :class="sheetAttr === '{{ a.key }}' ? 'border-accent bg-[#f5f7fa] text-accent' : 'border-transparent text-heading'">
+          {{ a.label }}
+          <span x-show="attrCount('{{ a.key }}')" x-cloak x-text="attrCount('{{ a.key }}')" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold leading-5 text-ink"></span>
+          <span class="ml-auto text-ink" x-show="sheetAttr !== '{{ a.key }}'">{% icon "plus-xs" %}</span>
+          <span class="ml-auto" x-show="sheetAttr === '{{ a.key }}'" x-cloak>{% icon "minus-xs" %}</span>
+        </button>
+        <div id="{{ l.id }}-m-{{ a.key }}" x-show="sheetAttr === '{{ a.key }}'" x-collapse x-cloak>
+          {% for g in a.groups %}
+          <div role="group" aria-labelledby="{{ l.id }}-m-{{ g.key }}" class="border-t border-secondary-200">
+            <p id="{{ l.id }}-m-{{ g.key }}" class="px-5 pb-1 pt-5 text-lg font-bold text-primary-500">{{ g.label }}</p>
+            {% for o in g.options %}
+            <label class="flex cursor-pointer items-center gap-2 p-5" x-show="countOf('{{ o.key }}') > 0 || applied.includes('{{ o.key }}')">
+              <input type="checkbox" value="{{ o.key }}" x-model="applied" class="peer sr-only">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-secondary-200 bg-white text-white peer-checked:border-primary-500 peer-checked:bg-primary-500 peer-focus-visible:ring-2 peer-focus-visible:ring-primary-200">{% icon "check-small", "h-5 w-5" %}</span>
+              <span class="ml-1 text-base text-body peer-checked:text-ink">{{ o.value }}</span>
+              <span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink" x-text="countOf('{{ o.key }}')">{{ o.count }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="flex shrink-0 gap-3 border-t border-secondary-200 bg-white p-5">
+      <button type="button" @click="cancelSheet()" class="btn-secondary flex-1 px-4">Cancel</button>
+      <button type="button" @click="sheet = false" class="btn-primary flex-1 px-4">Apply Filters</button>
+    </div>
+  </div>
   {% endif %}
 
   {# Products #}
-  <section class="bg-white py-10" data-figma="{{ figma }}" x-ref="top" aria-label="Products">
+  <section class="bg-white {{ pad }} md:py-10" data-figma="{{ figma }}" x-ref="top" aria-label="Products">
     <div class="container-page">
       <div class="flex flex-wrap items-center justify-between gap-x-10 gap-y-4" data-figma="34723:17182" x-show="found.length">
-        <h2 class="flex items-baseline gap-2 text-h2 font-bold text-heading md:text-h1">Products <span class="text-lg font-normal text-body" x-text="resultsLabel">{{ l.products.length }} result{{ "s" if l.products.length != 1 }}</span></h2>
-        <div class="flex w-full flex-wrap items-center gap-x-10 gap-y-4 md:w-auto">
+        <h2 class="flex items-baseline gap-2 text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">Products <span class="text-base font-normal text-body md:text-lg" x-text="resultsLabel">{{ l.products.length }} result{{ "s" if l.products.length != 1 }}</span></h2>
+        <div class="flex w-full flex-wrap items-center gap-x-3 gap-y-4 md:w-auto md:gap-x-10">
           <label class="relative block w-full md:w-[320px]">
             <span class="sr-only">Search within {{ l.cfg.title }}</span>
             <span class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-primary-500">{% icon "search" %}</span>
             <input type="search" x-model.debounce.150ms="within" @input="page = 1" placeholder="Search within {{ l.cfg.title }}" class="input pl-[60px] font-medium placeholder:font-medium">
           </label>
-          <div class="flex items-center gap-5" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
-            <span class="shrink-0 text-base text-body" id="{{ l.id }}-sort">Sort By:</span>
-            <div class="relative min-w-[227px]">
-              <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="{{ l.id }}-sort {{ l.id }}-sort-v" class="{{ controlClass }}" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
-                <span id="{{ l.id }}-sort-v" class="whitespace-nowrap" x-text="sortLabel">Product name A-Z</span>
+          {% if l.filters.length %}
+          <button type="button" @click="openSheet()" aria-haspopup="dialog" class="btn-secondary flex-1 px-4 md:hidden">
+            Filters<span x-show="applied.length" x-cloak x-text="applied.length" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold leading-5 text-ink"></span>
+          </button>
+          {% endif %}
+          <div class="flex flex-1 items-center gap-5 md:flex-initial" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+            <span class="sr-only shrink-0 text-base text-body md:not-sr-only" id="{{ l.id }}-sort">Sort By:</span>
+            <div class="relative w-full md:w-auto md:min-w-[227px]">
+              <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="{{ l.id }}-sort {{ l.id }}-sort-v" class="{{ mControlClass }}" :class="{{ mControlState }}">
+                <span class="md:hidden" aria-hidden="true">Sort By</span>
+                <span id="{{ l.id }}-sort-v" class="hidden whitespace-nowrap md:inline" x-text="sortLabel">Product name A-Z</span>
                 <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
               </button>
               <ul x-show="open" x-cloak x-transition.opacity class="{{ panelClass }}">
@@ -246,12 +322,12 @@
         </div>
       </div>
 
-      <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-figma="34723:17196">
+      <ul class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-8 md:gap-6 lg:grid-cols-3 xl:grid-cols-4" data-figma="34723:17196">
         {% for p in l.products %}
         <li class="min-w-0" x-show="isShown('{{ p.slug }}')" :style="{ order: rank('{{ p.slug }}') }" {% if loop.index > l.perPage %}style="display: none"{% endif %}>{{ ui.productCard(p) }}</li>
         {% endfor %}
       </ul>
-      <div x-show="!total" x-cloak class="mt-8 flex flex-col items-center gap-5 rounded border border-secondary-200 px-6 py-12 text-center">
+      <div x-show="!total" x-cloak class="mt-4 flex flex-col items-center gap-5 rounded border border-secondary-200 px-6 py-12 text-center md:mt-8">
         <p class="text-lg text-heading">We couldn&rsquo;t find anything for your search</p>
         <div x-show="found.length"><button type="button" @click="clearAll(); within = ''" class="btn-secondary">Clear all</button></div>
         <div x-show="!found.length" class="flex flex-wrap justify-center gap-4">
@@ -261,19 +337,19 @@
       </div>
 
       {# Pagination (34723:17222) #}
-      {# One line whenever it fits (wraps only on narrow phones); from lg the pager sits centred between the two. #}
-      <div x-show="total" class="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4" data-figma="34723:17222">
-        <p class="text-base text-body" x-text="itemsLabel">Items 1-{{ l.perPage if l.products.length > l.perPage else l.products.length }} of {{ l.products.length }}</p>
+      {# One line whenever it fits; from lg the pager sits centred between the two. Phones show only the pager, centred, with 3 pages (34730:7891). #}
+      <div x-show="total" class="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:mt-8 md:justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4" data-figma="34723:17222">
+        <p class="hidden text-base text-body md:block" x-text="itemsLabel">Items 1-{{ l.perPage if l.products.length > l.perPage else l.products.length }} of {{ l.products.length }}</p>
         <nav aria-label="Pagination" class="flex flex-wrap items-center gap-3">
           <button type="button" @click="go(current - 1)" :disabled="current <= 1" aria-label="Previous page" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5] disabled:cursor-default disabled:opacity-40">{% icon "arrow-left" %}</button>
           <template x-for="n in pageList" :key="n">
             <button type="button" @click="go(n)" :aria-current="n === current ? 'page' : null" x-text="n"
                     class="flex h-[52px] min-w-[52px] items-center justify-center rounded border px-3 text-lg font-medium"
-                    :class="n === current ? 'border-secondary-200 bg-secondary-200 text-secondary-300' : 'border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5]'"></button>
+                    :class="[n === current ? 'border-secondary-200 bg-secondary-200 text-secondary-300' : 'border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5]', nearPage(n) ? '' : 'hidden md:flex']"></button>
           </template>
           <button type="button" @click="go(current + 1)" :disabled="current >= pages" aria-label="Next page" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5] disabled:cursor-default disabled:opacity-40">{% icon "arrow-right" %}</button>
         </nav>
-        <div class="flex items-center gap-5 lg:justify-self-end" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+        <div class="hidden items-center gap-5 md:flex lg:justify-self-end" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
           <span class="text-base text-body" id="{{ l.id }}-show">Show:</span>
           <div class="relative w-[104px]">
             <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="{{ l.id }}-show {{ l.id }}-show-v" class="{{ controlClass }}" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
@@ -293,32 +369,35 @@
 </div>
 {% endmacro %}
 
-{# "Free Lifetime Repair" banner (34777:59015). #}
+{#
+  "Free Lifetime Repair" banner (34777:59015). Phones (34777:58812): title and the seal (130x126,
+  rising 26px above the navy) side by side, text and a full-width button below.
+#}
 {% macro repairBanner() %}
-<section class="bg-white py-10" data-figma="34777:59015">
+<section class="bg-white pt-8 md:py-10" data-figma="34777:59015">
   <div class="bg-primary-500">
-    <div class="container-page flex flex-col items-center gap-6 py-10 text-center md:h-[160px] md:flex-row md:gap-20 md:py-0 md:text-left">
-      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="-my-4 h-[140px] w-[140px] shrink-0 object-cover md:-my-[74px] md:h-[228px] md:w-[228px] md:-translate-y-2 md:scale-[1.19]">
-      <div class="flex flex-1 flex-col gap-4">
-        <h2 class="text-h3 font-medium text-white md:text-h2">{{ plp.repairBanner.title }}</h2>
-        <p class="text-lg text-[#d3dce5]">{{ plp.repairBanner.text }}</p>
+    <div class="container-page grid grid-cols-[minmax(0,1fr)_130px] items-end gap-x-4 gap-y-4 pb-8 md:flex md:h-[160px] md:flex-row md:items-center md:gap-20 md:py-0 md:text-left">
+      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="col-start-2 row-start-1 -mt-[26px] h-[126px] w-[130px] shrink-0 object-cover md:-my-[74px] md:h-[228px] md:w-[228px] md:-translate-y-2 md:scale-[1.19]">
+      <div class="contents md:flex md:flex-1 md:flex-col md:gap-4">
+        <h2 class="col-start-1 row-start-1 self-end text-h3 font-medium text-white md:text-h2">{{ plp.repairBanner.title }}</h2>
+        <p class="col-span-2 text-base text-[#d3dce5] md:text-lg">{{ plp.repairBanner.text }}</p>
       </div>
-      <a href="{{ plp.repairBanner.href }}" class="btn bg-white pl-8 pr-[30px] text-primary-500 hover:bg-[#f5f5f5]">{{ plp.repairBanner.cta }}{% icon "arrow-narrow-right" %}</a>
+      <a href="{{ plp.repairBanner.href }}" class="btn col-span-2 mt-2 bg-white pl-8 pr-[30px] text-primary-500 hover:bg-[#f5f5f5] md:mt-0">{{ plp.repairBanner.cta }}{% icon "arrow-narrow-right" %}</a>
     </div>
   </div>
 </section>
 {% endmacro %}
 
-{# "why us?" row (34777:59023). #}
+{# "why us?" row (34777:59023). Phones (34777:58812): #f5f8fa band, 60px circles with 32px icons, navy titles. #}
 {% macro trustRow() %}
-<section class="bg-white" aria-label="Why Ambler Surgical" data-figma="34777:59023">
-  <ul class="container-page grid gap-6 py-10 sm:grid-cols-2 xl:grid-cols-4">
+<section class="bg-[#f5f8fa] md:bg-white" aria-label="Why Ambler Surgical" data-figma="34777:59023">
+  <ul class="container-page grid gap-5 py-8 sm:grid-cols-2 md:gap-6 md:py-10 xl:grid-cols-4">
     {% for t in plp.trust %}
     <li class="flex min-w-0 items-center gap-4">
-      <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon t.icon %}</span>
+      <span class="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white md:h-[52px] md:w-[52px]">{% icon t.icon, "h-8 w-8 md:h-7 md:w-7" %}</span>
       <span class="min-w-0">
-        <span class="block text-lg font-medium text-ink">{{ t.title }}</span>
-        <span class="block text-base text-body">{{ t.text }}</span>
+        <span class="block text-lg font-medium text-primary-500 md:text-ink">{{ t.title }}</span>
+        <span class="mt-1 block text-base text-card md:mt-0 md:text-body">{{ t.text }}</span>
       </span>
     </li>
     {% endfor %}
@@ -329,21 +408,21 @@
 {#
   Info band (34777:59028, 34719:11393, 34888:121815): photo on the left, navy on the right,
   white copy column (856/886px) with an optional orange second title line and orange-dash bullets.
+  Phones (34726:18657): the photo is a 132px strip above the navy block. pad: phone padding of the copy.
 #}
-{% macro infoBand(b) %}
+{% macro infoBand(b, pad="py-8") %}
 <section class="relative overflow-hidden bg-primary-500" data-figma="{{ b.figma }}">
-  <img src="{{ b.image | img }}" alt="" loading="lazy" class="absolute inset-y-0 left-0 h-full w-full object-cover object-left md:w-[62%]">
+  <img src="{{ b.image | img }}" alt="" loading="lazy" class="block h-[132px] w-full object-cover object-left md:absolute md:inset-y-0 md:left-0 md:h-full md:w-[62%]">
   <div class="absolute inset-0 hidden md:block" style="background-image: {{ plp.gradients.band }}"></div>
-  <div class="absolute inset-0 bg-primary-500/85 md:hidden"></div>
-  <div class="container-page relative flex justify-end py-10">
-    <div class="flex w-full max-w-[886px] flex-col gap-7 md:w-[56%]">
-      <h2 class="text-h3 font-bold text-white md:text-h2">{{ b.title }}{% if b.accent %}<span class="block text-accent">{{ b.accent }}</span>{% endif %}</h2>
+  <div class="container-page relative flex justify-end {{ pad }} md:py-10">
+    <div class="flex w-full max-w-[886px] flex-col gap-6 md:w-[56%] md:gap-7">
+      <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">{{ b.title }}{% if b.accent %}<span class="mt-1 block text-accent md:mt-0">{{ b.accent }}</span>{% endif %}</h2>
       <div class="flex flex-col gap-4">
-        {% for p in b.paragraphs %}<p class="text-lg text-white">{{ p }}</p>{% endfor %}
+        {% for p in b.paragraphs %}<p class="text-base text-white md:text-lg">{{ p }}</p>{% endfor %}
       </div>
       {% if b.bullets %}
-      <ul class="flex flex-col gap-2 pl-4">
-        {% for i in b.bullets %}<li class="flex gap-4 text-lg text-white"><span class="mt-[13px] h-0.5 w-2 shrink-0 rounded-sm bg-accent"></span>{{ i }}</li>{% endfor %}
+      <ul class="-mt-2 flex flex-col gap-3 md:mt-0 md:gap-2 md:pl-4">
+        {% for i in b.bullets %}<li class="flex gap-3 text-base text-white md:gap-4 md:text-lg"><span class="mt-[11px] h-0.5 w-2 shrink-0 rounded-sm bg-accent md:mt-[13px]"></span>{{ i }}</li>{% endfor %}
       </ul>
       {% endif %}
     </div>
@@ -351,17 +430,17 @@
 </section>
 {% endmacro %}
 
-{# "Features - list, 2 columns" (34719:11433): title, intro, orange-dash bullets with a bold lead-in. #}
+{# "Features - list, 2 columns" (34719:11433): title, intro, orange-dash bullets with a bold lead-in. Phones: 16/24, gaps 16. #}
 {% macro features(f) %}
 <section class="bg-white" data-figma="{{ f.figma }}">
-  <div class="container-page pt-10">
-    <div class="flex max-w-[756px] flex-col gap-3">
-      <h2 class="text-h3 font-bold text-heading md:text-h2">{{ f.title }}</h2>
-      <p class="text-lg text-body">{{ f.intro }}</p>
+  <div class="container-page pt-8 md:pt-10">
+    <div class="flex max-w-[756px] flex-col gap-4 md:gap-3">
+      <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ f.title }}</h2>
+      <p class="text-base text-body md:text-lg">{{ f.intro }}</p>
     </div>
-    <ul class="mt-4 flex max-w-[908px] flex-col gap-3 p-4">
+    <ul class="mt-4 flex max-w-[908px] flex-col gap-4 md:gap-3 md:p-4">
       {% for i in f.items %}
-      <li class="flex gap-3 text-lg text-body"><span class="mt-[13px] h-0.5 w-2 shrink-0 rounded-sm bg-accent"></span><span><strong class="font-medium text-heading">{{ i[0] }}</strong> &ndash; {{ rich(i[1]) }}</span></li>
+      <li class="flex gap-3 text-base text-body md:text-lg"><span class="mt-[11px] h-0.5 w-2 shrink-0 rounded-sm bg-accent md:mt-[13px]"></span><span><strong class="font-medium text-heading">{{ i[0] }}</strong> &ndash; {{ rich(i[1]) }}</span></li>
       {% endfor %}
     </ul>
   </div>
@@ -371,15 +450,16 @@
 {#
   "Types of …" cards (34719:11450): 3-up cards with a title strip + arrow and a description.
   cards: [{ title, text, href? , filter? }]; without href the card applies a listing filter or is a prototype gap.
+  Phones (34726:18657): one column, gap 8; intro 16/24.
 #}
 {% macro typesOf(t) %}
 <section class="bg-white" data-figma="{{ t.figma }}">
-  <div class="container-page py-10">
-    <div class="flex max-w-[756px] flex-col gap-3">
-      <h2 class="text-h3 font-bold text-heading md:text-h2">{{ t.title }}</h2>
-      <p class="text-lg text-body">{{ t.intro }}</p>
+  <div class="container-page py-8 md:py-10">
+    <div class="flex max-w-[756px] flex-col gap-4 md:gap-3">
+      <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ t.title }}</h2>
+      <p class="text-base text-body md:text-lg">{{ t.intro }}</p>
     </div>
-    <ul class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <ul class="mt-4 grid gap-2 md:mt-8 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
       {% for c in t.cards %}
       <li class="min-w-0">
         <a href="{{ c.href or '#products' }}" {% if c.filter %}@click.prevent="$dispatch('plp-filter', '{{ c.filter }}')"{% elif not c.href %}data-proto{% endif %}
@@ -393,32 +473,39 @@
       </li>
       {% endfor %}
     </ul>
-    {% if t.outro %}<p class="mt-8 max-w-[756px] text-lg text-body">{{ rich(t.outro) }}</p>{% endif %}
+    {% if t.outro %}<p class="mt-4 max-w-[756px] text-base text-body md:mt-8 md:text-lg">{{ rich(t.outro) }}</p>{% endif %}
   </div>
 </section>
 {% endmacro %}
 
 {#
   "Shop by Product Lines" (34777:59035): title + "Shop All Product Lines", 2 rows of 6 logo tiles (239x80).
-  bg: "white" (specialty) or "tint" (#eff7fd, category page 34719:11345).
+  bg: "white" (specialty) or "tint" (#eff7fd, category page 34719:11345; white on phones like 34726:18657).
+  Phones: 2 columns of 61px tiles, gap 8, the button full width under them.
 #}
 {% macro brandsStrip(bg="white", figma="34777:59035") %}
-<section class="{{ 'bg-[#eff7fd]' if bg == 'tint' else 'bg-white' }}" data-figma="{{ figma }}">
-  <div class="container-page py-10">
-    {% call titleRow("Shop by Product Lines", "md") %}<a href="/product-lines/" class="btn-primary">Shop All Product Lines</a>{% endcall %}
-    <ul class="{{ 'mt-8' if bg == 'tint' else 'mt-10' }} grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
+<section class="{{ 'bg-white md:bg-[#eff7fd]' if bg == 'tint' else 'bg-white' }}" data-figma="{{ figma }}">
+  <div class="container-page py-8 md:py-10">
+    {% call titleRow("Shop by Product Lines", "md") %}<a href="/product-lines/" class="btn-primary hidden md:inline-flex">Shop All Product Lines</a>{% endcall %}
+    <ul class="{{ 'md:mt-8' if bg == 'tint' else 'md:mt-10' }} mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-5 lg:grid-cols-6">
       {% for b in plp.topLines %}
-      <li class="min-w-0">{{ logoTile(b) }}</li>
+      <li class="min-w-0">{{ logoTile(b, true) }}</li>
       {% endfor %}
     </ul>
+    <a href="/product-lines/" class="btn-primary mt-4 w-full md:hidden">Shop All Product Lines</a>
   </div>
 </section>
 {% endmacro %}
 
-{# Product line tile (styleguide "Brands cards" 14714:57265): 80px, #3a526d border, logo or name. #}
-{% macro logoTile(b) %}
-<a href="{{ b.url }}" class="card-hover flex h-20 items-center justify-center rounded border border-card bg-white px-3 text-center hover:border-primary-500">
-  {% if b.logo %}
+{#
+  Product line tile (styleguide "Brands cards" 14714:57265): 80px, #3a526d border, logo or name.
+  compact: 61px tall with logos at 72% on phones ("Shop by Product Lines" 34777:58812).
+#}
+{% macro logoTile(b, compact=false) %}
+<a href="{{ b.url }}" class="card-hover flex {{ 'h-[61px] md:h-20' if compact else 'h-20' }} items-center justify-center rounded border border-card bg-white px-3 text-center hover:border-primary-500">
+  {% if b.logo and compact %}
+  <img src="{{ b.logo }}" alt="{{ b.name }}" loading="lazy" class="max-h-[34px] w-[calc(var(--w)*0.72)] max-w-full object-contain md:max-h-12 md:w-[var(--w)]" style="--w: {{ plp.logoWidths[b.slug] or 160 }}px">
+  {% elif b.logo %}
   <img src="{{ b.logo }}" alt="{{ b.name }}" loading="lazy" class="max-h-12 max-w-full object-contain" style="width: {{ plp.logoWidths[b.slug] or 160 }}px">
   {% else %}
   <span class="text-lg font-medium leading-6 text-primary-500">{{ b.name }}</span>
@@ -430,12 +517,14 @@
   FAQ (34777:59083): accordion + "Can't find your answer?" box.
   items: [{ q, a? }]; all questions start closed. Questions without a drawn answer are prototype gaps.
   layout: "wide" (971 + 525, gap 40) or "narrow" (886 + 590, gap 60).
+  Phones (34777:58812): the "Can't find your answer?" box is a full-width navy band closing the section.
+  pt: top padding classes (phone and md:).
 #}
-{% macro faq(items, figma, layout="wide", tint="#f5f8fa", pt="pt-10") %}
+{% macro faq(items, figma, layout="wide", tint="#f5f8fa", pt="pt-8 md:pt-10") %}
 <section style="background-color: {{ tint }}" data-figma="{{ figma }}">
-  <div class="container-page {{ pt }} pb-10">
-    <h2 class="text-h3 font-bold text-heading md:text-h2">Frequently Asked Questions</h2>
-    <div class="{{ 'mt-10 gap-10 lg:grid-cols-[minmax(0,971fr)_minmax(0,525fr)]' if layout == 'wide' else 'mt-8 gap-10 lg:grid-cols-[minmax(0,886fr)_minmax(0,590fr)] lg:gap-[60px]' }} grid items-start" x-data="{ open: null }">
+  <div class="container-page {{ pt }} md:pb-10">
+    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Frequently Asked Questions</h2>
+    <div class="{{ 'mt-4 gap-8 md:mt-10 md:gap-10 lg:grid-cols-[minmax(0,971fr)_minmax(0,525fr)]' if layout == 'wide' else 'mt-4 gap-8 md:mt-8 md:gap-10 lg:grid-cols-[minmax(0,886fr)_minmax(0,590fr)] lg:gap-[60px]' }} grid items-start" x-data="{ open: null }">
       <div>
         {% for i in items %}
         {% set n = loop.index0 %}
@@ -456,12 +545,12 @@
         </div>
         {% endfor %}
       </div>
-      <div class="flex flex-col gap-6 rounded bg-primary-500 p-7">
+      <div class="-mx-5 flex flex-col gap-6 bg-primary-500 px-5 py-8 md:mx-0 md:rounded md:p-7">
         <div class="flex flex-col gap-4">
-          <h3 class="text-h3 font-bold text-white md:text-h2">Can&rsquo;t find your answer?</h3>
-          <p class="text-lg text-[#d3dce5]">Our instrument specialists respond within one business day.</p>
+          <h3 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Can&rsquo;t find your answer?</h3>
+          <p class="text-base text-[#d3dce5] md:text-lg">Our instrument specialists respond within one business day.</p>
         </div>
-        <a href="/contact/" class="btn-accent self-start pl-8 pr-[30px]">Contact Our Team{% icon "arrow-narrow-right" %}</a>
+        <a href="/contact/" class="btn-accent pl-8 pr-[30px] md:self-start">Contact Our Team{% icon "arrow-narrow-right" %}</a>
       </div>
     </div>
   </div>

@@ -25,9 +25,10 @@
   {{ co.heading("Payment Method", "payment-method-title") }}
   <div role="radiogroup" aria-labelledby="payment-method-title" class="flex flex-col">
 
-    {# Credit/Debit card #}
+    {# Credit/Debit card. Phones: 19px padding inside the 1px border and 4px before the badges keep
+       "Credit/Debit card" on one line, as in Figma (34799:88160) #}
     <div class="relative -mt-px overflow-hidden rounded-t border first:mt-0" :class="payment === 'card' ? 'z-10 border-primary-500' : 'border-secondary-200'">
-      <label class="flex h-16 cursor-pointer items-center justify-between gap-3 px-5">
+      <label class="flex h-16 cursor-pointer items-center justify-between gap-1 px-[19px] md:gap-3 md:px-5">
         <span class="flex items-center gap-3">
           <input type="radio" name="payment_method" value="card" x-model="payment" class="{{ co.radioClass() }}">
           <span class="text-base" :class="payment === 'card' ? 'text-ink' : 'text-body'">Credit/Debit card</span>
@@ -49,12 +50,14 @@
             </div>
             <input id="card-number" autocomplete="off" inputmode="numeric" placeholder="0000 0000 0000 0000" class="input text-base">
           </div>
-          <div class="flex flex-wrap gap-3">
+          {# Phones: CVV wraps under the expiry date, 20px apart like the other fields #}
+          <div class="flex flex-wrap gap-x-3 gap-y-5">
             <fieldset class="min-w-0 flex-[356_1_240px]">
               <legend class="mb-2 text-sm text-ink">Expiry date</legend>
+              {# Phones: the year keeps its 140px and the month takes the rest (162 + 8 + 140) #}
               <div class="flex gap-2">
-                <div class="min-w-0 flex-[208_1_0]">{{ co.select("card-month", "", checkout.months, "Month", "Expiry month", "text-base") }}</div>
-                <div class="min-w-0 flex-[140_1_0]">{{ co.select("card-year", "", checkout.years, "Year", "Expiry year", "text-base") }}</div>
+                <div class="min-w-0 flex-1 md:flex-[208_1_0]">{{ co.select("card-month", "", checkout.months, "Month", "Expiry month", "text-base") }}</div>
+                <div class="min-w-0 flex-[0_0_140px] md:flex-[140_1_0]">{{ co.select("card-year", "", checkout.years, "Year", "Expiry year", "text-base") }}</div>
               </div>
             </fieldset>
             <div class="flex-[192_1_160px]">
@@ -71,7 +74,7 @@
 
     {# PayPal #}
     <div class="relative -mt-px overflow-hidden border" :class="payment === 'paypal' ? 'z-10 border-primary-500' : 'border-secondary-200'">
-      <label class="flex h-16 cursor-pointer items-center justify-between gap-3 px-5">
+      <label class="flex h-16 cursor-pointer items-center justify-between gap-1 px-[19px] md:gap-3 md:px-5">
         <span class="flex items-center gap-3">
           <input type="radio" name="payment_method" value="paypal" x-model="payment" class="{{ co.radioClass() }}">
           <span class="text-base" :class="payment === 'paypal' ? 'text-ink' : 'text-body'">PayPal</span>
@@ -88,7 +91,7 @@
 
     {# Purchase Order #}
     <div class="relative -mt-px overflow-hidden rounded-b border" :class="payment === 'po' ? 'z-10 border-primary-500' : 'border-secondary-200'">
-      <label class="flex h-16 cursor-pointer items-center justify-between gap-3 px-5">
+      <label class="flex h-16 cursor-pointer items-center justify-between gap-1 px-[19px] md:gap-3 md:px-5">
         <span class="flex items-center gap-3">
           <input type="radio" name="payment_method" value="po" x-model="payment" class="{{ co.radioClass() }}">
           <span class="text-base" :class="payment === 'po' ? 'text-ink' : 'text-body'">Purchase Order</span>
@@ -107,7 +110,8 @@
   </div>
 </section>
 
-<div class="flex flex-col gap-6" data-figma="34799:87941">
+{# From 768px; phones show their copy under the Order Summary totals (summary.njk) #}
+<div class="hidden flex-col gap-6 md:flex" data-figma="34799:87941">
   {% call co.checkbox("terms", "accept-terms") %}I accept <a href="#" data-proto class="link">Terms &amp; Conditions</a> and <a href="#" data-proto class="link">Privacy Policy</a>{% endcall %}
   <button type="submit" disabled :disabled="!terms" class="btn-primary h-[60px] w-full">{% icon "checks", "h-7 w-7" %}Place Order</button>
 </div>

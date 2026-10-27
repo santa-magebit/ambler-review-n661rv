@@ -10,26 +10,28 @@ figma: "34385:27016"
 {% set downloadText = "Here you can download a copy of your personal data which we store for your account in CSV format." %}
 
 {# Modal body: text, optional extra field, Current Password, primary action (disabled until a password
-   is typed where Figma draws it disabled), Cancel. #}
+   is typed where Figma draws it disabled), Cancel. Phones (34385:27782): 20px padding, 16px gaps, the
+   buttons at the bottom of the full-screen modal. #}
 {% macro modalBody(name, text, action, requirePassword=true) %}
-<form @submit.prevent="confirm" novalidate>
-  <div class="flex flex-col gap-7 px-6 py-7 sm:px-10">
+<form @submit.prevent="confirm" novalidate class="flex flex-1 flex-col md:block">
+  <div class="flex flex-col gap-4 p-5 md:gap-7 md:px-10 md:py-7">
     <p class="text-base text-body">{{ text }}</p>
     {{ caller() if caller }}
     {{ acc.passwordField("Current Password", "privacy-password-" + name, "Enter your password to proceed", false, "current-password", 'x-model="password"') }}
   </div>
-  <div class="flex flex-col gap-3 px-6 pb-10 sm:px-10">
+  <div class="mt-auto flex flex-col gap-3 px-5 pb-5 md:px-10 md:pb-10">
     <button type="submit" class="btn-primary w-full" {% if requirePassword %}:disabled="!password"{% endif %}>{{ action }}</button>
     <button type="button" @click="close" class="btn-link w-full">Cancel</button>
   </div>
 </form>
 {% endmacro %}
 
-<div x-data="privacySettings" class="flex flex-col gap-10" data-figma="34385:27041">
+{# Phones: "Mobile - Privacy Settings" 34385:27102 (12px between the cards, full-width buttons). #}
+<div x-data="privacySettings" class="flex flex-col gap-8 md:gap-10" data-figma="34385:27041">
   {{ acc.pageTitle("Privacy Settings") }}
-  <div class="grid items-start gap-6 xl:grid-cols-2" data-figma="34385:27043">
+  <div class="grid items-start gap-3 md:gap-6 xl:grid-cols-2" data-figma="34385:27043">
     {% call acc.infoCard("files", "Policies Text", "34385:27044") %}
-    <div class="flex flex-wrap gap-3">
+    <div class="flex flex-col gap-3 md:flex-row md:flex-wrap">
       <a href="#" data-proto class="btn-secondary px-7">Read Privacy Policy</a>
       <a href="#" data-proto class="btn-secondary px-7">Read Cookie Policy</a>
     </div>
@@ -37,17 +39,17 @@ figma: "34385:27016"
 
     {% call acc.infoCard("download", "Download Personal Data", "34385:27069") %}
     <p class="text-base text-body">{{ downloadText }}</p>
-    <button type="button" @click="open('download')" class="btn-secondary w-fit">Download</button>
+    <button type="button" @click="open('download')" class="btn-secondary w-full md:w-fit">Download</button>
     {% endcall %}
 
     {% call acc.infoCard("eye-off", "Anonymise Personal Data", "34385:27078") %}
     <p class="text-base text-body">{{ anonymiseText }}</p>
-    <button type="button" @click="open('anonymise')" class="btn-secondary w-fit">Agree and Proceed</button>
+    <button type="button" @click="open('anonymise')" class="btn-secondary w-full md:w-fit">Agree and Proceed</button>
     {% endcall %}
 
     {% call acc.infoCard("trash", "Delete Account", "34385:27086") %}
     <p class="text-base text-body">{{ deleteText }}</p>
-    <button type="button" @click="open('delete')" class="btn-secondary w-fit">Agree and Submit Request</button>
+    <button type="button" @click="open('delete')" class="btn-secondary w-full md:w-fit">Agree and Submit Request</button>
     {% endcall %}
   </div>
 

@@ -25,22 +25,26 @@
 {% endmacro %}
 
 {# Product card, styleguide "PRODUCT CARD WEB" (34739:92926): 1px #3a526d border, 48px title strip
-   (Popular + ITEM#), 200px image, name Bold 18/28 + 2-line description, 52px price bar with Add to Cart. #}
+   (Popular + ITEM#), 200px image, name Bold 18/28 + 2-line description, 52px price bar with Add to Cart.
+   Phones get "PRODUCT CARD MOBILE" (34739:92941): the same strip and bar around a row with a 138px
+   image on the left and the name + up to 3 lines of description on the right. #}
 {% macro productCard(p) %}
 <article class="card-hover flex h-full flex-col overflow-hidden rounded border border-card bg-white" data-figma="34739:92926">
-  <div class="flex h-12 items-center justify-between gap-3 bg-secondary-100 px-3">
+  <div class="flex h-12 items-center justify-between gap-3 border-b border-outline bg-secondary-100 px-3 md:border-b-0">
     {% if p.badge %}
     <span class="flex items-center gap-1.5 text-base font-medium text-primary-500">{% icon "heart", "h-4 w-4" %}{{ p.badge }}</span>
     {% else %}<span></span>{% endif %}
     {% if p.sku %}<span class="text-base font-bold text-primary-500">ITEM#: {{ p.sku }}</span>{% endif %}
   </div>
-  <a href="{{ p.url }}" tabindex="-1" aria-hidden="true" class="block h-[200px] bg-white">
-    <img src="{{ p.image }}" alt="" loading="lazy" class="h-full w-full object-contain">
-  </a>
-  {# Figma body is a fixed 136px (2-line name + 2-line description), so cards line up at 436px. #}
-  <div class="flex min-h-[136px] flex-1 flex-col gap-2 border-t border-outline px-4 py-3">
-    <h3 class="line-clamp-2 text-lg font-bold text-primary-500"><a href="{{ p.url }}" class="hover:underline">{{ p.name }}</a></h3>
-    <p class="line-clamp-2 text-base text-body">{{ p.description }}</p>
+  <div class="flex flex-1 md:flex-col">
+    <a href="{{ p.url }}" tabindex="-1" aria-hidden="true" class="block min-h-[120px] w-[138px] shrink-0 bg-white md:h-[200px] md:w-auto">
+      <img src="{{ p.image }}" alt="" loading="lazy" class="h-full w-full object-contain">
+    </a>
+    {# Figma body is a fixed 136px on web (2-line name + 2-line description), so cards line up at 436px. #}
+    <div class="flex min-w-0 flex-1 flex-col gap-1 p-2 md:min-h-[136px] md:gap-2 md:border-t md:border-outline md:px-4 md:py-3">
+      <h3 class="line-clamp-2 text-lg font-bold text-primary-500"><a href="{{ p.url }}" class="hover:underline">{{ p.name }}</a></h3>
+      <p class="line-clamp-3 text-base text-body md:line-clamp-2">{{ p.description }}</p>
+    </div>
   </div>
   <div class="flex h-[52px] items-center justify-between border-t border-card bg-secondary-100 pl-3">
     <span class="flex items-baseline gap-2 text-lg font-bold text-primary-500">{{ p.price | money }}{% if p.oldPrice %}<s class="text-sm font-normal text-body">{{ p.oldPrice | money }}</s>{% endif %}</span>

@@ -8,11 +8,12 @@ figma: "14714:137321"
 {% import "account/macros.njk" as acc with context %}
 {# Collapsed (14714:137357) and "Change Email" checked (14714:137321). Change Password is not drawn
    checked; it reveals the Magento password fields in the same style. ?changepass opens it. #}
-<div class="flex flex-col gap-10" data-figma="14714:137343">
+{# Phones: "Mobile - Account Information" 14714:138816 / 14714:138829 (24px form padding, 20/28 heading). #}
+<div class="flex flex-col gap-8 md:gap-10" data-figma="14714:137343">
   {{ acc.pageTitle("Edit Account Information") }}
   <form x-data="accountEdit" @submit.prevent="submit" novalidate
         class="flex w-full max-w-[600px] flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" data-figma="14714:137346">
-    <h2 class="text-h3 font-medium text-heading">Account Information</h2>
+    <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Account Information</h2>
     {{ ui.field("First Name", "firstname", "text", false, "given-name", "", account.accountForm.firstName) }}
     {{ ui.field("Last Name", "lastname", "text", false, "family-name", "", account.accountForm.lastName) }}
     {{ acc.checkbox("Change Email", 'x-model="changeEmail"', "change_email") }}

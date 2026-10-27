@@ -7,13 +7,14 @@ figma: "34266:49954"
 {% import "account/macros.njk" as acc with context %}
 {% set gc = account.checkedGiftCard %}
 {# "Gift Card" (34266:49954); Check Balance shows "Gift Card - Check Balance" (34266:54383). #}
-<div class="flex flex-col gap-10" data-figma="34266:49958">
+{# Phones: "Mobile - Gift Card" 34266:49973 / "- Check Balance" 34266:54644 (32px between the boxes, 20/28 headings). #}
+<div class="flex flex-col gap-8 md:gap-10" data-figma="34266:49958">
   {{ acc.pageTitle("Gift Card") }}
-  <div class="grid items-start gap-6 xl:grid-cols-2" data-figma="34266:54363">
+  <div class="grid items-start gap-8 md:gap-6 xl:grid-cols-2" data-figma="34266:54363">
 
     {# Check Status and Balance #}
     <section x-data="giftCard" class="flex flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="giftcard-check" data-figma="34266:54314">
-      <h2 id="giftcard-check" class="text-h3 font-medium text-heading">Check Status and Balance</h2>
+      <h2 id="giftcard-check" class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Check Status and Balance</h2>
 
       <form x-show="!checked" @submit.prevent="check" novalidate class="flex flex-col gap-7">
         <div>
@@ -48,7 +49,7 @@ figma: "34266:49954"
 
     {# Your Gift Cards #}
     <section class="flex flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="giftcard-list" data-figma="34266:54349">
-      <h2 id="giftcard-list" class="text-h3 font-medium text-heading">Your Gift Cards</h2>
+      <h2 id="giftcard-list" class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Your Gift Cards</h2>
       <ul class="flex flex-col gap-3" data-figma="34520:102843">
         {% for c in account.giftCards %}
         <li class="flex items-center justify-between gap-4 rounded-lg border border-[#e6e6e6] bg-white px-6 py-3">

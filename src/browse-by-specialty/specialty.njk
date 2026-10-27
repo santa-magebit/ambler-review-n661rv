@@ -15,11 +15,11 @@ eleventyComputed:
 {{ ui.breadcrumbs(sp.breadcrumbs) }}
 {{ plp_ui.hero(sp.hero, "34777:58994") }}
 
-{# Shop By Categories #}
+{# Shop By Categories (phones 34777:58812: one column of 350x200 cards, gap 8) #}
 <section class="bg-white" data-figma="34777:58995">
-  <div class="container-page py-10">
-    <h2 class="text-h2 font-bold text-heading md:text-h1">Shop By Categories</h2>
-    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-figma="34777:58997">
+  <div class="container-page py-8 md:py-10">
+    <h2 class="text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">Shop By Categories</h2>
+    <ul class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-8 md:gap-6 lg:grid-cols-3 xl:grid-cols-4" data-figma="34777:58997">
       {% for c in sp.categories %}<li class="min-w-0">{{ plp_ui.navCard(c) }}</li>{% endfor %}
     </ul>
   </div>

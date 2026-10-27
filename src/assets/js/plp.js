@@ -40,6 +40,10 @@ document.addEventListener("alpine:init", () => {
     page: 1,
     perPage: cfg.perPage,
     perPageOptions: [...new Set([12, cfg.perPage, 40])].sort((a, b) => a - b),
+    // Filter screen on phones (mobile-filters 34731:36331): open, its expanded attribute, filters it opened with.
+    sheet: false,
+    sheetAttr: cfg.active,
+    sheetFrom: [],
 
     init() {
       const params = new URLSearchParams(window.location.search);
@@ -49,7 +53,7 @@ document.addEventListener("alpine:init", () => {
       const keys = [...params].map(([k, v]) => `${k}:${v}`).filter((k) => known.has(k) && this.groupLabels[groupOf(k)]);
       if (keys.length) {
         this.applied = keys;
-        this.active = this.attrOf(keys[0]) || this.active;
+        this.active = this.sheetAttr = this.attrOf(keys[0]) || this.active;
       }
       // Ticking a checkbox filters straight away (x-model="applied"): back to page 1.
       this.$watch("applied", () => (this.page = 1));
@@ -116,12 +120,21 @@ document.addEventListener("alpine:init", () => {
     get sortLabel() {
       return (SORTS.find((s) => s.value === this.sort) || SORTS[0]).label;
     },
-    get pageList() {
-      const span = 5;
+    /** First and last page of a window of `span` pages around the current one. */
+    pageWindow(span) {
       let start = Math.max(1, this.current - Math.floor(span / 2));
       const end = Math.min(this.pages, start + span - 1);
       start = Math.max(1, end - span + 1);
+      return [start, end];
+    },
+    get pageList() {
+      const [start, end] = this.pageWindow(5);
       return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    },
+    /** Phones show 3 of the 5 page buttons (34730:7891). */
+    nearPage(n) {
+      const [start, end] = this.pageWindow(3);
+      return n >= start && n <= end;
     },
 
     // --- filter panel -----------------------------------------------------
@@ -161,10 +174,21 @@ document.addEventListener("alpine:init", () => {
     only(key) {
       if (!this.items.some((i) => i.keys.includes(key))) return;
       this.applied = [key];
-      this.active = this.attrOf(key) || this.active;
+      this.active = this.sheetAttr = this.attrOf(key) || this.active;
       this.within = "";
       this.page = 1;
       this.$nextTick(() => this.$el.scrollIntoView({ behavior: "smooth", block: "start" }));
+    },
+
+    // --- filter screen (phones) -------------------------------------------
+    openSheet() {
+      this.sheetFrom = [...this.applied];
+      this.sheet = true;
+    },
+    /** Cancel: back to the filters the screen opened with. */
+    cancelSheet() {
+      if (this.applied.join("|") !== this.sheetFrom.join("|")) this.applied = [...this.sheetFrom];
+      this.sheet = false;
     },
 
     // --- toolbar & pagination -------------------------------------------------

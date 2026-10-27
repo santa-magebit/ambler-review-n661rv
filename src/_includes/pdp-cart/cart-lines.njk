@@ -2,10 +2,13 @@
   Cart lines (14714:103261): 60px #f1f5f8 header row, then one 148px row per item with
   alternating white / #f1f5f8 backgrounds. Columns Item 424, Price 240, Qty 132,
   Subtotal 100, Actions 132 with 40px gaps. Lines come from $store.cart (x-for).
+  Phones (14714:103652): white lines split by 1px #dde7ee rules, 108px image, then name, Bold 18/28
+  price and a 44px stepper + heart + pencil row; the bin sits top right, no subtotal (cells are
+  display: contents and placed on a 124 / 1fr / 44 grid).
 #}
 {% import "macros/ui.njk" as ui with context %}
 {% set cols = "md:grid md:grid-cols-[minmax(0,424fr)_minmax(0,240fr)_132px_minmax(0,100fr)_132px] md:gap-x-6 2xl:gap-x-10" %}
-<div role="table" aria-label="Items in your cart" class="flex flex-col" data-figma="14714:103261">
+<div role="table" aria-label="Items in your cart" class="flex flex-col border-t border-outline md:border-t-0" data-figma="14714:103261">
   <div role="row" class="hidden h-[60px] items-center rounded bg-secondary-100 pl-6 pr-3 text-sm text-heading {{ cols }}" data-figma="14714:103262">
     <span role="columnheader">Item</span>
     <span role="columnheader">Price</span>
@@ -14,30 +17,32 @@
     <span role="columnheader" class="pl-2.5">Actions</span>
   </div>
   <template x-for="(item, i) in $store.cart.items" :key="item.slug">
-    <div role="row" class="flex flex-wrap items-center gap-x-6 gap-y-3 rounded px-4 py-5 md:pl-6 md:pr-3 {{ cols }}"
-         :class="i % 2 ? 'bg-secondary-100' : 'bg-white'" data-figma="14714:103269">
-      <div role="cell" class="flex w-full min-w-0 items-center gap-4 md:gap-6">
-        <a :href="url(item.product.url)" class="shrink-0" tabindex="-1" aria-hidden="true">
-          <img :src="url(item.product.image)" alt="" class="h-20 w-20 rounded border border-outline bg-white object-contain md:h-[108px] md:w-[108px]">
+    <div role="row" class="grid grid-cols-[124px_minmax(0,1fr)_44px] items-start border-b border-outline bg-white pb-[15px] pt-4 md:items-center md:gap-y-3 md:rounded md:border-b-0 md:py-5 md:pl-6 md:pr-3 {{ cols }}"
+         :class="i % 2 ? 'md:bg-secondary-100' : ''" data-figma="14714:103269">
+      <div role="cell" class="contents w-full min-w-0 items-center gap-4 md:flex md:gap-6">
+        <a :href="url(item.product.url)" class="col-start-1 row-span-3 row-start-1 shrink-0" tabindex="-1" aria-hidden="true">
+          <img :src="url(item.product.image)" alt="" class="h-[108px] w-[108px] rounded border border-outline bg-white object-contain">
         </a>
-        <div class="flex min-w-0 flex-col gap-1">
+        <div class="col-start-2 row-start-1 flex min-w-0 flex-col gap-1">
           <a :href="url(item.product.url)" class="text-base text-body hover:text-primary-500 hover:underline" x-text="lineText(item.product)"></a>
           <span x-show="item.product.variant" class="text-xs text-body" x-text="item.product.variant"></span>
         </div>
       </div>
-      <div role="cell" class="text-base font-bold text-ink"><span class="font-normal text-body md:sr-only">Price </span><span x-text="money(item.product.price)"></span></div>
-      <div role="cell">{{ ui.qtyStepper("item.qty", "v => $store.cart.setQty(item.slug, v)", "Quantity") }}</div>
-      <div role="cell" class="text-base font-bold text-ink"><span class="font-normal text-body md:sr-only">Subtotal </span><span x-text="money(item.product.price * item.qty)"></span></div>
-      <div role="cell" class="flex text-primary-500" data-figma="14714:103276">
-        <button type="button" data-proto :aria-label="'Move ' + item.product.name + ' to wish list'" class="flex h-11 w-11 items-center justify-center hover:text-ink">{% icon "heart", "h-6 w-6" %}</button>
-        <a :href="url(item.product.url)" :aria-label="'Edit ' + item.product.name" class="flex h-11 w-11 items-center justify-center hover:text-ink">{% icon "pencil", "h-6 w-6" %}</a>
-        <button type="button" @click="$store.cart.remove(item.slug)" :aria-label="'Remove ' + item.product.name" class="flex h-11 w-11 items-center justify-center hover:text-error">{% icon "trash", "h-6 w-6" %}</button>
+      <div role="cell" class="col-start-2 row-start-2 mt-1 text-lg font-bold text-ink md:col-start-auto md:row-start-auto md:mt-0 md:text-base"><span class="sr-only">Price </span><span x-text="money(item.product.price)"></span></div>
+      <div role="cell" class="col-start-2 row-start-3 mt-2 md:col-start-auto md:row-start-auto md:mt-0">{{ ui.qtyStepper("item.qty", "v => $store.cart.setQty(item.slug, v)", "Quantity") }}</div>
+      <div role="cell" class="hidden text-base font-bold text-ink md:block"><span class="font-normal text-body md:sr-only">Subtotal </span><span x-text="money(item.product.price * item.qty)"></span></div>
+      <div role="cell" class="contents text-primary-500 md:flex" data-figma="14714:103276">
+        <button type="button" data-proto :aria-label="'Move ' + item.product.name + ' to wish list'" class="col-start-2 row-start-3 mt-2 flex h-11 w-11 items-center justify-center justify-self-end hover:text-ink md:mt-0">{% icon "heart", "h-6 w-6" %}</button>
+        <a :href="url(item.product.url)" :aria-label="'Edit ' + item.product.name" class="col-start-3 row-start-3 mt-2 flex h-11 w-11 items-center justify-center hover:text-ink md:mt-0">{% icon "pencil", "h-6 w-6" %}</a>
+        <button type="button" @click="$store.cart.remove(item.slug)" :aria-label="'Remove ' + item.product.name" class="col-start-3 row-start-1 flex h-11 w-11 items-center justify-center hover:text-error">{% icon "trash", "h-6 w-6" %}</button>
       </div>
     </div>
   </template>
 </div>
 
-<div class="flex flex-wrap gap-3" data-figma="34266:81866">
+{# Phones (14714:103652): full-width Clear Cart, no Print, and a "Checkout $total" button. #}
+<div class="mt-4 flex flex-col gap-3 md:mt-0 md:flex-row md:flex-wrap" data-figma="34266:81866">
   <button type="button" @click="$store.cart.clear()" class="btn-secondary pl-[30px]">{% icon "trash" %}Clear Cart</button>
-  <button type="button" @click="window.print()" class="btn-secondary pl-[30px]">{% icon "printer" %}Print</button>
+  <button type="button" @click="window.print()" class="btn-secondary hidden pl-[30px] md:inline-flex">{% icon "printer" %}Print</button>
+  <a href="/checkout/" class="btn-primary md:hidden" x-text="'Checkout ' + money(grandTotal)">Checkout</a>
 </div>

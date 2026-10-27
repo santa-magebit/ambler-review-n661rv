@@ -16,9 +16,24 @@ figma: "34266:54872"
 </span>
 {% endmacro %}
 
-<div x-data="storedCards({{ account.storedCards | length }})" class="flex flex-col gap-10" data-figma="34266:54876">
+{# Phones ("Mobile - Stored Payment Methods" 34266:54942): one card per stored card with a full-width Delete strip. #}
+<div x-data="storedCards({{ account.storedCards | length }})" class="flex flex-col gap-8 md:gap-10" data-figma="34266:54876">
   {{ acc.pageTitle("Stored Payment Methods") }}
-  <div x-show="count > 0" class="overflow-x-auto" data-figma="34266:59289">
+  <ul x-show="count > 0" class="flex flex-col gap-3 md:hidden">
+    {% for c in account.storedCards %}
+    <li data-row="{{ loop.index0 }}">
+      <dl class="{{ acc.cardCls }}">
+        {% call acc.cardRow("Card number:") %}{{ c.number }}{% endcall %}
+        {% call acc.cardRow("Expiration date:") %}{{ c.expires }}{% endcall %}
+        {% call acc.cardRow("Kind:", "flex justify-end") %}{{ cardBadge(c.kind) }}{% endcall %}
+      </dl>
+      <div class="{{ acc.cardActionsCls }}">
+        <button type="button" @click="remove($el.closest('[data-row]'))" aria-label="Delete {{ c.kind }} card ending {{ c.number | replace('*', '') }}" class="{{ acc.cardActionCls }}">{% icon "trash", "h-6 w-6" %}Delete</button>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <div x-show="count > 0" class="hidden overflow-x-auto md:block" data-figma="34266:59289">
     <table class="w-full min-w-[640px] text-left">
       <thead>
         <tr class="bg-secondary-100 text-sm text-heading">
@@ -30,13 +45,13 @@ figma: "34266:54872"
       </thead>
       <tbody class="text-base text-body">
         {% for c in account.storedCards %}
-        <tr class="even:bg-secondary-100">
+        <tr class="even:bg-secondary-100" data-row="{{ loop.index0 }}">
           <td class="h-[68px] rounded-l py-3 pl-6 pr-3">{{ c.number }}</td>
           <td class="px-3 py-3">{{ c.expires }}</td>
           <td class="px-3 py-3">{{ cardBadge(c.kind) }}</td>
           <td class="rounded-r py-3 pl-3 pr-6">
             <span class="flex justify-end">
-              <button type="button" @click="remove($el.closest('tr'))" aria-label="Delete {{ c.kind }} card ending {{ c.number | replace('*', '') }}" class="mr-[7px] flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "trash", "h-6 w-6" %}</button>
+              <button type="button" @click="remove($el.closest('[data-row]'))" aria-label="Delete {{ c.kind }} card ending {{ c.number | replace('*', '') }}" class="mr-[7px] flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "trash", "h-6 w-6" %}</button>
             </span>
           </td>
         </tr>

@@ -1,0 +1,25 @@
+{#
+  Phones only: the grey "order summary" bar under the logo (Figma 34799:88160 closed, 34799:88917 open).
+  "Order Summary (3)" and the grand total; it opens the cart lines and totals on #f5f5f5.
+  Full width: it cancels the 20px page padding. From 768px the Order Summary sidebar shows all of this.
+#}
+{% import "checkout/macros.njk" as co with context %}
+
+<div class="-mx-5 md:hidden">
+  <button type="button" @click="summaryOpen = !summaryOpen" :aria-expanded="summaryOpen" aria-controls="summary-bar-panel"
+          class="flex h-[60px] w-full items-center justify-between gap-3 border-y border-outline bg-[#f5f5f5] pl-5 pr-[30px] text-base text-ink">
+    <span class="flex items-center gap-1">
+      <span>Order Summary (<span x-text="count"></span>)</span>
+      <span x-show="!summaryOpen">{% icon "dropdown", "h-7 w-7" %}</span>
+      <span x-show="summaryOpen" x-cloak>{% icon "dropdown-up", "h-7 w-7" %}</span>
+    </span>
+    <span class="font-bold" x-text="price(grandTotal)"></span>
+  </button>
+  <div id="summary-bar-panel" x-show="summaryOpen" x-collapse x-cloak>
+    <div class="flex flex-col gap-4 bg-[#f5f5f5] px-5 pb-8 pt-5">
+      {{ co.summaryLines() }}
+      <hr class="border-outline">
+      {{ co.summaryTotals() }}
+    </div>
+  </div>
+</div>

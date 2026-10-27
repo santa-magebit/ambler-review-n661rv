@@ -3,10 +3,11 @@ layout: layouts/base.njk
 ---
 {#
   My Account page shell (Figma "Dashboard" 14714:137050 and siblings): 288px sidebar + 1224px content,
-  24px gap, 40px top / 80px bottom padding. Front matter: figma (frame node id), accountNavActive
-  (sidebar href to highlight when the route is a sub-page, e.g. New Address -> Address Book).
+  24px gap, 40px top / 80px bottom padding; phones 32px top and bottom (mobile frames, e.g. 14714:138225).
+  Front matter: figma (frame node id), accountNavActive (sidebar href to highlight when the route is a
+  sub-page, e.g. New Address -> Address Book).
 #}
-<div class="container-page flex flex-col gap-6 pb-20 pt-6 lg:flex-row lg:items-start lg:pt-10" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+<div class="container-page flex flex-col gap-6 pb-8 pt-8 md:pb-20 md:pt-6 lg:flex-row lg:items-start lg:pt-10" {% if figma %}data-figma="{{ figma }}"{% endif %}>
   {% include "account/sidebar.njk" %}
   <div class="min-w-0 flex-1">
     {{ content | safe }}

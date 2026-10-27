@@ -44,3 +44,8 @@
 {% macro emptyBox(cls="h-40 w-40") %}
 <img src="/img/illustrations/empty-box.svg" alt="" width="160" height="160" class="{{ cls }}">
 {% endmacro %}
+
+{# "icon/24px/zoom-in", mobile PDP gallery zoom button (34224:49918). Same 2px stroke as icon/24px/*. #}
+{% macro zoomIn(cls="h-6 w-6") %}
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 {{ cls }}" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M7 10h6M10 7v6M21 21l-6-6"/></svg>
+{% endmacro %}

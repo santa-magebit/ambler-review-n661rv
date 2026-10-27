@@ -3,6 +3,8 @@
   dashed "Add Row", then Add to Cart (orange, grey while no SKU is entered) and Reset.
   A matched SKU shows the product name, price and row subtotal under the input; an unknown
   one gets the error state from "Quick Order - Items Added" (34513:74023).
+  Phones (34403:67678 / 34403:68163): SKU 1fr + 52px plain quantity box + 52px bin on every row,
+  labels kept, no product line under a matched SKU, Add to Cart fills the row beside Reset.
 #}
 {% import "macros/ui.njk" as ui with context %}
 <form @submit.prevent="addToCart()" novalidate class="flex min-w-0 flex-col gap-3" data-figma="34391:65531">
@@ -13,26 +15,26 @@
   </div>
 
   <div class="flex flex-col gap-2" data-figma="34391:65532">
-    <div class="hidden grid-cols-[minmax(0,1fr)_156px_52px] gap-3 text-sm font-medium text-heading sm:grid" aria-hidden="true" data-figma="34391:65533">
+    <div class="grid grid-cols-[minmax(0,1fr)_52px_52px] gap-3 text-sm font-medium text-heading md:grid-cols-[minmax(0,1fr)_156px_52px]" aria-hidden="true" data-figma="34391:65533">
       <span>SKU</span><span>Qty</span><span></span>
     </div>
     <div class="flex flex-col gap-3" data-figma="34403:67570">
       <template x-for="(r, i) in rows" :key="r.id">
-        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:grid-cols-[minmax(0,1fr)_156px_52px]" data-figma="34403:67243">
-          <div class="col-span-2 flex min-w-0 flex-col gap-1 sm:col-span-1">
+        <div class="grid grid-cols-[minmax(0,1fr)_52px_52px] items-start gap-3 md:grid-cols-[minmax(0,1fr)_156px_52px]" data-figma="34403:67243">
+          <div class="flex min-w-0 flex-col gap-1">
             <input type="text" data-sku-input x-model="r.sku" @input="r.error = ''" @blur="check(r)" @keydown.enter.prevent="check(r)"
                    :aria-label="'SKU, row ' + (i + 1)" :aria-invalid="r.error ? 'true' : 'false'" :aria-describedby="'qo-row-' + r.id"
                    placeholder="Enter product SKU" autocomplete="off" spellcheck="false"
                    class="input" :class="r.error && '!border-error'">
-            <div :id="'qo-row-' + r.id" x-show="r.error || product(r)">
+            <div :id="'qo-row-' + r.id" x-show="r.error || product(r)" class="contents md:block">
               <p x-show="r.error" class="text-xs text-error" x-text="r.error"></p>
-              <p x-show="product(r)" class="flex flex-wrap justify-between gap-x-4 text-sm text-body">
+              <p x-show="product(r)" class="hidden flex-wrap justify-between gap-x-4 text-sm text-body md:flex">
                 <span><a :href="product(r) && url(product(r).url)" class="text-ink hover:text-primary-500 hover:underline" x-text="product(r) && product(r).name"></a>, <span x-text="product(r) && money(product(r).price)"></span></span>
                 <span>Subtotal <strong class="font-bold text-ink" x-text="money(subtotal(r))"></strong></span>
               </p>
             </div>
           </div>
-          <div class="[&_input]:text-lg [&_input]:text-ink">{{ ui.qtyStepper("r.qty", "v => r.qty = v", "Quantity", 52) }}</div>
+          <div class="[&_button]:hidden [&_input]:rounded [&_input]:border-x [&_input]:text-lg [&_input]:text-ink md:[&_button]:flex md:[&_input]:rounded-none md:[&_input]:border-x-0">{{ ui.qtyStepper("r.qty", "v => r.qty = v", "Quantity", 52) }}</div>
           <button type="button" @click="removeRow(r)" :aria-label="'Remove row ' + (i + 1)"
                   class="flex h-[52px] w-[52px] items-center justify-center rounded text-primary-500 hover:bg-secondary-100 hover:text-error">{% icon "trash" %}</button>
         </div>
@@ -42,7 +44,7 @@
   </div>
 
   <div class="flex flex-wrap gap-3" data-figma="34403:67494">
-    <button type="submit" disabled :disabled="!filled.length" class="btn-accent pl-[30px] disabled:bg-secondary-200 disabled:text-secondary-300">{% icon "shopping-cart" %}Add to Cart</button>
+    <button type="submit" disabled :disabled="!filled.length" class="btn-accent flex-1 pl-[30px] md:flex-initial disabled:bg-secondary-200 disabled:text-secondary-300">{% icon "shopping-cart" %}Add to Cart</button>
     <button type="button" @click="reset()" disabled :disabled="!dirty" class="btn-secondary disabled:border-secondary-200 disabled:bg-secondary-200">Reset</button>
   </div>
 </form>

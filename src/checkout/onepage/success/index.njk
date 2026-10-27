@@ -6,17 +6,19 @@ permalink: /checkout/onepage/success/
 {#
   Order success page. Not designed in Figma: built from the "Cart - Empty" message box
   (21071:135310) and the styleguide buttons. Placing an order empties the prototype cart.
+  Phones follow "Mobile - Cart - Empty" (21071:135318): 32px page padding, 40px box padding,
+  mobile H1 28/36, body 16/24 and full-width buttons.
 #}
-<section x-init="$store.cart.clear()" class="container-page pb-20 pt-10" aria-labelledby="success-title">
-  <div class="rounded border border-outline px-6 py-[60px]">
+<section x-init="$store.cart.clear()" class="container-page py-8 md:pb-20 md:pt-10" aria-labelledby="success-title">
+  <div class="rounded border border-outline p-10 md:px-6 md:py-[60px]">
     <div class="mx-auto flex max-w-[560px] flex-col items-center gap-8 text-center">
       <span class="flex h-20 w-20 items-center justify-center rounded-full bg-success-light text-success">{% icon "checks", "h-10 w-10" %}</span>
       <div class="flex flex-col gap-2">
-        <h1 id="success-title" class="text-h2 font-bold text-heading">Thank you for your purchase!</h1>
-        <p class="text-lg text-ink">Your order number is <strong class="font-bold">{{ checkout.orderNumber }}</strong>.</p>
+        <h1 id="success-title" class="text-mobile-h1 font-bold text-heading md:text-h2">Thank you for your purchase!</h1>
+        <p class="text-base text-ink md:text-lg">Your order number is <strong class="font-bold">{{ checkout.orderNumber }}</strong>.</p>
         <p class="text-base text-body">We&rsquo;ll e-mail you an order confirmation with details and tracking info.</p>
       </div>
-      <div class="flex flex-wrap justify-center gap-3">
+      <div class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:justify-center">
         <a href="/" class="btn-primary">Continue Shopping</a>
         <a href="/sales/order/view/" class="btn-secondary">View Order</a>
       </div>

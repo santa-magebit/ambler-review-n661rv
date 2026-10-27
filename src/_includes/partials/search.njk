@@ -2,8 +2,11 @@
   Header search (styleguide "Search" input + Figma Search page):
   focused & empty = "Search - Suggestions" (34194:128358), typing = "Search - Results" (34194:128283),
   nothing found = "Search - No Search Results" (34194:128402). Logic: Alpine.data("searchBox").
-  searchMobile: the mobile header's 52px white search row (34739:21830) instead of the rounded web field.
+  searchMobile: the mobile header's 52px white search row (34739:21830) instead of the rounded web field,
+  and the mobile panel ("Mobile - Search - Suggestions / Results" 34194:128381, 34194:128322): flush under
+  the row, 20px padding, term chips on one scrolling line, top-aligned product rows 16px apart.
 #}
+{% set chipRow = "-mr-5 flex gap-3 overflow-x-auto pr-5 [scrollbar-width:none] [&>*]:shrink-0 [&>*]:whitespace-nowrap" if searchMobile else "flex flex-wrap gap-2" %}
 <div x-data="searchBox" @click.outside="open = false" @keydown.escape="open = false" class="relative w-full">
   <form role="search" @submit.prevent="go(q)" action="/search/" class="flex w-full {{ 'h-[52px] border-b border-secondary-200 bg-white' if searchMobile else 'h-[60px]' }}">
     <label class="relative flex min-w-0 flex-1 items-center">
@@ -20,12 +23,12 @@
     {% endif %}
   </form>
 
-  <div x-show="open" x-cloak class="absolute inset-x-0 top-full z-50 mt-0.5 max-h-[80vh] overflow-y-auto rounded bg-white px-5 py-6 text-left shadow-300">
+  <div x-show="open" x-cloak class="{{ 'absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-144px)] overflow-y-auto overscroll-contain bg-white p-5 text-left shadow-100' if searchMobile else 'absolute inset-x-0 top-full z-50 mt-0.5 max-h-[80vh] overflow-y-auto rounded bg-white px-5 py-6 text-left shadow-300' }}">
     {# Suggestions #}
-    <div x-show="!needle" class="flex flex-col gap-6">
+    <div x-show="!needle" class="flex flex-col {{ 'gap-5' if searchMobile else 'gap-6' }}">
       <section>
         <h3 class="mb-4 text-sm font-bold text-heading">Popular Search Terms</h3>
-        <div class="flex flex-wrap gap-2">
+        <div class="{{ chipRow }}">
           {% for t in site.search.popularTerms %}
           <button type="button" @click="go('{{ t }}')" class="rounded border border-secondary-200 px-5 py-3 text-base text-ink hover:border-primary-500">{{ t }}</button>
           {% endfor %}
@@ -33,7 +36,7 @@
       </section>
       <section>
         <h3 class="mb-4 text-sm font-bold text-heading">Recently Viewed</h3>
-        <ul class="flex flex-col gap-2">
+        <ul class="flex flex-col {{ 'gap-4' if searchMobile else 'gap-2' }}">
           <template x-for="p in recent" :key="p.slug">{% include "partials/search-row.njk" %}</template>
         </ul>
       </section>
@@ -41,18 +44,18 @@
     {# No results #}
     <p x-show="needle && hits.length === 0" class="py-4 text-center text-sm text-heading">We couldn&rsquo;t find anything for your search</p>
     {# Results #}
-    <div x-show="needle && hits.length > 0" class="flex flex-col gap-6">
+    <div x-show="needle && hits.length > 0" class="flex flex-col {{ 'gap-5' if searchMobile else 'gap-6' }}">
       <section>
         <h3 class="mb-4 text-sm font-bold text-heading">Search Terms</h3>
-        <div class="flex flex-wrap gap-2">
+        <div class="{{ chipRow }}">
           {% for t in site.search.termCounts %}
-          <button type="button" @click="go('{{ t[0] }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500">{{ t[0] }}<span class="px-1 text-sm font-bold text-ink">{{ t[1] }}</span></button>
+          <button type="button" @click="go('{{ t[0] }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base hover:border-primary-500 {{ 'font-medium text-ink' if searchMobile else 'text-body' }}">{{ t[0] }}<span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink">{{ t[1] }}</span></button>
           {% endfor %}
         </div>
       </section>
       <section>
         <h3 class="mb-4 text-sm font-bold text-heading">Products</h3>
-        <ul class="flex flex-col gap-2">
+        <ul class="flex flex-col {{ 'gap-4' if searchMobile else 'gap-2' }}">
           <template x-for="p in hits" :key="p.slug">{% include "partials/search-row.njk" %}</template>
         </ul>
       </section>
@@ -71,9 +74,9 @@
       </section>
       <section>
         <h3 class="mb-4 text-sm font-bold text-heading">Size</h3>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap {{ 'gap-3' if searchMobile else 'gap-2' }}">
           {% for t in site.search.sizes %}
-          <button type="button" @click="go(q + ' {{ t[0] | replace('"', '') }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500">{{ t[0] }}<span class="px-1 text-sm font-bold text-ink">{{ t[1] }}</span></button>
+          <button type="button" @click="go(q + ' {{ t[0] | replace('"', '') }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500">{{ t[0] }}<span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink">{{ t[1] }}</span></button>
           {% endfor %}
         </div>
       </section>

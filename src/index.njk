@@ -6,37 +6,44 @@ title: Home
 {% import "macros/ui.njk" as ui with context %}
 {% import "content/macros.njk" as c with context %}
 {% set oph = catalog.specialties | find("slug", "ophthalmology") %}
+{# Phones list the other specialties column by column of the desktop grid (mobile 34141:38087: Plastic Surgery,
+   Hand Surgery, OB/GYN, Neuro/Spinal, then ENT, Orthopedic, Cardiovascular, General Surgery). #}
+{% set phoneOrder = {
+  "plastic-surgery": "order-1", "hand-surgery": "order-2", "ob-gyn": "order-3", "neuro-spinal": "order-4",
+  "ent": "order-5", "orthopedic": "order-6", "cardiovascular": "order-7", "general-surgery": "order-8"
+} %}
 
-{# Hero: eye photo, navy fade from the left, 593px text column. #}
+{# Hero: eye photo, navy fade from the left, 593px text column. Phones (mobile 34141:38087): 280px, 20px gaps, full-width button. #}
 <section class="relative isolate overflow-hidden bg-primary-500" data-figma="34141:37899">
-  <img src="{{ '0cdfda6c' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-right">
-  <div aria-hidden="true" class="absolute inset-0 -z-10" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/60 md:hidden"></div>
-  <div class="container-page flex min-h-[360px] items-center py-12 lg:min-h-[480px]">
-    <div class="flex max-w-[593px] flex-col items-start gap-7">
+  <img src="{{ '0cdfda6c' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-[78%_50%] md:object-right">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
+  <div class="container-page flex min-h-[280px] items-center py-8 md:min-h-[360px] md:py-12 lg:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col items-start gap-5 md:gap-7">
       {{ c.heroTitle("The Smarter Source") }}
-      <p class="text-lg text-white">Ambler Surgical offers the largest selection of premium-quality surgical instruments with a fast, easy-to-use online catalog.</p>
-      {{ c.arrowButton("Browse Surgical Instruments", "/browse-by-specialty/") }}
+      <p class="text-base text-white md:text-lg">Ambler Surgical offers the largest selection of premium-quality surgical instruments with a fast, easy-to-use online catalog.</p>
+      {{ c.arrowButton("Browse Surgical Instruments", "/browse-by-specialty/", "", "w-full md:w-auto") }}
     </div>
   </div>
 </section>
 
-{# Specialties: Ophthalmology with its four categories, then the other eight specialties in two columns. #}
+{# Specialties: Ophthalmology with its four categories, then the other eight specialties in two columns.
+   Phones (mobile 34141:38087): 32px padding, 16px under the Medium 24/32 title, everything in two 171px columns 8px apart. #}
 <section class="bg-white" data-figma="34141:37900">
-  <div class="container-page flex flex-col gap-10 py-10">
-    <h2 class="text-h2 font-bold text-heading lg:text-h1">Specialized Surgical Instruments for Every Field</h2>
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-[588fr_450fr_450fr]">
-      <div class="flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5 transition-shadow duration-300 ease-out has-[>a:hover]:shadow-200 md:col-span-2 lg:col-span-1 lg:row-span-4" data-figma="34141:37904">
-        <a href="{{ oph.url }}" class="group flex flex-col">{{ c.descriptionHead(oph.name, true) }}</a>
-        <p class="px-5 text-lg text-body">{{ oph.description }}</p>
-        <ul class="grid grid-cols-1 gap-3 px-5 sm:grid-cols-2" data-figma="34141:37913">
+  <div class="container-page flex flex-col gap-4 py-8 md:gap-10 md:py-10">
+    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1">Specialized Surgical Instruments for Every Field</h2>
+    <div class="grid grid-cols-2 gap-2 md:grid-cols-2 md:gap-6 lg:grid-cols-[588fr_450fr_450fr]">
+      <div class="col-span-2 flex min-w-0 flex-col gap-3 overflow-hidden rounded border border-card bg-white transition-shadow duration-300 ease-out has-[>a:hover]:shadow-200 md:col-span-2 md:gap-4 md:border-body md:pb-5 lg:col-span-1 lg:row-span-4" data-figma="34141:37904">
+        <a href="{{ oph.url }}" class="group flex flex-col">{{ c.descriptionHead(oph.name, true, "home-lead") }}</a>
+        <p class="px-[11px] text-base text-card md:px-5 md:text-lg md:text-body">{{ oph.description }}</p>
+        <ul class="grid grid-cols-2 gap-2 px-[11px] pb-[11px] sm:grid-cols-2 md:gap-3 md:px-5 md:pb-0" data-figma="34141:37913">
           {% for cat in catalog.ophthalmologyCategories %}
           <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard({ title: cat.name, image: cat.image, href: oph.url + cat.slug + "/", imgClass: contentPages.home.categoryImage[cat.slug] }, "sub") }}</li>
           {% endfor %}
         </ul>
       </div>
       {% for s in catalog.specialties %}{% if s.slug != "ophthalmology" %}
-      {{ c.descriptionCard(s.name, s.description, s.url) }}
+      {{ c.descriptionCard(s.name, s.description, s.url, "", "home", (phoneOrder[s.slug] or "") + " md:order-none") }}
       {% endif %}{% endfor %}
     </div>
   </div>
@@ -47,38 +54,45 @@ title: Home
 {#
   Repair Services band: navy offer card + four category cards. A card title needs a card of about 210px
   (Figma draws 243), so the drawn side-by-side layout starts at 1440px; below it the navy card spans the
-  width on top (a row from 768px), with the cards four across from 1024px, 2x2 from 480px and in a
-  swipeable row of 243px cards on phones.
+  width on top (a row from 768px), with the cards four across from 1024px and 2x2 below that.
+  Phones (mobile 34141:38087): the navy card runs edge to edge (32px padding, 24px above a full-width button),
+  then 171px cards with the mobile title strip (Bold 16/24, fits 171px), 8px apart, 20px around.
 #}
 <section class="bg-white" aria-labelledby="home-repair" data-figma="34141:38027">
-  <div class="container-page grid gap-6 py-10 min-[1440px]:grid-cols-[minmax(min-content,467fr)_1045fr]">
-    <div class="flex min-w-0 flex-col items-start justify-center gap-5 rounded bg-primary-500 p-8 sm:p-10 md:flex-row md:items-center md:justify-between md:gap-10 min-[1440px]:flex-col min-[1440px]:items-start min-[1440px]:justify-center min-[1440px]:gap-5" data-figma="34141:38028">
+  <div class="container-page grid gap-5 pb-5 md:gap-6 md:py-10 min-[1440px]:grid-cols-[minmax(min-content,467fr)_1045fr]">
+    <div class="-mx-5 flex min-w-0 flex-col items-start justify-center gap-6 bg-primary-500 px-5 py-8 sm:p-10 md:mx-0 md:rounded md:flex-row md:items-center md:justify-between md:gap-10 min-[1440px]:flex-col min-[1440px]:items-start min-[1440px]:justify-center min-[1440px]:gap-5" data-figma="34141:38028">
       <div class="flex flex-col gap-4">
-        <h2 id="home-repair" class="text-h2 font-bold text-white">Repair Services</h2>
-        <p class="text-lg text-[#d3dce5]">We offer expert repairs to help your surgical instruments last longer.</p>
+        <h2 id="home-repair" class="text-h3 font-medium text-white md:text-h2 md:font-bold">Repair Services</h2>
+        <p class="text-base text-[#d3dce5] md:text-lg">We offer expert repairs to help your surgical instruments last longer.</p>
       </div>
-      {{ c.arrowButton("See All Services", "/repair-services/") }}
+      {{ c.arrowButton("See All Services", "/repair-services/", "", "w-full md:w-auto") }}
     </div>
-    <ul class="grid min-w-0 snap-x snap-mandatory auto-cols-[243px] grid-flow-col gap-6 overflow-x-auto [scrollbar-width:none] min-[480px]:grid-flow-row min-[480px]:grid-cols-2 min-[480px]:overflow-visible lg:grid-cols-4 [&::-webkit-scrollbar]:hidden" data-figma="34141:38033">
+    <ul class="grid min-w-0 grid-cols-2 gap-2 md:gap-6 lg:grid-cols-4" data-figma="34141:38033">
       {% for card in contentPages.home.repairCards %}
-      <li class="flex min-w-0 snap-start [&>*]:flex-1">{{ c.imageCard(card, "medium") }}</li>
+      <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard(card, "medium") }}</li>
       {% endfor %}
     </ul>
   </div>
 </section>
 
-{# Shop by Product Lines: the twelve featured logos. #}
-<section class="bg-secondary-100" data-figma="34141:38038">
-  <div class="container-page flex flex-col gap-10 py-10">
-    {{ ui.sectionHeading("Shop by Product Lines", "/product-lines/", "Shop All Product Lines") }}
-    <ul class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6" data-figma="34141:38042">
+{# Shop by Product Lines: the twelve featured logos. The heading is ui.sectionHeading with its button moved under
+   the logos on phones (mobile 34141:38087: #f5f8fa, 32px padding, 16px gaps, 171x61 navy-bordered boxes 8px apart,
+   logos at 70%, full-width "Shop All Product Lines"). #}
+<section class="bg-menu md:bg-secondary-100" data-figma="34141:38038">
+  <div class="container-page flex flex-col gap-4 py-8 md:gap-10 md:py-10">
+    <div class="flex flex-wrap items-center justify-between gap-5">
+      <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Shop by Product Lines</h2>
+      <a href="/product-lines/" class="btn-primary hidden md:inline-flex">Shop All Product Lines</a>
+    </div>
+    <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-6 lg:grid-cols-6" data-figma="34141:38042">
       {% for l in contentPages.home.logos %}
       <li class="min-w-0">
-        <a href="{{ l.url }}" class="card-hover flex h-20 items-center justify-center rounded border border-card bg-white px-4">
-          <img src="{{ l.logo }}" alt="{{ l.name }}" width="{{ l.width }}" height="{{ l.height }}" loading="lazy" class="h-auto max-w-full">
+        <a href="{{ l.url }}" class="card-hover flex h-[61px] items-center justify-center rounded border border-primary-500 bg-white px-4 md:h-20 md:border-card">
+          <img src="{{ l.logo }}" alt="{{ l.name }}" width="{{ l.width }}" height="{{ l.height }}" loading="lazy" style="--w: {{ l.width }}px" class="h-auto w-[calc(var(--w)*0.7)] max-w-full md:w-[var(--w)]">
         </a>
       </li>
       {% endfor %}
     </ul>
+    <a href="/product-lines/" class="btn-primary w-full md:hidden">Shop All Product Lines</a>
   </div>
 </section>

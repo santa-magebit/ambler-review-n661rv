@@ -2,6 +2,8 @@
   "CSV Upload Summary" modal (34547:112478): 800px, 96px title bar with close box, the
   rows the simulated file could not use, Cancel / "Add 12 Valid Items". Opens when any
   file is chosen. Teleported to <body> so the #0c2a4b99 overlay covers the header.
+  Phones (34550:113025): a full-screen sheet, 56px title bar, one bordered card per error row
+  instead of the table, "Add 12 Valid Items" over Cancel in a footer stuck to the bottom.
 #}
 {% import "pdp-cart/graphics.njk" as gfx %}
 {% set qo = pdpCart.quickOrder %}
@@ -10,14 +12,25 @@
        @keydown.escape.window="csvOpen = false" data-figma="34547:112188">
     <div class="fixed inset-0 bg-secondary-700/60" @click="csvOpen = false" x-show="csvOpen" x-transition.opacity data-figma="34547:112476"></div>
     <div x-show="csvOpen" x-trap="csvOpen" x-effect="lockScroll('csv-summary', csvOpen)" x-transition
-         class="relative mx-4 my-4 rounded bg-white md:mx-auto md:mt-20 md:w-[800px]" data-figma="34547:112478">
+         class="relative flex min-h-full flex-col bg-white md:mx-auto md:mb-4 md:mt-20 md:block md:min-h-0 md:w-[800px] md:rounded" data-figma="34547:112478">
       <div class="flex border-b border-outline">
-        <h2 id="qo-csv-title" class="flex flex-1 items-center px-6 py-5 text-h3 font-medium tracking-title text-heading md:px-10 md:py-7 md:text-[28px] md:leading-10">CSV Upload Summary</h2>
-        <button type="button" @click="csvOpen = false" aria-label="Close" class="flex w-16 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100 md:w-24">{% icon "close-x", "h-6 w-6" %}</button>
+        <h2 id="qo-csv-title" class="flex flex-1 items-center px-5 pb-[11px] pt-3 text-h3 font-medium tracking-title text-heading md:px-10 md:py-7 md:text-[28px] md:leading-10">CSV Upload Summary</h2>
+        <button type="button" @click="csvOpen = false" aria-label="Close" class="flex w-14 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100 md:w-24">{% icon "close-x", "h-6 w-6" %}</button>
       </div>
-      <div class="flex flex-col gap-7 px-6 py-7 md:px-10" data-figma="34547:112484">
+      <div class="flex flex-col gap-4 p-5 md:gap-7 md:px-10 md:py-7" data-figma="34547:112484">
         <p class="text-base text-body">We found <strong class="font-bold text-ink">{{ qo.csvValid.length }} valid</strong> items and <strong class="font-bold text-ink">{{ qo.csvErrors.length }} errors</strong> in your file. The errors below will be skipped if you continue.</p>
-        <div class="overflow-x-auto">
+        <ul class="flex flex-col gap-3 md:hidden">
+          {% for e in qo.csvErrors %}
+          <li class="rounded border border-outline p-[23px]">
+            <dl class="flex flex-col gap-3 text-base">
+              {% for label, value in [["Row", e.row], ["SKU", e.sku], ["Qty", e.qty], ["Reason", e.reason]] %}
+              <div class="flex justify-between gap-3"><dt class="text-ink">{{ label }}:</dt><dd class="text-right text-body">{{ value }}</dd></div>
+              {% endfor %}
+            </dl>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="hidden overflow-x-auto md:block">
           <table class="w-full min-w-[520px] border-separate border-spacing-0 text-left" data-figma="34547:112995">
             <thead>
               <tr class="text-sm text-ink">
@@ -41,7 +54,7 @@
           </table>
         </div>
       </div>
-      <div class="flex flex-wrap justify-center gap-3 px-6 pb-10 md:px-10" data-figma="34547:112487">
+      <div class="sticky bottom-0 mt-auto flex flex-col-reverse gap-3 bg-white p-5 shadow-bar md:static md:mt-0 md:flex-row md:flex-wrap md:justify-center md:bg-transparent md:px-10 md:pb-10 md:pt-0 md:shadow-none" data-figma="34547:112487">
         <button type="button" @click="csvOpen = false" class="btn-link px-8">Cancel</button>
         <button type="button" @click="addValid()" class="btn-primary">Add {{ qo.csvValid.length }} Valid Items</button>
       </div>

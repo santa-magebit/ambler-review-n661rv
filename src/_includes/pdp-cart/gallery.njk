@@ -2,10 +2,13 @@
   PDP gallery card (34659:60344): 52px #f5f8fa strip with "Popular" and the item number,
   974x522 main image, 108px thumbnails (active: 2px #3a526d border). The main image opens
   "PDP - Zoom" (21171:386870), teleported to <body> so it sits above the header.
-  Expects `product` and `gallery` (image paths) in scope. State: Alpine.data("pdpGallery").
+  Phones (Mobile PDP 34224:49918): full-bleed 390px square slider with a back button, zoom
+  button, dots and a "1/n" count instead of the thumbnails (swipe or tap a dot).
+  Expects `product`, `gallery` (image paths) and `typeHref` in scope. State: Alpine.data("pdpGallery").
 #}
+{% import "pdp-cart/graphics.njk" as gfx %}
 <section x-data="pdpGallery({{ gallery | json }})" aria-label="Product images"
-         class="min-w-0 self-start overflow-hidden rounded border border-card bg-white lg:sticky lg:top-[calc(var(--header-h,0px)+24px)]" data-figma="34659:60344">
+         class="-mx-5 min-w-0 self-start overflow-hidden bg-white md:mx-0 md:rounded md:border md:border-card lg:sticky lg:top-[calc(var(--header-h,0px)+24px)]" data-figma="34659:60344">
   <div class="flex min-h-[52px] items-center justify-between gap-2 bg-menu px-5 py-3" data-figma="34659:60345">
     {% if product.badge %}
     <span class="flex items-center gap-1.5 text-base font-medium text-primary-500">{% icon "heart", "h-4 w-4" %}{{ product.badge }}</span>
@@ -13,13 +16,33 @@
     {% if product.sku %}<span class="text-lg font-bold text-primary-500">ITEM#: {{ product.sku }}</span>{% endif %}
   </div>
 
-  <div class="flex flex-col gap-5 p-3 sm:p-5" data-figma="34224:49541">
-    <button type="button" x-ref="opener" @click="open()" aria-label="Zoom image"
-            class="block aspect-[974/522] w-full cursor-zoom-in overflow-hidden rounded border border-outline bg-white">
-      <img src="{{ gallery[0] }}" :src="src" alt="{{ product.name }}" class="h-full w-full object-contain">
-    </button>
+  <div class="flex flex-col gap-5 md:p-5" data-figma="34224:49541">
+    <div class="relative" @touchstart.passive="touchStart($event)" @touchend="touchEnd($event)">
+      <button type="button" x-ref="opener" @click="open()" aria-label="Zoom image"
+              class="block aspect-square w-full cursor-zoom-in overflow-hidden border-b border-outline bg-white md:aspect-[974/522] md:rounded md:border">
+        <img src="{{ gallery[0] }}" :src="src" alt="{{ product.name }}" class="h-full w-full object-contain">
+      </button>
+      {# Mobile slider controls (34224:49918): 44px #eff7fd back + zoom buttons 20px in, dots, count. #}
+      {% set backHref = typeHref or "/browse-by-specialty/ophthalmology/" %}
+      <a href="{{ backHref }}" aria-label="Back to {{ product.typeName }}"
+         class="absolute left-5 top-5 flex h-11 w-11 items-center justify-center rounded bg-[#eff7fd] text-primary-500 md:hidden">{% icon "chevron-right", "h-6 w-6 rotate-180" %}</a>
+      <button type="button" @click="open()" aria-label="Zoom image"
+              class="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded bg-[#eff7fd] text-primary-500 md:hidden">{{ gfx.zoomIn() }}</button>
+      {% if gallery.length > 1 %}
+      <div class="absolute bottom-3.5 left-1/2 flex -translate-x-1/2 md:hidden">
+        {% for img in gallery %}
+        <button type="button" @click="show({{ loop.index0 }})" aria-label="Show image {{ loop.index }} of {{ gallery.length }}" :aria-current="index === {{ loop.index0 }}" class="p-1.5">
+          <span class="block h-2 w-2 rounded-full border opacity-[.36]"
+                :class="index === {{ loop.index0 }} ? 'border-heading bg-white' : 'border-white bg-heading'"></span>
+        </button>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <span class="absolute bottom-px right-0 bg-[#eff7fd] px-1.5 py-1 text-xs text-body md:hidden" aria-hidden="true"
+            x-text="(index + 1) + '/' + images.length">1/{{ gallery.length }}</span>
+    </div>
     {% if gallery.length > 1 %}
-    <ul class="flex flex-wrap gap-3" aria-label="Product image thumbnails" data-figma="34224:49543">
+    <ul class="hidden flex-wrap gap-3 md:flex" aria-label="Product image thumbnails" data-figma="34224:49543">
       {% for img in gallery %}
       <li>
         <button type="button" @click="show({{ loop.index0 }})" aria-label="Show image {{ loop.index }} of {{ gallery.length }}"
@@ -35,20 +58,22 @@
   </div>
 
   {# PDP - Zoom (21171:386870): white full screen, image centred at full height, 106px thumbnails
-     down the left, 104px close box top right. Prev/next buttons and arrow keys added for the prototype. #}
+     down the left, 104px close box top right. Prev/next buttons and arrow keys added for the prototype.
+     Phones (21171:387659): 448px full-width image, 60px thumbnails bottom left, 56px close box, no arrows (swipe). #}
   <template x-teleport="body">
     <div x-show="zoom" x-cloak x-trap="zoom" x-effect="lockScroll('pdp-zoom', zoom)" role="dialog" aria-modal="true" aria-label="{{ product.name }}, enlarged images"
          @keydown.escape.window="zoom && close()" @keydown.arrow-right.window="zoom && many && next()" @keydown.arrow-left.window="zoom && many && prev()"
+         @touchstart.passive="touchStart($event)" @touchend="touchEnd($event)"
          class="fixed inset-0 z-50 bg-white" data-figma="21171:386870">
       <img :src="src" alt="{{ product.name }}"
-           class="absolute inset-0 m-auto h-full w-full max-w-[939px] object-contain px-4 pb-28 pt-20 md:px-0 md:py-0">
+           class="absolute inset-0 m-auto h-[448px] max-h-full w-full max-w-[939px] object-contain md:h-full">
 
       <ul x-show="many" aria-label="Product image thumbnails" data-figma="21171:386874"
-          class="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-3 md:bottom-auto md:left-10 md:top-10 md:translate-x-0 md:flex-col">
+          class="absolute bottom-5 left-5 flex gap-3 md:bottom-auto md:left-10 md:top-10 md:flex-col">
         <template x-for="(img, i) in images" :key="i">
           <li>
             <button type="button" @click="show(i)" :aria-label="'Show image ' + (i + 1) + ' of ' + images.length" :aria-current="index === i"
-                    class="block h-16 w-16 overflow-hidden rounded bg-white md:h-[106px] md:w-[106px]"
+                    class="block h-[60px] w-[60px] overflow-hidden rounded bg-white md:h-[106px] md:w-[106px]"
                     :class="index === i ? 'border-2 border-primary-500' : 'border border-outline hover:border-primary-500'">
               <img :src="img" alt="" class="h-full w-full object-contain">
             </button>
@@ -59,14 +84,14 @@
       <template x-if="many">
         <div>
           <button type="button" @click="prev()" aria-label="Previous image"
-                  class="btn-secondary absolute left-4 top-1/2 w-[52px] -translate-y-1/2 px-0 md:left-[186px]">{% icon "arrow-left" %}</button>
+                  class="btn-secondary absolute left-4 top-1/2 hidden w-[52px] -translate-y-1/2 px-0 md:left-[186px] md:inline-flex">{% icon "arrow-left" %}</button>
           <button type="button" @click="next()" aria-label="Next image"
-                  class="btn-secondary absolute right-4 top-1/2 w-[52px] -translate-y-1/2 px-0 md:right-10">{% icon "arrow-right" %}</button>
+                  class="btn-secondary absolute right-4 top-1/2 hidden w-[52px] -translate-y-1/2 px-0 md:right-10 md:inline-flex">{% icon "arrow-right" %}</button>
         </div>
       </template>
 
       <button type="button" @click="close()" aria-label="Close enlarged images" data-figma="21171:386872"
-              class="absolute right-0 top-0 flex h-16 w-16 items-center justify-center border-b border-l border-outline bg-white text-primary-500 hover:bg-secondary-100 md:h-[104px] md:w-[104px]">
+              class="absolute right-0 top-0 flex h-14 w-14 items-center justify-center border-b border-l border-outline bg-white text-primary-500 hover:bg-secondary-100 md:h-[104px] md:w-[104px]">
         {% icon "close-x", "h-6 w-6" %}
       </button>
     </div>

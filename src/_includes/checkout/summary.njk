@@ -2,6 +2,9 @@
   Order Summary sidebar ("sidebar" 34799:87737): the cart lines from $store.cart, three
   collapsible panels (discount code, gift card, order comment), totals and two info boxes.
   All closed on load; the guest frames draw them open as an example (state in checkout.js).
+  Phones (Figma 34799:88160, 34799:88917): white, below Payment Method, "Order Summary (3)" with a
+  "Show Products" toggle for the cart lines, then Place Order (the form's own copy shows from 768px)
+  and the info boxes on #f5f5f5.
 #}
 {% import "checkout/macros.njk" as co with context %}
 
@@ -14,27 +17,27 @@
     <span x-show="panels.{{ key }}" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
   </button>
   <div id="summary-{{ key }}" x-show="panels.{{ key }}" x-collapse x-cloak>
-    <div class="pb-3">{{ caller() }}</div>
+    {# Phones: the line follows 16px under an open panel (Figma 34799:88917) #}
+    <div class="md:pb-3">{{ caller() }}</div>
   </div>
   <hr class="border-outline">
 </div>
 {% endmacro %}
 
-<div class="flex flex-col gap-6" data-figma="34799:87737">
-  <h2 id="summary-title" class="text-h3 font-medium text-heading">Order Summary</h2>
+<div class="flex flex-col gap-4 md:gap-6" data-figma="34799:87737">
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center justify-between gap-3">
+      <h2 id="summary-title" class="flex-1 text-h4 font-medium text-heading md:text-h3">Order Summary<span class="md:hidden" x-text="' (' + count + ')'"></span></h2>
+      <button type="button" @click="showProducts = !showProducts" :aria-expanded="showProducts" aria-controls="summary-lines"
+              class="shrink-0 text-base text-primary-500 hover:text-ink md:hidden" x-text="showProducts ? 'Hide Products' : 'Show Products'">Show Products</button>
+    </div>
+    <hr class="border-outline md:hidden">
+  </div>
   <div class="flex flex-col gap-4">
-    <ul class="flex flex-col gap-4" aria-label="Items in your order">
-      <template x-for="line in lines" :key="line.key">
-        <li class="flex items-start gap-6">
-          <img :src="url(line.image)" alt="" class="h-[108px] w-[108px] shrink-0 rounded border border-outline bg-white object-contain">
-          <div class="flex min-w-0 flex-col gap-1">
-            <p class="text-base text-body" x-text="line.qty + ' x ' + line.name"></p>
-            <p class="text-lg font-bold tracking-title text-ink" x-text="price(line.total)"></p>
-          </div>
-        </li>
-      </template>
-    </ul>
-    <hr class="border-outline">
+    <div id="summary-lines" class="flex-col gap-4" :class="showProducts ? 'flex' : 'hidden md:flex'">
+      {{ co.summaryLines() }}
+      <hr class="border-outline">
+    </div>
 
     {% call panel("discount", "Apply Discount Code", "34799:87759") %}
     <form @submit.prevent class="flex flex-col gap-7">
@@ -63,22 +66,20 @@
     </label>
     {% endcall %}
 
-    <dl class="flex flex-col gap-2 text-base text-body" data-figma="34799:87773">
-      <div class="flex justify-between gap-4"><dt>Subtotal</dt><dd x-text="price(subtotal)"></dd></div>
-      <div class="flex justify-between gap-4"><dt>Discount</dt><dd x-text="'- ' + price(discount)"></dd></div>
-      <div class="flex items-center justify-between gap-4">
-        <dt>Shipping<span class="block text-xs" x-text="method.label"></span></dt>
-        <dd x-text="price(method.price)"></dd>
-      </div>
-      <div class="flex justify-between gap-4 text-lg font-bold text-ink"><dt>Grand Total</dt><dd x-text="price(grandTotal)"></dd></div>
-    </dl>
+    {{ co.summaryTotals() }}
 
-    <div class="flex flex-col gap-2" data-figma="34820:4266">
-      <div class="flex flex-col gap-5 rounded border border-outline p-[23px]">
+    {# Phones: terms and Place Order come after the totals (Figma "Frame 5679"); it submits #checkout-form. #}
+    <div class="mt-4 flex flex-col gap-4 md:hidden">
+      {% call co.checkbox("terms", "accept-terms-mobile") %}I accept <a href="#" data-proto class="link">Terms &amp; Conditions</a> and <a href="#" data-proto class="link">Privacy Policy</a>{% endcall %}
+      <button type="submit" form="checkout-form" disabled :disabled="!terms" class="btn-primary h-[60px] w-full">{% icon "checks", "h-7 w-7" %}Place Order</button>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-2 md:mt-0" data-figma="34820:4266">
+      <div class="flex flex-col gap-5 rounded border border-outline bg-[#f5f5f5] p-[23px] md:bg-transparent">
         <p class="flex items-center gap-2 text-base text-ink">{% icon "truck-delivery", "h-6 w-6 text-accent" %}Delivery information</p>
         <p class="text-base text-body">Orders placed before 12 PM EST normally ship within 1-2 business days. On occasion we might not have the item you ordered in stock.</p>
       </div>
-      <div class="flex flex-col gap-5 rounded border border-outline p-[23px]">
+      <div class="flex flex-col gap-5 rounded border border-outline bg-[#f5f5f5] p-[23px] md:bg-transparent">
         <p class="flex items-center gap-2 text-base text-ink">{% icon "help-circle", "h-6 w-6 text-accent" %}Backorders &amp; Delivery Times</p>
         <p class="text-base text-body">For more information on backorders and delivery times please <a href="/contact/" class="link">contact us</a>.</p>
       </div>

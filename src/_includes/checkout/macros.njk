@@ -4,11 +4,11 @@
   Sizes and colours from the Figma checkout frames (34799:87723 and siblings).
 #}
 
-{# Section heading: Medium 24/32 #0c2a4b, 12px gap, 1px #dde7ee line. Optional right-hand slot via {% call %}. #}
+{# Section heading: Medium 24/32 #0c2a4b (phones 20/28), 12px gap, 1px #dde7ee line. Optional right-hand slot via {% call %}. #}
 {% macro heading(title, id) %}
 <div class="flex flex-col gap-3">
-  <div class="flex min-h-8 items-center justify-between gap-3">
-    <h2 id="{{ id }}" class="text-h3 font-medium text-heading">{{ title }}</h2>
+  <div class="flex min-h-7 items-center justify-between gap-3 md:min-h-8">
+    <h2 id="{{ id }}" class="text-h4 font-medium text-heading md:text-h3">{{ title }}</h2>
     {% if caller %}{{ caller() }}{% endif %}
   </div>
   <hr class="border-outline">
@@ -22,7 +22,9 @@
     <input id="{{ id }}" type="checkbox" x-model="{{ model }}" class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-secondary-200 bg-white checked:border-primary-500 checked:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500">
     {% icon "check-small", "pointer-events-none absolute inset-0 hidden h-5 w-5 text-white peer-checked:block" %}
   </span>
-  <label for="{{ id }}" class="cursor-pointer text-base {{ labelClass }}">{{ caller() }}</label>
+  {# -mr-1: on phones the label may run 4px into the page margin, as in Figma (34799:88160), so
+     "My billing and shipping address are the same" stays on one line at 390px #}
+  <label for="{{ id }}" class="-mr-1 cursor-pointer text-base md:mr-0 {{ labelClass }}">{{ caller() }}</label>
 </div>
 {% endmacro %}
 
@@ -56,9 +58,10 @@
   Address fields (guest Shipping/Billing Address, New Address modal): first/last name, phone,
   then either the address finder ("Your Address", 34799:88054) or the manual fields in a grey
   box ("Frame 5672", 34799:87832). ns: field name prefix; manual: Alpine boolean expression.
+  First and last name share a row on phones too (169 + 12 + 169, Figma 34799:88160).
 #}
 {% macro addressFields(ns, manual) %}
-<div class="grid grid-cols-1 gap-x-3 gap-y-7 sm:grid-cols-2">
+<div class="grid grid-cols-2 gap-x-3 gap-y-7">
   <label class="block">
     <span class="label">First name</span>
     <input name="{{ ns }}[firstname]" autocomplete="given-name" placeholder="Enter first name" class="input">
@@ -67,7 +70,7 @@
     <span class="label">Last name</span>
     <input name="{{ ns }}[lastname]" autocomplete="family-name" placeholder="Enter last name" class="input">
   </label>
-  <div class="sm:col-span-2">
+  <div class="col-span-2">
     <label for="{{ ns }}-telephone" class="label">Phone number</label>
     <div class="flex">
       <input id="{{ ns }}-telephone" name="{{ ns }}[telephone]" type="tel" autocomplete="tel" placeholder="Enter phone number" class="input">
@@ -76,7 +79,7 @@
   </div>
 
   {# Address finder #}
-  <div x-show="!({{ manual }})" class="sm:col-span-2">
+  <div x-show="!({{ manual }})" class="col-span-2">
     <label for="{{ ns }}-search" class="mb-2 block text-sm text-ink">Your Address</label>
     <div class="relative">
       <input id="{{ ns }}-search" name="{{ ns }}[search]" autocomplete="off" placeholder="Enter your address" class="input pr-14 text-base">
@@ -86,8 +89,8 @@
   </div>
 
   {# Manual entry #}
-  <div x-show="{{ manual }}" class="flex flex-col gap-2 sm:col-span-2">
-    <div class="flex flex-col gap-7 rounded border border-outline bg-[#f5f5f5] p-5">
+  <div x-show="{{ manual }}" class="col-span-2 flex flex-col gap-2">
+    <div class="flex flex-col gap-7 rounded border border-outline bg-[#f5f5f5] p-[19px] md:p-5">
       <div>
         <label for="{{ ns }}-country" class="label">Country</label>
         {{ select(ns + "-country", ns + "[country]", checkout.countries) }}
@@ -115,6 +118,34 @@
     <button type="button" @click="{{ manual }} = false" class="link self-start text-base">Switch back to address finder</button>
   </div>
 </div>
+{% endmacro %}
+
+{# Order summary cart lines: the sidebar list and, on phones, the summary bar under the logo. #}
+{% macro summaryLines() %}
+<ul class="flex flex-col gap-4" aria-label="Items in your order">
+  <template x-for="line in lines" :key="line.key">
+    <li class="flex items-start gap-6">
+      <img :src="url(line.image)" alt="" class="h-[108px] w-[108px] shrink-0 rounded border border-outline bg-white object-contain">
+      <div class="flex min-w-0 flex-col gap-1">
+        <p class="text-base text-body" x-text="line.qty + ' x ' + line.name"></p>
+        <p class="text-lg font-bold tracking-title text-ink" x-text="price(line.total)"></p>
+      </div>
+    </li>
+  </template>
+</ul>
+{% endmacro %}
+
+{# Order summary totals (34799:87773). #}
+{% macro summaryTotals() %}
+<dl class="flex flex-col gap-2 text-base text-body" data-figma="34799:87773">
+  <div class="flex justify-between gap-4"><dt>Subtotal</dt><dd x-text="price(subtotal)"></dd></div>
+  <div class="flex justify-between gap-4"><dt>Discount</dt><dd x-text="'- ' + price(discount)"></dd></div>
+  <div class="flex items-center justify-between gap-4">
+    <dt>Shipping<span class="block text-xs" x-text="method.label"></span></dt>
+    <dd x-text="price(method.price)"></dd>
+  </div>
+  <div class="flex justify-between gap-4 text-lg font-bold text-ink"><dt>Grand Total</dt><dd x-text="price(grandTotal)"></dd></div>
+</dl>
 {% endmacro %}
 
 {# Express checkout wordmarks and payment badges. Figma draws them as vectors; these are close stand-ins. #}

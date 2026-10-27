@@ -1,6 +1,6 @@
 {# One product row in the search dropdown; used inside <template x-for="p in ...">. #}
 <li>
-  <a :href="url(p.url)" class="flex items-center gap-6 rounded hover:bg-secondary-100">
+  <a :href="url(p.url)" class="flex {{ 'items-start' if searchMobile else 'items-center' }} gap-6 rounded hover:bg-secondary-100">
     <img :src="url(p.image)" alt="" class="h-[108px] w-[108px] shrink-0 rounded border border-outline bg-white object-contain">
     <span class="flex flex-col gap-1">
       <span class="text-base text-body" x-text="(p.sku ? p.sku + ' ' : '') + p.name"></span>

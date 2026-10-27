@@ -20,6 +20,24 @@ accountNavActive: /sales/order/history/
 </div>
 {% endmacro %}
 
+{# Phones ("Mobile - Order Opened" 14714:138846, Invoices 14714:138947): each line is a card, white, 1px #dde7ee,
+   radius 4, 24px padding: the 108px image with name / variant / price (Bold 18/28) next to it (16px gap),
+   then label rows (acc.cardRow) from the caller. #}
+{% macro itemCard(item, showPrice=true) %}
+{% set p = catalog.products | find("sku", item.sku) %}
+<div class="flex flex-col gap-3 rounded border border-outline bg-white p-[23px] text-base text-body md:hidden">
+  <div class="flex items-start gap-4">
+    <a href="{{ p.url }}" tabindex="-1" aria-hidden="true" class="shrink-0"><img src="{{ p.image }}" alt="" width="108" height="108" class="h-[108px] w-[108px] rounded border border-outline bg-white object-contain"></a>
+    <div class="flex min-w-0 flex-1 flex-col gap-1">
+      <a href="{{ p.url }}" class="hover:text-primary-500 hover:underline">{{ item.name }}</a>
+      {% if item.variant %}<span class="text-xs">{{ item.variant }}</span>{% endif %}
+      {% if showPrice %}<span class="text-lg font-bold text-ink">{{ item.price }}</span>{% endif %}
+    </div>
+  </div>
+  <dl class="flex flex-col gap-3">{{ caller() }}</dl>
+</div>
+{% endmacro %}
+
 {# Totals panel under the item tables ("totals" 14714:138028): 408px column aligned with Price. #}
 {% macro totals(extra=[], grandTotal=order.grandTotal, after=[]) %}
 <div class="rounded bg-secondary-100 p-6">
@@ -41,22 +59,23 @@ accountNavActive: /sales/order/history/
 {% set tdFirst = "rounded-l py-5 pl-6 pr-3" %}
 {% set tdLast = "rounded-r py-5 pl-3 pr-6" %}
 
-<div x-data="orderView" @hashchange.window="fromHash()" class="flex flex-col gap-10" data-figma="14714:137970">
-  {{ acc.pageTitle("My Orders") }}
+<div x-data="orderView" @hashchange.window="fromHash()" class="flex flex-col gap-8 md:gap-10" data-figma="14714:137970">
+  {{ acc.pageTitle("My Orders", "/sales/order/history/") }}
 
-  {# Order number, status, date and actions ("order#" 14714:137972) #}
-  <div class="flex flex-wrap items-center justify-between gap-6" data-figma="14714:137972">
+  {# Order number, status, date and actions ("order#" 14714:137972). Phones: the buttons under the number,
+     Print and Reorder sharing the row; Back To Orders is the back button by the title. #}
+  <div class="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-6" data-figma="14714:137972">
     <div class="flex flex-col gap-1">
       <div class="flex flex-wrap items-center gap-3">
-        <h2 class="text-h3 font-medium text-heading">Order #{{ order.number }}</h2>
+        <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Order #{{ order.number }}</h2>
         {{ acc.statusBadge(order.status) }}
       </div>
       <p class="text-base text-body">Order Date: {{ order.date }}</p>
     </div>
-    <div class="flex flex-wrap items-center gap-3" data-figma="14714:137978">
-      <a href="/sales/order/history/" class="btn pl-[30px] text-primary-500 hover:text-ink">{% icon "arrow-left" %}Back To Orders</a>
-      <button type="button" @click="print()" class="btn-secondary pl-[30px]">{% icon "printer" %}<span x-text="{ items: 'Print Order', invoices: 'Print Invoice', shipments: 'Print Shipment', refunds: 'Print Refund' }[tab]">Print Order</span></button>
-      <button type="button" @click="reorder()" data-reorder class="btn-primary pl-[30px]">{% icon "reload", "h-7 w-7" %}Reorder</button>
+    <div class="flex items-center gap-3 md:flex-wrap" data-figma="14714:137978">
+      <a href="/sales/order/history/" class="btn hidden pl-[30px] text-primary-500 hover:text-ink md:inline-flex">{% icon "arrow-left" %}Back To Orders</a>
+      <button type="button" @click="print()" class="btn-secondary min-w-0 flex-1 px-2 md:flex-initial md:pl-[30px] md:pr-8">{% icon "printer" %}<span x-text="{ items: 'Print Order', invoices: 'Print Invoice', shipments: 'Print Shipment', refunds: 'Print Refund' }[tab]">Print Order</span></button>
+      <button type="button" @click="reorder()" data-reorder class="btn-primary min-w-0 flex-1 px-2 md:flex-initial md:pl-[30px] md:pr-8">{% icon "reload", "h-7 w-7" %}Reorder</button>
     </div>
   </div>
 
@@ -68,13 +87,16 @@ accountNavActive: /sales/order/history/
               :aria-selected="tab === '{{ t[0] }}'" :tabindex="tab === '{{ t[0] }}' ? 0 : -1" {% if not loop.first %}tabindex="-1"{% endif %}
               @click="select('{{ t[0] }}')" @keydown.right.prevent="step(1)" @keydown.left.prevent="step(-1)"
               class="-mb-px shrink-0 whitespace-nowrap border-b-2 px-6 pb-[14px] text-base"
-              :class="tab === '{{ t[0] }}' ? 'border-accent text-ink' : 'border-transparent text-body hover:shadow-[inset_0_-1px_0_theme(colors.primary.500)] active:border-primary-500 active:text-ink'">{{ t[1] }}</button>
+              :class="tab === '{{ t[0] }}' ? 'border-primary-500 text-ink md:border-accent' : 'border-transparent text-body hover:shadow-[inset_0_-1px_0_theme(colors.primary.500)] active:border-primary-500 active:text-ink'">{{ t[1] }}</button>
       {% endfor %}
     </div>
 
     {# Items Ordered (14714:137998) #}
-    <div role="tabpanel" id="order-panel-items" aria-labelledby="order-tab-items" x-show="tab === 'items'" data-figma="14714:137998">
-      <div class="overflow-x-auto">
+    <div role="tabpanel" id="order-panel-items" aria-labelledby="order-tab-items" x-show="tab === 'items'" class="flex flex-col gap-3 md:block" data-figma="14714:137998">
+      {% for item in order.items %}
+      {% call itemCard(item) %}{% call acc.cardRow("Qty:") %}Ordered: 1<br>Shipped: 1<br>Refunded: 1{% endcall %}{% endcall %}
+      {% endfor %}
+      <div class="hidden overflow-x-auto md:block">
         <table class="w-full min-w-[760px] text-left">
           <thead>
             <tr class="bg-secondary-100 text-sm text-heading">
@@ -101,9 +123,12 @@ accountNavActive: /sales/order/history/
 
     {# Invoices (27033:13344) #}
     <div role="tabpanel" id="order-panel-invoices" aria-labelledby="order-tab-invoices" x-show="tab === 'invoices'" x-cloak class="flex flex-col gap-6" data-figma="27033:13396">
-      <h3 class="text-h3 font-medium text-heading">Invoice #{{ order.number }}</h3>
-      <div>
-        <div class="overflow-x-auto">
+      <h3 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Invoice #{{ order.number }}</h3>
+      <div class="flex flex-col gap-3 md:block">
+        {% for item in order.items %}
+        {% call itemCard(item) %}{% call acc.cardRow("Qty Invoiced:") %}1{% endcall %}{% endcall %}
+        {% endfor %}
+        <div class="hidden overflow-x-auto md:block">
           <table class="w-full min-w-[760px] text-left">
             <thead>
               <tr class="bg-secondary-100 text-sm text-heading">
@@ -133,12 +158,18 @@ accountNavActive: /sales/order/history/
     <div role="tabpanel" id="order-panel-shipments" aria-labelledby="order-tab-shipments" x-show="tab === 'shipments'" x-cloak class="flex flex-col gap-6" data-figma="27033:13298">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex flex-col gap-1">
-          <h3 class="text-h3 font-medium text-heading">Shipment #{{ order.number }}</h3>
+          <h3 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Shipment #{{ order.number }}</h3>
           <p class="text-base text-body">Tracking Number(s): {{ order.trackingNumber }}</p>
         </div>
-        <a href="#" data-proto class="btn-secondary">Track This Shipment</a>
+        <a href="#" data-proto class="btn-secondary w-full md:w-auto">Track This Shipment</a>
       </div>
-      <div class="overflow-x-auto">
+      {# Phones: not drawn; the item cards of the other tabs with the shipped quantity. #}
+      <div class="flex flex-col gap-3 md:hidden">
+        {% for item in order.items %}
+        {% call itemCard(item, false) %}{% call acc.cardRow("Qty Shipped:") %}1{% endcall %}{% endcall %}
+        {% endfor %}
+      </div>
+      <div class="hidden overflow-x-auto md:block">
         <table class="w-full min-w-[640px] text-left">
           <thead>
             <tr class="bg-secondary-100 text-sm text-heading">
@@ -160,9 +191,18 @@ accountNavActive: /sales/order/history/
 
     {# Refunds (27033:13115) #}
     <div role="tabpanel" id="order-panel-refunds" aria-labelledby="order-tab-refunds" x-show="tab === 'refunds'" x-cloak class="flex flex-col gap-6" data-figma="27033:13170">
-      <h3 class="text-h3 font-medium text-heading">Refund #{{ order.number }}</h3>
-      <div>
-        <div class="overflow-x-auto">
+      <h3 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Refund #{{ order.number }}</h3>
+      {# Phones: not drawn; item cards with the refund columns as rows. #}
+      <div class="flex flex-col gap-3 md:block">
+        {% for item in order.items %}
+        {% call itemCard(item) %}
+          {% call acc.cardRow("Qty Refunded:") %}{{ item.qtyRefunded }}{% endcall %}
+          {% call acc.cardRow("Subtotal:", "font-bold text-ink") %}{{ item.subtotal }}{% endcall %}
+          {% call acc.cardRow("Discount Amount:") %}$0.00{% endcall %}
+          {% call acc.cardRow("Row Total:") %}$0.00{% endcall %}
+        {% endcall %}
+        {% endfor %}
+        <div class="hidden overflow-x-auto md:block">
           <table class="w-full min-w-[960px] text-left">
             <thead>
               <tr class="bg-secondary-100 text-sm text-heading">
@@ -195,7 +235,7 @@ accountNavActive: /sales/order/history/
 
   {# Order Information (14714:138044) #}
   <section class="flex flex-col gap-6" data-figma="14714:138044">
-    <h2 class="text-h3 font-medium text-heading">Order Information</h2>
+    <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Order Information</h2>
     <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4" data-figma="14714:138046">
       {% for box in order.info %}
       <div class="flex flex-col gap-3 rounded border border-outline bg-white p-[23px]">
@@ -206,9 +246,9 @@ accountNavActive: /sales/order/history/
     </div>
   </section>
 
-  {# About Your Order (14714:138059), drawn on the Items Ordered tab only #}
-  <section x-show="tab === 'items'" class="flex flex-col gap-3" data-figma="14714:138059">
-    <h2 class="text-h3 font-medium text-ink">About Your Order</h2>
+  {# About Your Order (14714:138059), drawn on the Items Ordered tab only; phones: 24px under Order Information. #}
+  <section x-show="tab === 'items'" class="-mt-2 flex flex-col gap-3 md:mt-0" data-figma="14714:138059">
+    <h2 class="text-h4 font-medium tracking-title text-ink md:text-h3 md:tracking-normal">About Your Order</h2>
     <div class="flex flex-col gap-2 rounded bg-secondary-100 p-6">
       <p class="text-xs font-medium text-body">{{ order.comment.date }}</p>
       <p class="text-base text-body">{{ order.comment.text }}</p>

@@ -105,6 +105,10 @@ document.addEventListener("alpine:init", () => {
 
       /* Order summary panels */
       panels: { discount: false, giftcard: false, comment: false },
+      // Phones only (Figma 34799:88160 / 34799:88917): the summary bar under the logo opens the cart
+      // lines and totals; "Show Products" opens the lines in the Order Summary further down.
+      summaryOpen: false,
+      showProducts: false,
 
       /* Shipping and payment */
       methods: config.shippingMethods,
@@ -125,6 +129,10 @@ document.addEventListener("alpine:init", () => {
           total: i.qty * i.product.price,
         }));
         return [...cart, ...this.merged];
+      },
+      /** "Order Summary (3)" on phones: items in the order. */
+      get count() {
+        return this.lines.reduce((n, l) => n + l.qty, 0);
       },
       get subtotal() {
         return this.lines.reduce((n, l) => n + l.total, 0);

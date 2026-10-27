@@ -1,32 +1,43 @@
 {#
   Account sidebar ("account-sidebar" 27318:111605): 288px, #f1f5f8, 64px links with #dde7ee dividers,
   current link in ink with a 2x32px orange bar. Below 1024px it collapses behind a toggle.
+  Phones ("Mobile - Dashboard - Menu" 14714:138776): the toggle opens a full-screen white menu with the
+  "My Account" title bar (56px, close cell 56px), 56px links + 1px #dee7ed line (Medium 16/24, 24px icons in the text colour),
+  the current link in ink without the orange bar.
 #}
 {% set activeHref = accountNavActive or page.url %}
 {% set current = site.accountNav | find("href", activeHref) %}
-<nav aria-label="My Account" class="w-full shrink-0 lg:w-[288px]" x-data="{ open: false }" data-figma="27318:111605">
+<nav aria-label="My Account" class="w-full shrink-0 lg:w-[288px]" x-data="{ open: false, get sheet() { return this.open && window.innerWidth < 768 } }" @keydown.escape.window="open = false" data-figma="27318:111605">
   <button type="button" @click="open = !open" :aria-expanded="open" aria-controls="account-nav"
           class="flex h-16 w-full items-center justify-between gap-3 rounded bg-secondary-100 px-5 text-base font-medium text-ink lg:hidden">
     <span class="flex items-center gap-3">{% if current %}{% icon current.icon, "h-6 w-6 text-primary-500" %}{{ current.label }}{% else %}My Account{% endif %}</span>
     <span x-show="!open">{% icon "dropdown", "h-7 w-7 text-primary-500" %}</span>
     <span x-show="open" x-cloak>{% icon "dropdown-up", "h-7 w-7 text-primary-500" %}</span>
   </button>
-  <ul id="account-nav" x-show="open" x-cloak class="mt-2 overflow-hidden rounded bg-secondary-100 lg:mt-0 lg:!block">
-    {% for n in site.accountNav %}
-    {% set isActive = n.href == activeHref %}
-    <li>
-      <a href="{{ n.href }}" {% if isActive %}aria-current="page"{% endif %}
-         class="relative flex h-16 items-center gap-3 border-b border-outline px-5 text-base font-medium {{ 'text-ink' if isActive else 'text-body hover:text-ink' }}">
-        {% if isActive %}<span class="absolute left-0 top-4 h-8 w-0.5 bg-accent" aria-hidden="true"></span>{% endif %}
-        {% icon n.icon, "h-6 w-6 text-primary-500" %}{{ n.label }}
-      </a>
-    </li>
-    {% endfor %}
-    <li>
-      <button type="button" @click="$store.auth.signOut(); window.location.href = url('/')"
-              class="flex h-16 w-full items-center gap-3 px-5 text-left text-base font-medium text-body hover:text-ink">
-        {% icon "door-exit", "h-6 w-6 text-primary-500" %}Sign Out
-      </button>
-    </li>
-  </ul>
+  <div id="account-nav" x-show="open" x-cloak :aria-modal="sheet" x-trap="sheet" x-effect="lockScroll('account-nav', sheet)"
+       class="fixed inset-0 z-50 overflow-y-auto bg-white md:static md:z-auto md:mt-2 md:overflow-visible md:bg-transparent lg:mt-0 lg:!block">
+    {# Phones: "Popup Top Bar" #}
+    <div class="flex border-b border-outline md:hidden">
+      <p class="flex flex-1 items-center py-3 pl-5 text-h3 font-medium tracking-title text-heading">My Account</p>
+      <button type="button" @click="open = false" aria-label="Close menu" class="flex w-14 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100">{% icon "close-x", "h-6 w-6" %}</button>
+    </div>
+    <ul class="md:overflow-hidden md:rounded md:bg-secondary-100">
+      {% for n in site.accountNav %}
+      {% set isActive = n.href == activeHref %}
+      <li>
+        <a href="{{ n.href }}" {% if isActive %}aria-current="page"{% endif %}
+           class="relative flex h-[57px] items-center gap-3 border-b border-secondary-200 px-5 text-base font-medium md:h-16 md:border-outline {{ 'text-ink' if isActive else 'text-body hover:text-ink' }}">
+          {% if isActive %}<span class="absolute left-0 top-4 hidden h-8 w-0.5 bg-accent md:block" aria-hidden="true"></span>{% endif %}
+          {% icon n.icon, "h-6 w-6 md:text-primary-500" %}{{ n.label }}
+        </a>
+      </li>
+      {% endfor %}
+      <li>
+        <button type="button" @click="$store.auth.signOut(); window.location.href = url('/')"
+                class="flex h-[57px] w-full items-center gap-3 border-b border-secondary-200 px-5 text-left text-base font-medium text-body hover:text-ink md:h-16 md:border-b-0">
+          {% icon "door-exit", "h-6 w-6 md:text-primary-500" %}Sign Out
+        </button>
+      </li>
+    </ul>
+  </div>
 </nav>

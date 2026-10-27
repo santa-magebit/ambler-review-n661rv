@@ -10,12 +10,14 @@ import images from "./images.js";
 /**
  * Gradients measured from the Figma renders (the dumps only say GRADIENT_LINEAR).
  * heroFade: navy over the Landing Page and Repair Services hero photos.
+ * heroFadePhone: the same on phones (mobile 34141:38087), solid navy under the text, clear at 75%.
  * aboutFade: About hero, solid navy to 14%, clear at 64%.
  * whyFade: About "Why Us" band, clear at 12%, solid navy from 50%.
  * titleLine: 2px line under hero titles, orange with a white highlight and clear ends.
  */
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
+  heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 75%)",
   aboutFade: "linear-gradient(90deg, #004776 14%, rgba(0, 71, 118, 0) 64%)",
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
   titleLine:

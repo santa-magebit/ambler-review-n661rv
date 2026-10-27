@@ -71,6 +71,8 @@ export default {
         h3: ["24px", "32px"],
         h2: ["32px", "40px"],
         h1: ["40px", "48px"],
+        // Mobile H1 (styleguide "mobile headings"); mobile H2-H6 equal h3, h4, lg, h5, h6.
+        "mobile-h1": ["28px", "36px"],
         hero: ["56px", "64px"],
       },
       letterSpacing: { title: "-0.02em" },

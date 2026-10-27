@@ -4,9 +4,12 @@ title: Forgot Your Password?
 permalink: /customer/account/forgotpassword/
 ---
 {% import "account/macros.njk" as acc with context %}
-{# Figma "Password Reset" 14714:118400 #}
-<div class="container-page flex flex-col items-center gap-10 pb-20 pt-10" data-figma="14714:118401">
-  <h1 class="text-center text-h2 font-bold text-heading md:text-h1">Forgot Your Password?</h1>
+{# Figma "Password Reset" 14714:118400; phones "Mobile - Password Reset" 14714:118340 (back button + left title, 16px under the text). #}
+<div class="container-page flex flex-col items-center gap-8 pb-8 pt-8 md:gap-10 md:pb-20 md:pt-10" data-figma="14714:118401">
+  <div class="flex w-full items-center gap-5 md:w-auto">
+    {{ acc.backButton("/customer/account/login/") }}
+    <h1 class="text-mobile-h1 font-medium tracking-title text-heading md:text-center md:text-h1 md:font-bold md:tracking-normal">Forgot Your Password?</h1>
+  </div>
   <form x-data="forgotPassword" @submit.prevent="submit" novalidate
         class="flex w-full max-w-[496px] flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" data-figma="14714:118403">
     {# Confirmation: not drawn in Figma; styleguide success alert (34747:15526) with Magento's message. #}
@@ -14,7 +17,7 @@ permalink: /customer/account/forgotpassword/
       {% icon "check", "h-6 w-6 text-success" %}
       <p class="min-w-0 break-words">If there is an account associated with <strong class="font-medium" x-text="email || 'this email address'"></strong> you will receive an email with a link to reset your password.</p>
     </div>
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4 md:gap-6">
       <p class="text-base text-body">Please enter your email address below to receive a password reset link.</p>
       <div>
         <label for="reset-email" class="label">E-mail</label>

@@ -7,33 +7,51 @@ figma: "14714:137202"
 {% import "account/macros.njk" as acc with context %}
 {# Address Book with additional addresses (14714:137202); "No Additional Addresses" (23115:35427)
    shows with ?empty or once every row is deleted. #}
-<div x-data="addressBook({{ account.addresses | length }})" class="flex flex-col gap-10" data-figma="14714:137224">
+{# Phones ("Mobile - Address Book" 14714:138607, empty 23115:35480): address cards instead of the table,
+   the pager 32px under the cards. #}
+<div x-data="addressBook({{ account.addresses | length }})" class="flex flex-col gap-8 md:gap-10" data-figma="14714:137224">
   {{ acc.pageTitle("Address Book") }}
 
   {# Default Addresses #}
-  <section class="flex flex-col gap-6" data-figma="14714:137226">
+  <section class="flex flex-col gap-4 md:gap-6" data-figma="14714:137226">
     {{ acc.sectionTitle("Default Addresses") }}
-    <div class="grid gap-6 xl:grid-cols-2" data-figma="14714:137228">
+    <div class="grid gap-3 md:gap-6 xl:grid-cols-2" data-figma="14714:137228">
       {% call acc.infoCard("report-money", "Default Billing Address", "14714:137229") %}
       {{ acc.addressLines(account.defaultAddress) }}
-      <a href="/customer/address/new/" class="btn-secondary w-fit px-4">Change Billing Address</a>
+      <a href="/customer/address/new/" class="btn-secondary w-full px-4 md:w-fit">Change Billing Address</a>
       {% endcall %}
       {% call acc.infoCard("truck", "Default Shipping Address", "14714:137236") %}
       {{ acc.addressLines(account.defaultAddress) }}
-      <a href="/customer/address/new/" class="btn-secondary w-fit px-4">Change Shipping Address</a>
+      <a href="/customer/address/new/" class="btn-secondary w-full px-4 md:w-fit">Change Shipping Address</a>
       {% endcall %}
     </div>
   </section>
 
   {# Additional addresses #}
-  <section class="flex flex-col gap-6" data-figma="14714:137243">
+  <section class="flex flex-col gap-4 md:gap-6" data-figma="14714:137243">
     <div class="flex flex-col gap-1">
-      <h2 class="text-h3 font-medium text-heading">Address Book</h2>
-      <a x-show="count > 0" href="/customer/address/new/" class="flex w-fit items-center gap-1 text-base text-primary-500 hover:text-ink hover:underline">New Address{% icon "arrow-right", "h-7 w-7" %}</a>
+      <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Address Book</h2>
+      <a x-show="count > 0" href="/customer/address/new/" class="flex w-fit items-center gap-1 text-base text-primary-500 hover:text-ink hover:underline max-md:underline max-md:underline-offset-2">New Address{% icon "arrow-right", "h-7 w-7" %}</a>
     </div>
 
-    <div x-show="count > 0" class="flex flex-col gap-6" data-figma="14714:137247">
-      <div class="overflow-x-auto">
+    <div x-show="count > 0" class="flex flex-col gap-8 md:gap-6" data-figma="14714:137247">
+      {# Phones: address cards ("table-card" 14714:138607) with Edit / Delete. data-row ties a card to its table row. #}
+      <ul class="flex flex-col gap-3 md:hidden">
+        {% for a in account.addresses %}
+        <li data-row="{{ loop.index0 }}">
+          <dl class="{{ acc.cardCls }}">
+            {% call acc.cardRow("Street Address:") %}{{ a.street }}{% endcall %}
+            {% call acc.cardRow("Name:") %}{{ a.name }}{% endcall %}
+            {% call acc.cardRow("City:") %}{{ a.city }}{% endcall %}
+          </dl>
+          <div class="{{ acc.cardActionsCls }}">
+            <a href="/customer/address/new/" aria-label="Edit address {{ a.street }}" class="{{ acc.cardActionCls }}">{% icon "pencil", "h-6 w-6" %}Edit</a>
+            <button type="button" @click="remove($el.closest('[data-row]'))" aria-label="Delete address {{ a.street }}" class="{{ acc.cardActionCls }}">{% icon "trash", "h-6 w-6" %}Delete</button>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="hidden overflow-x-auto md:block">
         <table class="w-full min-w-[760px] text-left">
           <thead>
             <tr class="bg-secondary-100 text-sm text-heading">
@@ -45,14 +63,14 @@ figma: "14714:137202"
           </thead>
           <tbody class="text-base text-body">
             {% for a in account.addresses %}
-            <tr class="even:bg-secondary-100">
+            <tr class="even:bg-secondary-100" data-row="{{ loop.index0 }}">
               <td class="h-[68px] rounded-l py-3 pl-6 pr-3">{{ a.street }}</td>
               <td class="px-3 py-3">{{ a.name }}</td>
               <td class="px-3 py-3">{{ a.city }}</td>
               <td class="rounded-r py-3 pl-3 pr-6">
                 <span class="flex">
                   <a href="/customer/address/new/" aria-label="Edit address {{ a.street }}" class="flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "pencil", "h-6 w-6" %}</a>
-                  <button type="button" @click="remove($el.closest('tr'))" aria-label="Delete address {{ a.street }}" class="flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "trash", "h-6 w-6" %}</button>
+                  <button type="button" @click="remove($el.closest('[data-row]'))" aria-label="Delete address {{ a.street }}" class="flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "trash", "h-6 w-6" %}</button>
                 </span>
               </td>
             </tr>

@@ -10,6 +10,9 @@ permalink: /checkout/
   Guest vs signed in comes from $store.auth.loggedIn. Behaviour: Alpine.data("checkout") in assets/js/checkout.js.
   Layout: 600px form column and 380px summary on a #f5f5f5 panel that runs to the right edge
   (split at 1070px of the 1920 frame, i.e. 50% + 110px).
+  Phones (Figma "Mobile - Checkout" 34799:88160, 34799:88917): one white column with 20px margins and
+  32px between sections, a summary bar under the logo (summary-bar.njk), the Order Summary after
+  Payment Method, then Place Order and the info boxes (summary.njk).
 #}
 <script type="application/json" id="checkout-config">{{ checkout.client | json | safe }}</script>
 
@@ -17,15 +20,16 @@ permalink: /checkout/
   <h1 class="sr-only">Checkout</h1>
 
   {# Empty cart: copy and buttons from "Cart - Empty" (21071:135310) #}
-  <div x-show="empty" x-cloak class="container-page flex flex-1 flex-col items-center gap-12 pb-20 pt-7">
-    <a href="/" class="shrink-0"><img src="{{ 'b36bba42' | img }}" alt="Ambler Surgical" class="h-10 w-[149px] object-cover"></a>
-    <div class="w-full max-w-[1060px] rounded border border-outline px-6 py-[60px]" data-figma="21071:135310">
+  {# Phones: box padding 40, title 20/28 and full-width buttons as in "Mobile - Cart - Empty" (21071:135318) #}
+  <div x-show="empty" x-cloak class="container-page flex flex-1 flex-col items-center gap-8 pb-8 pt-5 md:gap-12 md:pb-20 md:pt-7">
+    <a href="/" class="shrink-0"><img src="{{ 'b36bba42' | img }}" alt="Ambler Surgical" class="h-9 w-[134px] object-cover md:h-10 md:w-[149px]"></a>
+    <div class="w-full max-w-[1060px] rounded border border-outline p-10 md:px-6 md:py-[60px]" data-figma="21071:135310">
       <div class="mx-auto flex max-w-[414px] flex-col items-center gap-8 text-center">
         <div class="flex flex-col gap-2">
-          <h2 class="text-h2 font-bold text-heading">Your cart is empty</h2>
+          <h2 class="text-h4 font-bold text-heading md:text-h2">Your cart is empty</h2>
           <p class="text-base text-body">Looks like you haven&rsquo;t added any products to your cart yet.</p>
         </div>
-        <div class="flex flex-wrap justify-center gap-3">
+        <div class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:justify-center">
           <a href="/browse-by-specialty/" class="btn-primary">Start Shopping</a>
           <a href="/quick-order/" x-show="$store.auth.loggedIn" class="btn-secondary px-6 text-base">{% icon "checkup-list", "h-6 w-6" %}Order by SKU</a>
         </div>
@@ -34,10 +38,11 @@ permalink: /checkout/
   </div>
 
   <div x-show="!empty" x-cloak class="flex flex-1 flex-col lg:flex-row" data-figma="34799:87723">
-    <div class="px-4 md:px-8 lg:w-[calc(50%+110px)] lg:shrink-0 lg:pl-8 lg:pr-10">
-      <form @submit.prevent="placeOrder()" novalidate aria-label="Checkout" class="mx-auto flex w-full max-w-[600px] flex-col gap-12 pb-12 pt-7 lg:ml-auto lg:mr-0" data-figma="34799:87800">
-        <div class="flex flex-col gap-7" data-figma="34799:87801">
-          <a href="/" class="self-center"><img src="{{ 'b36bba42' | img }}" alt="Ambler Surgical" class="h-10 w-[149px] object-cover"></a>
+    <div class="px-5 md:px-8 lg:w-[calc(50%+110px)] lg:shrink-0 lg:pl-8 lg:pr-10">
+      <form id="checkout-form" @submit.prevent="placeOrder()" novalidate aria-label="Checkout" class="mx-auto flex w-full flex-col gap-8 pb-8 pt-5 md:max-w-[600px] md:gap-12 md:pb-12 md:pt-7 lg:ml-auto lg:mr-0" data-figma="34799:87800">
+        <div class="flex flex-col gap-5 md:gap-7" data-figma="34799:87801">
+          <a href="/" class="self-center"><img src="{{ 'b36bba42' | img }}" alt="Ambler Surgical" class="h-9 w-[134px] object-cover md:h-10 md:w-[149px]"></a>
+          {% include "checkout/summary-bar.njk" %}
           {% include "checkout/express.njk" %}
         </div>
         {% include "checkout/contacts.njk" %}
@@ -46,8 +51,8 @@ permalink: /checkout/
       </form>
     </div>
 
-    <aside aria-labelledby="summary-title" class="border-t border-outline bg-[#f5f5f5] px-4 pb-12 pt-7 md:px-8 lg:flex-1 lg:border-l lg:border-t-0 lg:pl-[39px]" data-figma="34799:87724">
-      <div class="mx-auto max-w-[380px] lg:mx-0">
+    <aside aria-labelledby="summary-title" class="px-5 pb-8 md:border-t md:border-outline md:bg-[#f5f5f5] md:px-8 md:pb-12 md:pt-7 lg:flex-1 lg:border-l lg:border-t-0 lg:pl-[39px]" data-figma="34799:87724">
+      <div class="mx-auto md:max-w-[380px] lg:mx-0">
         {% include "checkout/summary.njk" %}
       </div>
     </aside>

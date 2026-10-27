@@ -4,15 +4,19 @@ title: Customer Login
 permalink: /customer/account/login/
 ---
 {% import "account/macros.njk" as acc with context %}
-{# Figma "Login" 14714:118247 #}
-<div class="container-page flex flex-col items-center gap-10 pb-20 pt-10" data-figma="27289:94768">
-  <h1 class="text-center text-h2 font-bold text-heading md:text-h1">Customer Login</h1>
-  <div class="grid w-full max-w-[1016px] items-start gap-6 md:grid-cols-2" data-figma="14714:118252">
+{# Figma "Login" 14714:118247; phones "Mobile - Login" 14714:118308: back button + Medium 28/36 title on the
+   left, 32px padding and gaps, 12px between the cards, 24px card padding with 16px gaps, 20/28 headings. #}
+<div class="container-page flex flex-col items-center gap-8 pb-8 pt-8 md:gap-10 md:pb-20 md:pt-10" data-figma="27289:94768">
+  <div class="flex w-full items-center gap-5 md:w-auto">
+    {{ acc.backButton("/") }}
+    <h1 class="text-mobile-h1 font-medium tracking-title text-heading md:text-center md:text-h1 md:font-bold md:tracking-normal">Customer Login</h1>
+  </div>
+  <div class="grid w-full max-w-[1016px] items-start gap-3 md:grid-cols-2 md:gap-6" data-figma="14714:118252">
 
     {# Registered Customers #}
-    <section class="flex flex-col gap-6 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="login-registered" data-figma="14714:118253">
+    <section class="flex flex-col gap-4 rounded bg-secondary-100 p-6 sm:p-10 md:gap-6" aria-labelledby="login-registered" data-figma="14714:118253">
       <div class="flex max-w-[376px] flex-col gap-1">
-        <h2 id="login-registered" class="text-h3 font-medium text-heading">Registered Customers</h2>
+        <h2 id="login-registered" class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">Registered Customers</h2>
         <p class="text-base text-body">If you have an account, sign in with your email address.</p>
       </div>
       <form x-data="accountAuthForm('', true)" @submit.prevent="submit" novalidate class="flex flex-col gap-7">
@@ -36,9 +40,9 @@ permalink: /customer/account/login/
     </section>
 
     {# New Customers #}
-    <section class="flex flex-col gap-6 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="login-new" data-figma="14714:118263">
+    <section class="flex flex-col gap-4 rounded bg-secondary-100 p-6 sm:p-10 md:gap-6" aria-labelledby="login-new" data-figma="14714:118263">
       <div class="flex max-w-[376px] flex-col gap-1">
-        <h2 id="login-new" class="text-h3 font-medium text-heading">New Customers</h2>
+        <h2 id="login-new" class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">New Customers</h2>
         <p class="text-base text-body">Creating an account has many benefits.</p>
       </div>
       <ul class="flex flex-col gap-2 text-base text-ink">

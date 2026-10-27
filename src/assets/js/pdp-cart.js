@@ -14,6 +14,7 @@ document.addEventListener("alpine:init", () => {
     images: images.map((src) => window.url(src)),
     index: 0,
     zoom: false,
+    touch: null,
     get many() {
       return this.images.length > 1;
     },
@@ -31,6 +32,18 @@ document.addEventListener("alpine:init", () => {
     },
     open() {
       this.zoom = true;
+    },
+    /** Phone slider (34224:49918) and zoom (21171:387659): a sideways swipe shows the next / previous image. */
+    touchStart(e) {
+      const t = e.changedTouches[0];
+      this.touch = { x: t.clientX, y: t.clientY };
+    },
+    touchEnd(e) {
+      if (!this.touch || !this.many) return;
+      const dx = e.changedTouches[0].clientX - this.touch.x;
+      const dy = e.changedTouches[0].clientY - this.touch.y;
+      this.touch = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? this.next() : this.prev();
     },
     close() {
       this.zoom = false;

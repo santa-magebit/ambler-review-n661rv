@@ -5,12 +5,12 @@
 {% import "macros/ui.njk" as ui with context %}
 {% set c = pdpCart.pdp %}
 
-{# One accordion: 52px #eff7fd header, Medium 20/28 title, open by default as in Figma. #}
+{# One accordion: 52px #eff7fd header, Medium 20/28 title (18/28 on phones), open by default as in Figma. #}
 {% macro accordion(title, id, figma) %}
 <section x-data="{ open: true }" class="overflow-hidden rounded border border-card bg-white" data-figma="{{ figma }}">
   <h2>
     <button type="button" @click="open = !open" :aria-expanded="open" aria-controls="{{ id }}"
-            class="flex min-h-[52px] w-full items-center justify-between gap-2 bg-[#eff7fd] px-5 py-3 text-left text-h4 font-medium tracking-title text-primary-500">
+            class="flex min-h-[52px] w-full items-center justify-between gap-2 bg-[#eff7fd] px-5 py-3 text-left text-lg font-medium tracking-title text-primary-500 md:text-h4">
       {{ title }}
       <span x-show="open">{% icon "dropdown-up" %}</span>
       <span x-show="!open" x-cloak>{% icon "dropdown" %}</span>
@@ -22,29 +22,31 @@
 </section>
 {% endmacro %}
 
-<div class="flex min-w-0 flex-col gap-8" data-figma="34224:49547">
-  <div x-data="pdpBuy('{{ product.slug }}')" class="flex flex-col gap-5" data-figma="34224:49548">
-    <div class="flex flex-col gap-5">
+{# Phones (34224:49918): 28px between blocks, 16px in the buy box, title and price Medium 24/32,
+   description 16/24, a plain 52px quantity box. #}
+<div class="flex min-w-0 flex-col gap-7 md:gap-8" data-figma="34224:49547">
+  <div x-data="pdpBuy('{{ product.slug }}')" class="flex flex-col gap-4 md:gap-5" data-figma="34224:49548">
+    <div class="flex flex-col gap-4 md:gap-5">
       <div class="flex flex-col gap-2">
-        <h1 class="text-h3 font-bold text-heading sm:text-h2">{{ product.name }}</h1>
-        <p class="text-lg text-body">{{ product.description }}</p>
+        <h1 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ product.name }}</h1>
+        <p class="text-base text-body md:text-lg">{{ product.description }}</p>
       </div>
-      <p class="flex items-baseline gap-3 text-h2 font-bold text-heading">
+      <p class="flex items-baseline gap-3 text-h3 font-medium text-heading md:text-h2 md:font-bold">
         {{ product.price | money }}
         {% if product.oldPrice %}<s class="text-lg font-normal text-body">{{ product.oldPrice | money }}</s>{% endif %}
       </p>
     </div>
     <div class="flex gap-3" data-figma="34224:49562">
-      <div class="shrink-0 [&_input]:text-lg">{{ ui.qtyStepper("qty", "v => qty = v", "Quantity", 52) }}</div>
+      <div class="shrink-0 [&_button]:hidden [&_input]:rounded [&_input]:border-x [&_input]:text-lg md:[&_button]:flex md:[&_input]:rounded-none md:[&_input]:border-x-0">{{ ui.qtyStepper("qty", "v => qty = v", "Quantity", 52) }}</div>
       <button type="button" @click="add()" class="btn-primary min-w-0 flex-1 px-4">Add to Cart</button>
       <button type="button" @click="window.print()" aria-label="Print this page" class="btn-secondary w-[52px] shrink-0 px-0">{% icon "printer" %}</button>
     </div>
   </div>
 
   <div class="flex items-center gap-6 rounded border border-card bg-white p-3" data-figma="34224:49566">
-    <img src="{{ c.lifetimeRepair.image }}" alt="" class="h-24 w-24 shrink-0 object-cover sm:h-[148px] sm:w-[148px]">
+    <img src="{{ c.lifetimeRepair.image }}" alt="" class="h-[104px] w-[104px] shrink-0 object-cover md:h-[148px] md:w-[148px]">
     <div class="flex min-w-0 flex-col gap-2">
-      <p class="text-h4 font-medium tracking-title text-primary-500">{{ c.lifetimeRepair.title }}</p>
+      <p class="text-lg font-medium tracking-title text-primary-500 md:text-h4">{{ c.lifetimeRepair.title }}</p>
       <p class="text-lg text-ink">{{ c.lifetimeRepair.text }}</p>
       <a href="/repair-services/" class="link self-start text-lg font-medium">{{ c.lifetimeRepair.linkLabel }}</a>
     </div>
@@ -57,20 +59,20 @@
 
   {% call accordion("Additional Information", "pdp-info", "34660:60436") %}
     {% set brand = catalog.productLines | find("slug", product.brand) %}
-    <dl>
-      <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0">
+    <dl class="break-words">
+      <div class="grid grid-cols-[200px_minmax(0,1fr)] py-1">
         <dt class="text-body">Manufacturer:</dt>
         <dd>{% if brand %}<a href="{{ brand.url }}" class="link">{{ product.brandName }}</a>{% else %}<span class="text-primary-500">{{ product.brandName }}</span>{% endif %}</dd>
       </div>
       {% for row in c.attributesBeforeType %}
-      <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0"><dt class="text-body">{{ row[0] }}</dt><dd class="text-primary-500">{{ row[1] }}</dd></div>
+      <div class="grid grid-cols-[200px_minmax(0,1fr)] py-1"><dt class="text-body">{{ row[0] }}</dt><dd class="text-primary-500">{{ row[1] }}</dd></div>
       {% endfor %}
-      <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0">
+      <div class="grid grid-cols-[200px_minmax(0,1fr)] py-1">
         <dt class="text-body">Product Type:</dt>
         <dd>{% if typeHref %}<a href="{{ typeHref }}" class="link">{{ product.typeName }}</a>{% else %}{{ product.typeName }}{% endif %}</dd>
       </div>
       {% for row in c.attributesAfterType %}
-      <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0"><dt class="text-body">{{ row[0] }}</dt><dd class="text-primary-500">{{ row[1] }}</dd></div>
+      <div class="grid grid-cols-[200px_minmax(0,1fr)] py-1"><dt class="text-body">{{ row[0] }}</dt><dd class="text-primary-500">{{ row[1] }}</dd></div>
       {% endfor %}
     </dl>
   {% endcall %}

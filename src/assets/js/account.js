@@ -25,6 +25,11 @@
   /** ?empty shows the designed empty state of a list page (Address Book, My Orders). */
   const wantsEmpty = () => new URLSearchParams(window.location.search).has("empty");
 
+  /** Remove a list entry: its table row and its phone card share data-row (both are in the page). */
+  const removeRow = (root, el) => {
+    root.querySelectorAll(`[data-row="${el.dataset.row}"]`).forEach((n) => n.remove());
+  };
+
   /** The items of the designed order (#000000368), by item number. */
   const ORDER_SKUS = ["14205", "BCD-10", "2084E"];
 
@@ -101,7 +106,7 @@
     Alpine.data("addressBook", (count = 0) => ({
       count: wantsEmpty() ? 0 : count,
       remove(row) {
-        row.remove();
+        removeRow(this.$root, row);
         this.count -= 1;
         toast({ message: "You deleted the address." });
       },
@@ -168,7 +173,7 @@
     Alpine.data("storedCards", (count = 0) => ({
       count,
       remove(row) {
-        row.remove();
+        removeRow(this.$root, row);
         this.count -= 1;
         toast({ message: "Stored Payment Method was successfully removed." });
       },

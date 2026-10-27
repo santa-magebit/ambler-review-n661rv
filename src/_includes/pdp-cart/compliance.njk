@@ -1,12 +1,13 @@
-{# Cart "regulatory-notice" (34314:11255): 288px grey label panel, three rows split by 1px lines. #}
+{# Cart "regulatory-notice" (34314:11255): 288px grey label panel, three rows split by 1px lines.
+   Phones (14714:103652): last on the page, icon beside the title, 20px padding. #}
 {% import "pdp-cart/graphics.njk" as gfx %}
 {% set cmp = pdpCart.compliance %}
-<section aria-labelledby="compliance-title" class="grid overflow-hidden rounded border border-outline bg-white md:grid-cols-[288px_minmax(0,1fr)]" data-figma="34314:11255">
-  <div class="flex flex-col gap-3 bg-[#f1f5f9] p-6" data-figma="34314:11256">
+<section aria-labelledby="compliance-title" class="order-last mt-5 grid overflow-hidden rounded border border-outline bg-white md:order-none md:mt-0 md:grid-cols-[288px_minmax(0,1fr)]" data-figma="34314:11255">
+  <div class="flex items-center gap-3 bg-[#f1f5f9] p-5 md:flex-col md:items-stretch md:p-6" data-figma="34314:11256">
     {{ gfx.shield("h-6 w-6 text-heading") }}
     <h2 id="compliance-title" class="text-lg font-medium text-heading">{{ cmp.title }}</h2>
   </div>
-  <div class="flex min-w-0 flex-col p-6" data-figma="34314:11259">
+  <div class="flex min-w-0 flex-col p-5 md:p-6" data-figma="34314:11259">
     {% for r in cmp.rows %}
     <div class="flex flex-col gap-1 {{ 'mt-5 border-t border-outline pt-5' if not loop.first }}">
       <h3 class="text-base font-bold text-heading">{{ r.title }}</h3>

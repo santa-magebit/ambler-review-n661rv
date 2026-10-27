@@ -24,7 +24,7 @@
   {{ co.heading("Shipping Address", "saved-shipping-title") }}
   <div role="radiogroup" aria-labelledby="saved-shipping-title" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
     <template x-for="a in addresses" :key="a.id">
-      <label class="relative flex min-h-[200px] cursor-pointer rounded border p-[23px] text-base text-body"
+      <label class="relative flex cursor-pointer rounded border p-[19px] text-base text-body md:min-h-[200px] md:p-[23px]"
              :class="shippingAddress === a.id ? 'border-primary-500 bg-[#f5f5f5]' : 'border-secondary-200 bg-white hover:border-grayscale-400'">
         <span class="flex min-w-0 flex-1 flex-col gap-2">
           <template x-for="(l, i) in a.lines" :key="i"><span x-text="l"></span></template>
@@ -42,10 +42,11 @@
   {{ co.heading("Billing Address", "saved-billing-title") }}
   <div>
     <label for="billing-address-select" class="label">Select Address</label>
-    {# Native select under a wrapping label box: Figma shows the full address over two lines. #}
+    {# Native select under a wrapping label box: Figma shows the full address over two lines
+       (phones: one 52px line, cut off, 34799:88917). #}
     <div class="relative">
-      <div aria-hidden="true" class="flex min-h-[80px] items-start justify-between gap-3 rounded border border-secondary-200 bg-white py-3 pl-5 pr-5 text-lg text-body">
-        <span x-text="oneLine(billingAddress)"></span>
+      <div aria-hidden="true" class="flex h-[52px] items-center justify-between gap-3 rounded border border-secondary-200 bg-white py-3 pl-5 pr-5 text-lg text-body md:h-auto md:min-h-[80px] md:items-start">
+        <span class="min-w-0 truncate md:overflow-visible md:whitespace-normal" x-text="oneLine(billingAddress)"></span>
         {% icon "dropdown", "h-7 w-7 text-primary-500" %}
       </div>
       <select id="billing-address-select" name="billing_address" x-model="billingAddress" class="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0">

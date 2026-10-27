@@ -3,27 +3,41 @@
     {% import "account/macros.njk" as acc with context %}
 #}
 
-{# Page title, web/heading/h1 (Bold 40/48). #}
-{% macro pageTitle(text) %}
-<h1 class="text-h2 font-bold text-heading md:text-h1">{{ text }}</h1>
+{# Page title, web/heading/h1 (Bold 40/48); phones Medium 28/36, -2% letter spacing (mobile frames, e.g. 14714:138225).
+   backHref: sub-pages draw a 40x32 "back" button left of the title on phones (14714:138751). #}
+{% macro pageTitle(text, backHref="") %}
+{% if backHref %}
+<div class="flex items-center gap-5">
+  {{ backButton(backHref) }}
+  <h1 class="text-mobile-h1 font-medium tracking-title text-heading md:text-h1 md:font-bold md:tracking-normal">{{ text }}</h1>
+</div>
+{% else %}
+<h1 class="text-mobile-h1 font-medium tracking-title text-heading md:text-h1 md:font-bold md:tracking-normal">{{ text }}</h1>
+{% endif %}
 {% endmacro %}
 
-{# Section heading (Medium 24/32) with an optional "Label ->" link under it (dashboard "h3" 14714:137098). #}
+{# Phones only: "back" button next to the page title (40x32, #f1f5f8, 1px #dee7ed, chevron-left; 14714:138751). #}
+{% macro backButton(href, label="Back") %}
+<a href="{{ href }}" aria-label="{{ label }}" class="flex h-8 w-10 shrink-0 items-center justify-center rounded border border-secondary-200 bg-secondary-100 text-primary-500 hover:text-ink md:hidden">{% icon "chevron-right", "h-6 w-6 rotate-180" %}</a>
+{% endmacro %}
+
+{# Section heading (Medium 24/32, phones 20/28 with -2% letter spacing) with an optional "Label ->" link under it (dashboard "h3" 14714:137098). #}
 {% macro sectionTitle(text, href="", linkLabel="") %}
 <div class="flex flex-col gap-1">
-  <h2 class="text-h3 font-medium text-heading">{{ text }}</h2>
+  <h2 class="text-h4 font-medium tracking-title text-heading md:text-h3 md:tracking-normal">{{ text }}</h2>
   {% if href %}
   <a href="{{ href }}" class="link flex w-fit items-center gap-1 text-base">{{ linkLabel }}{% icon "arrow-right", "h-7 w-7" %}</a>
   {% endif %}
 </div>
 {% endmacro %}
 
-{# Grey card with the 52px orange icon disc (dashboard "contact.information" 14714:137077, privacy cards). #}
+{# Grey card with the 52px orange icon disc (dashboard "contact.information" 14714:137077, privacy cards).
+   Phones (14714:138225): 24px padding, icon and Medium 18/28 title side by side, the content full width under them, 16px gaps. #}
 {% macro infoCard(icon, title, figma="") %}
-<div class="flex gap-4 rounded bg-secondary-100 p-6 sm:gap-6 sm:p-10" {% if figma %}data-figma="{{ figma }}"{% endif %}>
-  <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-accent text-white" aria-hidden="true">{% icon icon, "h-6 w-6" %}</span>
-  <div class="flex min-w-0 flex-1 flex-col gap-6">
-    <h3 class="text-h4 font-medium tracking-title text-heading">{{ title }}</h3>
+<div class="relative flex gap-4 rounded bg-secondary-100 p-6 md:gap-6 md:p-10" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <span class="absolute left-6 top-6 flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-accent text-white md:static" aria-hidden="true">{% icon icon, "h-6 w-6" %}</span>
+  <div class="flex min-w-0 flex-1 flex-col gap-4 md:gap-6">
+    <h3 class="flex min-h-[52px] items-center pl-[68px] text-lg font-medium tracking-title text-heading md:block md:min-h-0 md:pl-0 md:text-h4">{{ title }}</h3>
     {{ caller() }}
   </div>
 </div>
@@ -77,28 +91,31 @@
 </div>
 {% endmacro %}
 
-{# Empty state (Address Book 23115:35472, My Orders 32215:84211): white box, #dde7ee border, 160px illustration. #}
-{% macro emptyState(image, title, text, href, linkLabel, figma="", padding="py-[60px]") %}
-<div class="flex flex-col items-center rounded border border-outline bg-white px-6 text-center {{ padding }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+{# Empty state (Address Book 23115:35472, My Orders 32215:84211): white box, #dde7ee border, 160px illustration.
+   Phones (23115:35480, 21071:136476): 40px padding, 24px under the illustration, Medium 20/28 ink title;
+   btnGap: space above the button on phones (24px Address Book, 32px My Orders). #}
+{% macro emptyState(image, title, text, href, linkLabel, figma="", padding="md:py-[60px]", btnGap="mt-6") %}
+<div class="flex flex-col items-center rounded border border-outline bg-white p-10 text-center md:px-6 {{ padding }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
   <img src="{{ image }}" alt="" width="160" height="160" class="h-40 w-40">
-  <h2 class="mt-8 text-h3 font-bold text-heading md:text-h2">{{ title }}</h2>
+  <h2 class="mt-6 text-h4 font-medium tracking-title text-ink md:mt-8 md:text-h2 md:font-bold md:tracking-normal md:text-heading">{{ title }}</h2>
   <p class="mt-2 max-w-[500px] text-base text-body">{{ text }}</p>
-  <a href="{{ href }}" class="btn-primary mt-8">{{ linkLabel }}</a>
+  <a href="{{ href }}" class="btn-primary {{ btnGap }} md:mt-8">{{ linkLabel }}</a>
 </div>
 {% endmacro %}
 
-{# Table pager row: "Items x-y of z", Previous / pages / Next, "Show: 16" (Address Book 14714:137308). #}
+{# Table pager row: "Items x-y of z", Previous / pages / Next, "Show: 16" (Address Book 14714:137308).
+   Phones (14714:138607 "pagination"): only the 52px buttons, centred, arrows without their labels. #}
 {% macro pager(summary, figma="") %}
-<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4" {% if figma %}data-figma="{{ figma }}"{% endif %}>
-  <p class="text-base text-body lg:w-[168px]">{{ summary }}</p>
+<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:justify-between" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <p class="hidden text-base text-body md:block lg:w-[168px]">{{ summary }}</p>
   <nav aria-label="Pages" class="flex flex-wrap items-center gap-3">
-    <a href="#" data-proto class="btn-secondary pl-4 pr-8">{% icon "arrow-left" %}Previous</a>
+    <a href="#" data-proto aria-label="Previous" class="btn-secondary w-[52px] px-0 md:w-auto md:pl-4 md:pr-8">{% icon "arrow-left" %}<span class="hidden md:inline">Previous</span></a>
     <a href="#" data-proto class="btn-secondary w-[52px] px-0">1</a>
-    <span aria-current="page" class="btn w-[52px] bg-secondary-200 px-0 text-secondary-300">2</span>
+    <span aria-current="page" class="btn w-[52px] bg-outline px-0 text-body md:bg-secondary-200 md:text-secondary-300">2</span>
     <a href="#" data-proto class="btn-secondary w-[52px] px-0">3</a>
-    <a href="#" data-proto class="btn-secondary pl-8 pr-4">Next{% icon "arrow-right" %}</a>
+    <a href="#" data-proto aria-label="Next" class="btn-secondary w-[52px] px-0 md:w-auto md:pl-8 md:pr-4"><span class="hidden md:inline">Next</span>{% icon "arrow-right" %}</a>
   </nav>
-  <label class="flex items-center gap-5 text-base text-body">
+  <label class="hidden items-center gap-5 text-base text-body md:flex">
     Show:
     <span class="relative">
       <select class="input h-[52px] w-[104px] cursor-pointer appearance-none pr-12 text-body">
@@ -110,10 +127,42 @@
 </div>
 {% endmacro %}
 
+{# Phones: tables are drawn as stacked cards ("table-card" 14714:138225). Card body: white, 1px #dde7ee,
+   24px padding, 12px between rows; a row is a 110px ink label and the value right-aligned. #}
+{% set cardCls = "flex flex-col gap-3 border border-outline bg-white p-[23px] text-base text-body" %}
+{# Card action strip: 44px, white cells with #dde7ee lines, icon + Regular 16/24 label. #}
+{% set cardActionsCls = "grid h-11 auto-cols-fr grid-flow-col divide-x divide-outline border-x border-b border-outline bg-white text-base text-body" %}
+{% set cardActionCls = "flex items-center justify-center gap-2.5 hover:text-primary-500" %}
+{% macro cardRow(label, valueClass="", center=false) %}
+<div class="flex {{ 'items-center' if center else 'items-start' }}">
+  <dt class="min-w-[110px] shrink-0 whitespace-nowrap text-ink">{{ label }}</dt>
+  <dd class="min-w-0 flex-1 text-right {{ valueClass }}">{{ caller() }}</dd>
+</div>
+{% endmacro %}
+
 {# Orders table (dashboard "Recent Orders" 14714:137120, "My Orders" 14714:137460).
-   Columns from Figma: 100 / 100 / fill / 100 / 100 / 100 with 24px gaps and padding. #}
+   Columns from Figma: 100 / 100 / fill / 100 / 100 / 100 with 24px gaps and padding.
+   Phones: order cards with View Order / Re-order (14714:138225, 14714:138439). #}
 {% macro ordersTable(orders, figma="") %}
-<div x-data="orderActions" class="overflow-x-auto" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+<div x-data="orderActions" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <ul class="flex flex-col gap-3 md:hidden">
+    {% for o in orders %}
+    <li>
+      <dl class="{{ cardCls }}">
+        {% call cardRow("Order #:") %}<a href="/sales/order/view/" class="link">{{ o.number }}</a>{% endcall %}
+        {% call cardRow("Date:") %}{{ o.date }}{% endcall %}
+        {% call cardRow("Ship To:") %}{{ o.shipTo }}{% endcall %}
+        {% call cardRow("Order Total:", "font-bold text-ink") %}{{ o.total }}{% endcall %}
+        {% call cardRow("Status:", "", true) %}{{ statusBadge(o.status) }}{% endcall %}
+      </dl>
+      <div class="{{ cardActionsCls }}">
+        <a href="/sales/order/view/" class="{{ cardActionCls }}">{% icon "eye", "h-6 w-6" %}View Order</a>
+        <button type="button" @click="reorder()" class="{{ cardActionCls }}">{% icon "reload", "h-6 w-6" %}Re-order</button>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="hidden overflow-x-auto md:block">
   <table class="w-full min-w-[860px] text-left">
     <thead>
       <tr class="bg-secondary-100 text-sm text-heading">
@@ -143,18 +192,21 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% endmacro %}
 
 {# Modal (Privacy Settings modals 34547:110757): 496px white panel, 96px title bar with a 96px close cell,
-   navy 60% overlay. open: Alpine expression, close: Alpine statement. #}
+   navy 60% overlay. open: Alpine expression, close: Alpine statement.
+   Phones (34385:27782): a full-screen white page, 56px title bar (Medium 24/32) with a 56px close cell;
+   the panel is a flex column so the body can keep its buttons at the bottom (mt-auto). #}
 {% macro modal(id, title, open, close, figma="") %}
-<div x-show="{{ open }}" x-cloak class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-4 py-10 md:pt-20" role="dialog" aria-modal="true" aria-labelledby="{{ id }}-title" @keydown.escape.window="{{ close }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+<div x-show="{{ open }}" x-cloak class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto md:px-4 md:pb-10 md:pt-20" role="dialog" aria-modal="true" aria-labelledby="{{ id }}-title" @keydown.escape.window="{{ close }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
   <div class="fixed inset-0 bg-heading/60" @click="{{ close }}" x-show="{{ open }}" x-transition.opacity></div>
-  <div class="relative w-full max-w-[496px] rounded bg-white" x-show="{{ open }}" x-transition x-trap="{{ open }}" x-effect="lockScroll('{{ id }}', {{ open }})">
+  <div class="relative flex min-h-full w-full flex-col bg-white md:block md:min-h-0 md:max-w-[496px] md:rounded" x-show="{{ open }}" x-transition x-trap="{{ open }}" x-effect="lockScroll('{{ id }}', {{ open }})">
     <div class="flex border-b border-outline">
-      <h2 id="{{ id }}-title" class="flex flex-1 items-center px-6 py-7 text-h3 font-medium tracking-title text-heading sm:px-10 sm:text-[28px] sm:leading-10">{{ title }}</h2>
-      <button type="button" @click="{{ close }}" aria-label="Close" class="flex w-20 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100 sm:w-24">{% icon "close-x", "h-6 w-6" %}</button>
+      <h2 id="{{ id }}-title" class="flex flex-1 items-center px-5 py-3 text-h3 font-medium tracking-title text-heading md:px-10 md:py-7 md:text-[28px] md:leading-10">{{ title }}</h2>
+      <button type="button" @click="{{ close }}" aria-label="Close" class="flex w-14 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100 md:w-24">{% icon "close-x", "h-6 w-6" %}</button>
     </div>
     {{ caller() }}
   </div>

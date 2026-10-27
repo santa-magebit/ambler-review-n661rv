@@ -1,7 +1,9 @@
 {#
-  Footer: two designs and nothing in between, switching at 1280px (xl) like the header.
-  Web (Landing Page 34141:38086): white band + 56px navy bottom bar; the four columns fill the width
-  in the drawn proportions (345 / 223 / 563 / 345) and never get narrower than their content.
+  Footer: two designs and nothing in between, mobile up to 768px (tablet) and web from 769px.
+  Web (Landing Page 34141:38086): white band + 56px navy bottom bar; from 1280px the four columns fill
+  the width in the drawn proportions (345 / 223 / 563 / 345) and never get narrower than their content.
+  The single row needs about 1200px, so from 769px to 1279px the same columns sit in two rows:
+  logo | socials + BBB, then Quick Links | Contact Information.
   Mobile (Figma "mobile/footer" 34739:21934): centred logo, contact buttons, one row per link,
   socials + BBB, copyright only in the bar.
   The logo matches the header's visually: the blue logo on white reads smaller than the white one on
@@ -10,7 +12,7 @@
 {% set mapsHref = "https://www.google.com/maps/search/?api=1&query=" + (site.contact.address | replace("|", "") | urlencode) %}
 <footer class="mt-auto" data-figma="34141:38086">
   {# Mobile #}
-  <div class="bg-white xl:hidden" data-figma="34739:21934">
+  <div class="bg-white min-[769px]:hidden" data-figma="34739:21934">
     <div class="flex justify-center py-7">
       <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo.png" alt="Ambler Surgical" width="138" height="32" class="h-8 w-auto"></a>
     </div>
@@ -40,12 +42,12 @@
   </div>
 
   {# Web #}
-  <div class="hidden bg-white xl:block">
-    <div class="container-page grid grid-cols-[minmax(max-content,345fr)_minmax(max-content,223fr)_minmax(max-content,563fr)_minmax(max-content,345fr)] gap-5 py-10">
-      <div>
+  <div class="hidden bg-white min-[769px]:block">
+    <div class="container-page grid grid-cols-[minmax(max-content,1fr)_minmax(max-content,2fr)] gap-x-5 gap-y-10 py-10 xl:grid-cols-[minmax(max-content,345fr)_minmax(max-content,223fr)_minmax(max-content,563fr)_minmax(max-content,345fr)] xl:gap-5">
+      <div class="self-center xl:self-auto">
         <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo.png" alt="Ambler Surgical" width="242" height="56" class="h-14 w-auto"></a>
       </div>
-      <div>
+      <div class="row-start-2 xl:row-start-auto">
         <h2 class="text-base font-medium text-ink">Quick Links</h2>
         <ul class="mt-6 flex flex-col gap-2 whitespace-nowrap">
           {% for l in site.footerQuickLinks %}
@@ -53,7 +55,7 @@
           {% endfor %}
         </ul>
       </div>
-      <div>
+      <div class="row-start-2 xl:row-start-auto">
         <h2 class="text-base font-medium text-ink">Contact Information</h2>
         <ul class="mt-6 flex flex-col gap-2 whitespace-nowrap text-lg text-primary-500">
           <li><a href="{{ site.contact.phoneHref }}" class="flex items-center gap-2 font-medium hover:underline">{% icon "phone-call", "h-7 w-7 text-accent" %}{{ site.contact.phone }}</a></li>
@@ -61,7 +63,7 @@
           <li class="flex items-center gap-2">{% icon "map-pin", "h-7 w-7 text-accent" %}{{ site.contact.address }}</li>
         </ul>
       </div>
-      <div class="flex flex-col items-end gap-11">
+      <div class="col-start-2 row-start-1 flex items-center justify-end gap-6 xl:col-start-auto xl:row-start-auto xl:flex-col xl:items-end xl:justify-start xl:gap-11">
         <ul class="flex gap-3">
           {% for s in site.social %}
           <li>
@@ -75,9 +77,9 @@
   </div>
 
   <div class="bg-primary-500 text-base text-white">
-    <div class="container-page flex min-h-14 items-center justify-center py-4 xl:justify-between">
+    <div class="container-page flex min-h-14 items-center justify-center py-4 min-[769px]:justify-between">
       <p>© 2026 Ambler Surgical</p>
-      <p class="hidden items-center gap-2 xl:flex">
+      <p class="hidden items-center gap-2 min-[769px]:flex">
         <a href="#" data-proto class="hover:underline">Privacy Policy</a>
         <span class="h-3 w-px bg-secondary-200" aria-hidden="true"></span>
         <a href="#" data-proto class="hover:underline">Manage Cookies</a>

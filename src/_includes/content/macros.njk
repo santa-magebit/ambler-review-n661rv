@@ -109,5 +109,5 @@
 
 {# Orange button with the arrow (Landing Page hero 34141:37899 "btn": 12/30/12/32 padding). #}
 {% macro arrowButton(label, href, attrs="") %}
-<a href="{{ href }}" class="btn-accent pr-[30px]" {{ attrs | safe }}>{{ label }}{% icon "arrow-narrow-right" %}</a>
+<a href="{{ href }}" class="btn-accent whitespace-nowrap pr-[30px]" {{ attrs | safe }}>{{ label }}{% icon "arrow-narrow-right" %}</a>
 {% endmacro %}

@@ -44,9 +44,9 @@ title: Home
 
 {{ c.trustBand("34141:38022") }}
 
-{# Repair Services band: navy offer card + four category cards. #}
+{# Repair Services band: navy offer card + four category cards; the card never gets narrower than its one-line button. #}
 <section class="bg-white" aria-labelledby="home-repair" data-figma="34141:38027">
-  <div class="container-page grid gap-6 py-10 lg:grid-cols-[467fr_1045fr]">
+  <div class="container-page grid gap-6 py-10 lg:grid-cols-[minmax(min-content,467fr)_1045fr]">
     <div class="flex min-w-0 flex-col items-start justify-center gap-5 rounded bg-primary-500 p-8 sm:p-10" data-figma="34141:38028">
       <div class="flex flex-col gap-4">
         <h2 id="home-repair" class="text-h2 font-bold text-white">Repair Services</h2>

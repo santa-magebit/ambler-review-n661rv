@@ -160,9 +160,9 @@ permalink: /about-ambler-surgical/
   </div>
 </section>
 
-{# More from Ambler: three navy cards. #}
+{# More from Ambler: three navy cards, side by side from 1024px (narrower, their one-line buttons don't fit). #}
 <section class="bg-secondary-100" aria-label="More from Ambler" data-figma="34974:1331">
-  <ul class="container-page grid gap-6 py-10 md:grid-cols-3">
+  <ul class="container-page grid gap-6 py-10 lg:grid-cols-3">
     {% for card in a.ctas %}
     <li class="flex min-w-0 flex-col items-start gap-4 rounded bg-primary-500 p-6 lg:min-h-[365px] lg:p-8" data-figma="{{ card.figma }}">
       {% if card.icon %}{% icon card.icon, "h-14 w-14 text-white" %}{% else %}<img src="{{ card.image }}" alt="" class="h-14 w-14 object-contain">{% endif %}

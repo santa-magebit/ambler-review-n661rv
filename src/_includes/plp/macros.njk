@@ -177,15 +177,16 @@
             <span x-show="applied.length" x-cloak x-text="applied.length" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink"></span>
           </p>
           <p x-show="!applied.length" class="flex h-9 items-center text-base text-body">No filters applied yet</p>
-          <ul x-show="applied.length" x-cloak class="flex min-w-0 flex-1 flex-wrap items-center gap-2" aria-label="Active filters">
-            <template x-for="key in chips" :key="key">
-              <li class="flex h-9 items-center gap-2 rounded bg-[#eff7fd] py-1.5 pl-4 pr-3 text-base text-heading">
+          {# One row of chips: the ones that don't fit (measured, see fitChips) wait behind "+x more", which shows them all. #}
+          <ul x-show="applied.length" x-cloak x-ref="chips" class="flex min-w-0 flex-1 items-center gap-2" :class="allChips ? 'flex-wrap' : 'flex-nowrap'" aria-label="Active filters">
+            <template x-for="(key, i) in applied" :key="key">
+              <li x-show="chipShown(i)" data-chip class="flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded bg-[#eff7fd] py-1.5 pl-4 pr-3 text-base text-heading">
                 <span><span class="font-medium" x-text="groupLabel(key) + ':'"></span> <span x-text="valueLabel(key)"></span></span>
                 <button type="button" @click="remove(key)" :aria-label="'Remove filter ' + groupLabel(key) + ' ' + valueLabel(key)" class="flex h-6 w-6 items-center justify-center text-heading hover:text-accent">{% icon "close-x", "h-4 w-4" %}</button>
               </li>
             </template>
-            <li x-show="hiddenChips > 0">
-              <button type="button" @click="allChips = true" class="link h-9 px-2 text-base" x-text="'+' + hiddenChips + ' more'"></button>
+            <li x-show="measuring || hiddenChips > 0" class="shrink-0">
+              <button type="button" x-ref="more" @click="allChips = true" class="link h-9 whitespace-nowrap px-2 text-base" x-text="'+' + (measuring ? applied.length : hiddenChips) + ' more'"></button>
             </li>
           </ul>
           <button type="button" x-show="applied.length" x-cloak @click="clearAll()" class="link ml-auto h-9 text-base">Clear all</button>

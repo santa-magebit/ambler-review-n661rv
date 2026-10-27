@@ -4,6 +4,7 @@
 // CMS - About Ambler Surgical (34974:1141) and Repair Services (34799:68554).
 // Texts the layer dump cuts off were read from the frame renders.
 import catalog from "./catalog.js";
+import plp from "./plp.js";
 import images from "./images.js";
 
 /**
@@ -256,22 +257,8 @@ const repair = {
     "After extended use, even the highest quality surgical instruments lose their edge or alignment. Instead of discarding valuable assets, Ambler Surgical offers a surgical instrument repair service designed to restore your equipment to original manufacturer specifications. Our capabilities cover the entire spectrum of the operating room.",
     "Our FDA-registered lab is staffed by some of the most experienced technicians in the industry. Unlike general repair shops, we assign each repair to a surgical instrument repair specialist trained in that specific device. With us, you don't need to call for an RMA number. Simply download a repair form, ship your instruments, and we handle the rest.",
   ],
-  /** FAQ (34799:68632). Only the third answer is written in Figma; the others are not part of the prototype. */
-  faq: [
-    { id: "sterilize", q: "How do you sterilize ophthalmic surgical instruments" },
-    { id: "cataract-tray", q: "What instruments are included in a standard cataract surgery tray?" },
-    {
-      id: "materials",
-      q: "What materials are ophthalmic surgical instruments are made of?",
-      a: [
-        "Titanium: Highly preferred because it is lightweight (reducing hand fatigue during microsurgery), non-magnetic, and extremely resistant to corrosion.",
-        "Stainless Steel: Widely used for its durability, strength, and ability to hold exceptionally sharp edges for cutting instruments.",
-        "Tungsten Carbide: Often used as inserts in the tips of scissors or the jaws of needle holders to provide extra hardness, longevity, and a secure grip.",
-        "Medical-Grade Plastics: Used for disposable, single-use instruments.",
-      ],
-    },
-    { id: "repair-services", q: "Does Ambler Surgical offer repair services for ophthalmic instruments?" },
-  ],
+  /** FAQ (34799:68632): the same questions as the PLP FAQ, answered from the old site (see plp.js). */
+  faq: plp.faq.general.map((f, i) => ({ id: ["sterilize", "cataract-tray", "materials", "repair-services"][i], ...f })),
 };
 
 export default { gradients, trust, home, about, repair };

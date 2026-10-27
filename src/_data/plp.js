@@ -222,20 +222,53 @@ const materialsAnswer = [
   "Tungsten Carbide: Often used as inserts in the tips of scissors or the jaws of needle holders to provide extra hardness, longevity, and a secure grip.",
   "Medical-Grade Plastics: Used for disposable, single-use instruments.",
 ];
+// FAQ answers from the old site: the Ophthalmology page FAQ (amblersurgical.com/browse-by-specialty/ophthalmology),
+// its instrument category copy and the cleaning & sterilization IFU. Figma draws only the materials answer.
+const sterilizeAnswer = [
+  "Reusable ophthalmic instruments are typically sterilized via steam autoclave (134°C for 3–4 minutes, or 121°C for 15 minutes) following thorough manual cleaning or ultrasonic bath decontamination.",
+  "Instruments with delicate tips, such as forceps, needle holders, or diamond knives should be placed in silicone-fingered instrument trays to protect cutting edges and fine tips during the autoclave cycle. Ambler Surgical carries a full range of sterilization trays, cleaning brushes, disinfectant solutions, and instrument guards to support proper SPD workflow.",
+  "Diamond knives require special handling and should never be autoclaved; Ambler's professional resharpening service restores them instead.",
+];
+const cataractTrayAnswer = [
+  "A typical cataract surgery tray includes a lid speculum (e.g., Lieberman or Barraquer), a fixed caliper (e.g., Braunstein), a clear-cornea or keratome knife, a crescent blade, Castroviejo suturing forceps, a chopper or second instrument, iris hooks or a capsular tension ring injector (e.g., RingJect™ CTR), a Westcott tenotomy scissor, and an I/A handpiece.",
+  "Exact tray composition varies by surgeon preference and technique (phaco vs. MSICS). Ambler Surgical carries all of these individually, and the cross-reference catalog search lets you match any current catalog number to find compatible replacements in seconds.",
+];
+const repairAnswer = [
+  "Yes, and it's one of our strongest differentiators. Ambler offers free lifetime repair on most Ambler-brand ophthalmic instruments, covering the full service life of the tool.",
+  "Paid repair services are also available for diamond knives (resharpening and re-tipping), phaco handpieces, cryosurgical handpieces, micro instruments, and surgical/diagnostic lenses. For OR managers and ASC buyers, this significantly lowers total cost of ownership compared to disposable-only or no-warranty alternatives.",
+];
 const faq = {
   // Specialty, Category and Forceps frames (34777:59083, 34719:11514, 34887:118753).
   general: [
-    { q: "How do you sterilize ophthalmic surgical instruments" },
-    { q: "What instruments are included in a standard cataract surgery tray?" },
-    { q: "What materials are ophthalmic surgical instruments are made of?", a: materialsAnswer },
-    { q: "Does Ambler Surgical offer repair services for ophthalmic instruments?" },
+    { q: "How do you sterilize ophthalmic surgical instruments?", a: sterilizeAnswer },
+    { q: "What instruments are included in a standard cataract surgery tray?", a: cataractTrayAnswer },
+    { q: "What materials are ophthalmic surgical instruments made of?", a: materialsAnswer },
+    { q: "Does Ambler Surgical offer repair services for ophthalmic instruments?", a: repairAnswer },
   ],
   // Product Type Page (34723:17357).
   instruments: [
-    { q: "What are ophthalmic instruments used for?" },
-    { q: "What are the key features of ophthalmic instruments?" },
+    {
+      q: "What are ophthalmic instruments used for?",
+      a: [
+        "Ophthalmic surgical instruments are built for microsurgical accuracy in both anterior and posterior segment procedures: cataract, corneal, glaucoma, retinal, refractive, and oculoplastic surgery.",
+        "Each type has its own job in the tray: speculums hold the lids open, calipers and markers measure and mark the cornea, knives and blades make the incisions, forceps and hooks grasp and manipulate tissue, sutures and lenses, scissors cut, and cannulas and I/A tips irrigate and aspirate.",
+      ],
+    },
+    {
+      q: "What are the key features of ophthalmic instruments?",
+      a: [
+        "Each instrument is selected for superior materials, ergonomic design, and consistent performance, and held to microsurgical tolerances where tip geometry is measured in microns.",
+        "You get controlled handling, clear visibility, and a consistent feel, case after case. Stainless steel and titanium options hold alignment through repeated autoclave cycles, while balanced profiles and finely finished tips help you work confidently in cataract, cornea, retina, glaucoma, and oculoplastic surgery.",
+      ],
+    },
     { q: "How do I choose between stainless steel and titanium instruments?", a: materialsAnswer },
-    { q: "Are these instruments reusable and autoclavable?" },
+    {
+      q: "Are these instruments reusable and autoclavable?",
+      a: [
+        "Yes. Ambler Surgical's reusable instruments are provided non-sterile and must be inspected, cleaned, and sterilized before first use and before every reuse. They are typically sterilized via steam autoclave (134°C for 3–4 minutes, or 121°C for 15 minutes) after thorough manual or ultrasonic cleaning.",
+        "Repeated reprocessing has minimal effect on the instrument life: the end of useful life for metal surgical instruments is normally determined by wear and damage from surgical use. Diamond knives should never be autoclaved, and disposable instruments are for single use only.",
+      ],
+    },
   ],
 };
 

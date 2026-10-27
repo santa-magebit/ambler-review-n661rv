@@ -23,6 +23,42 @@
     return CATALOG.find((p) => p.sku && p.sku.toLowerCase() === s);
   };
 
+  /**
+   * Page scroll lock for drawers and modals: x-effect="lockScroll('minicart', $store.cart.open)".
+   * The page scrollbar stays on screen, so nothing jumps sideways when a panel opens. While any lock
+   * is on, wheel, touch and scroll keys outside the open dialog do nothing, scrolling inside it still
+   * works, and a scroll from dragging the page scrollbar snaps straight back.
+   */
+  const locks = new Set();
+  let lockedY = 0;
+  window.lockScroll = (key, on) => {
+    if (on && !locks.size) lockedY = window.scrollY;
+    on ? locks.add(key) : locks.delete(key);
+  };
+  const dialogOf = (el) => (el && el.closest ? el.closest('[aria-modal="true"]') : null);
+  /** Can something between el and the dialog scroll further in direction dy (0 = either way)? */
+  const canScroll = (el, dialog, dy) => {
+    for (let n = el; n && n !== dialog.parentElement; n = n.parentElement) {
+      if (!/(auto|scroll)/.test(getComputedStyle(n).overflowY) || n.scrollHeight <= n.clientHeight + 1) continue;
+      if (dy === 0 || (dy < 0 ? n.scrollTop > 0 : n.scrollTop + n.clientHeight < n.scrollHeight - 1)) return true;
+    }
+    return false;
+  };
+  const blockScroll = (e, dy) => {
+    if (!locks.size) return;
+    const dialog = dialogOf(e.target);
+    if (!dialog || !canScroll(e.target, dialog, dy)) e.preventDefault();
+  };
+  window.addEventListener("wheel", (e) => blockScroll(e, e.deltaY), { passive: false });
+  window.addEventListener("touchmove", (e) => blockScroll(e, 0), { passive: false });
+  const SCROLL_KEYS = new Set([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"]);
+  window.addEventListener("keydown", (e) => {
+    if (locks.size && SCROLL_KEYS.has(e.key) && !dialogOf(e.target) && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) e.preventDefault();
+  });
+  window.addEventListener("scroll", () => {
+    if (locks.size && window.scrollY !== lockedY) window.scrollTo({ top: lockedY, behavior: "instant" });
+  }, { passive: true });
+
   const read = (k, fallback) => {
     try {
       const raw = localStorage.getItem(k);

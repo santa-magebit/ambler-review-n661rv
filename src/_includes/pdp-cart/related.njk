@@ -8,7 +8,7 @@
   <div class="container-page flex flex-col gap-10">
     <h2 id="related-title" class="text-h3 font-bold text-heading md:text-h2">Related Products</h2>
     <ul x-ref="track" data-figma="34224:49615"
-        class="grid snap-x snap-mandatory auto-cols-[minmax(240px,calc((100%-24px)/2))] grid-flow-col gap-6 overflow-x-auto [scrollbar-width:none] md:auto-cols-[calc((100%-48px)/3)] lg:auto-cols-[calc((100%-72px)/4)] xl:auto-cols-[calc((100%-96px)/5)] [&::-webkit-scrollbar]:hidden">
+        class="-mb-8 -mt-3 grid snap-x snap-mandatory auto-cols-[minmax(240px,calc((100%-24px)/2))] grid-flow-col gap-6 overflow-x-auto pb-8 pt-3 [scrollbar-width:none] md:auto-cols-[calc((100%-48px)/3)] lg:auto-cols-[calc((100%-72px)/4)] xl:auto-cols-[calc((100%-96px)/5)] [&::-webkit-scrollbar]:hidden">
       {% for p in related %}
       <li class="min-w-0 snap-start">{{ ui.productCard(p) }}</li>
       {% endfor %}

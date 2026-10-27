@@ -27,7 +27,7 @@
 {# Product card, styleguide "PRODUCT CARD WEB" (34739:92926): 1px #3a526d border, 48px title strip
    (Popular + ITEM#), 200px image, name Bold 18/28 + 2-line description, 52px price bar with Add to Cart. #}
 {% macro productCard(p) %}
-<article class="flex h-full flex-col overflow-hidden rounded border border-card bg-white" data-figma="34739:92926">
+<article class="card-hover flex h-full flex-col overflow-hidden rounded border border-card bg-white" data-figma="34739:92926">
   <div class="flex h-12 items-center justify-between gap-3 bg-secondary-100 px-3">
     {% if p.badge %}
     <span class="flex items-center gap-1.5 text-base font-medium text-primary-500">{% icon "heart", "h-4 w-4" %}{{ p.badge }}</span>

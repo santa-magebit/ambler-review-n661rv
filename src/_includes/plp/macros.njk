@@ -76,15 +76,15 @@
   c: { name, href, count?, image, fit ("cover"|"contain"), hover?: [paragraphs] }
 #}
 {% macro categoryCard(c, figma="34719:11312") %}
-<a href="{{ c.href }}" {% if c.proto %}data-proto{% endif %} class="group flex aspect-square min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white" data-figma="{{ figma }}">
+<a href="{{ c.href }}" {% if c.proto %}data-proto{% endif %} class="card-hover group flex aspect-square min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white" data-figma="{{ figma }}">
   <span class="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-transparent bg-[#f5f8fa] px-5 group-hover:bg-primary-500 group-focus-visible:bg-primary-500">
     <span class="truncate text-h3 font-medium tracking-title text-primary-500 group-hover:text-white group-focus-visible:text-white">{{ c.name }}</span>
     {% if c.count %}<span class="shrink-0 text-lg text-primary-500 group-hover:text-secondary-100 group-focus-visible:text-secondary-100">{{ c.count }} product{{ "s" if c.count != 1 }}</span>{% endif %}
   </span>
   <span class="relative block min-h-0 flex-1 overflow-hidden">
-    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'group-hover:invisible group-focus-visible:invisible' if c.hover }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
+    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'group-hover:opacity-0 group-focus-visible:opacity-0' if c.hover }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
     {% if c.hover %}
-    <span class="absolute inset-0 hidden flex-col gap-2 p-5 text-base text-primary-500 group-hover:flex group-focus-visible:flex">
+    <span class="absolute inset-0 flex flex-col gap-2 p-5 text-base text-primary-500 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
       {% for t in c.hover %}<span>{{ t }}</span>{% endfor %}
     </span>
     {% endif %}
@@ -105,7 +105,7 @@
   c: { title, href, image, fit, menu: [{ label, href }] }
 #}
 {% macro navCard(c) %}
-<div class="group/card relative flex aspect-square min-w-0 flex-col rounded border border-primary-500 bg-white" data-figma="34777:59000" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+<div class="card-hover group/card relative flex aspect-square min-w-0 flex-col rounded border border-primary-500 bg-white" data-figma="34777:59000" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
   <a href="{{ c.href }}" class="group flex h-14 shrink-0 items-center gap-3 rounded-t bg-[#f5f8fa] px-5 hover:bg-primary-500">
     <span class="truncate text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ c.title }}</span>
     {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
@@ -382,7 +382,7 @@
       {% for c in t.cards %}
       <li class="min-w-0">
         <a href="{{ c.href or '#products' }}" {% if c.filter %}@click.prevent="$dispatch('plp-filter', '{{ c.filter }}')"{% elif not c.href %}data-proto{% endif %}
-           class="group flex h-full flex-col gap-4 rounded border border-body bg-white pb-5">
+           class="card-hover group flex h-full flex-col gap-4 rounded border border-body bg-white pb-5">
           <span class="flex h-14 items-center gap-3 rounded-t bg-secondary-100 px-5 group-hover:bg-primary-500">
             <span class="text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ c.title }}</span>
             {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
@@ -416,7 +416,7 @@
 
 {# Product line tile (styleguide "Brands cards" 14714:57265): 80px, #3a526d border, logo or name. #}
 {% macro logoTile(b) %}
-<a href="{{ b.url }}" class="flex h-20 items-center justify-center rounded border border-card bg-white px-3 text-center hover:border-primary-500 hover:shadow-100">
+<a href="{{ b.url }}" class="card-hover flex h-20 items-center justify-center rounded border border-card bg-white px-3 text-center hover:border-primary-500">
   {% if b.logo %}
   <img src="{{ b.logo }}" alt="{{ b.name }}" loading="lazy" class="max-h-12 max-w-full object-contain" style="width: {{ plp.logoWidths[b.slug] or 160 }}px">
   {% else %}

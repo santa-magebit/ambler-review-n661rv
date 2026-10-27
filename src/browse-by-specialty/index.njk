@@ -16,7 +16,7 @@ permalink: /browse-by-specialty/
     <ul class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
       {% for s in plp.specialtyPages %}
       <li class="min-w-0">
-        <a href="{{ s.url }}" class="group flex h-full flex-col gap-4 rounded border border-body bg-white pb-5" data-figma="34141:37949">
+        <a href="{{ s.url }}" class="card-hover group flex h-full flex-col gap-4 rounded border border-body bg-white pb-5" data-figma="34141:37949">
           <span class="flex h-14 items-center gap-3 rounded-t bg-secondary-100 px-5 group-hover:bg-primary-500">
             <span class="text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ s.name }}</span>
             {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}

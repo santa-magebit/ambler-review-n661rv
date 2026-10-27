@@ -1,12 +1,50 @@
-{# Footer (Landing Page 34141:38086): white band + 56px navy bottom bar. #}
+{#
+  Footer (Landing Page 34141:38086): white band + 56px navy bottom bar.
+  Phones (< md) get the Figma "mobile/footer" (34739:21934) instead: centred logo, contact
+  buttons, one row per link, socials + BBB, copyright only in the bar.
+  The logo is the Figma render (298x80, its image fill is cropped, so it is narrower than the PNG).
+#}
+{% set mapsHref = "https://www.google.com/maps/search/?api=1&query=" + (site.contact.address | replace("|", "") | urlencode) %}
 <footer class="mt-auto" data-figma="34141:38086">
-  <div class="bg-white">
+  {# Mobile #}
+  <div class="bg-white md:hidden" data-figma="34739:21934">
+    <div class="flex justify-center py-7">
+      <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo-footer.png" alt="Ambler Surgical" width="239" height="64" class="h-16 w-auto"></a>
+    </div>
+    <div class="flex flex-col gap-2 border-t border-[#dedede] px-4 py-6">
+      <a href="{{ site.contact.phoneHref }}" class="btn-accent w-full">{% icon "phone-call" %}{{ site.contact.phone }}</a>
+      <a href="mailto:{{ site.contact.email }}" class="btn h-14 w-full border border-[#dedede] bg-white text-primary-500 hover:bg-[#f5f5f5]">{% icon "mail" %}{{ site.contact.email }}</a>
+      <a href="{{ mapsHref }}" target="_blank" rel="noreferrer" class="btn h-14 w-full border border-[#dedede] bg-white text-primary-500 hover:bg-[#f5f5f5]">{% icon "map-pin" %}Directions to Ambler</a>
+    </div>
+    <ul class="border-t border-[#dedede] text-lg text-primary-500">
+      {% for l in site.footerQuickLinks %}
+      <li class="border-b border-[#dedede]"><a href="{{ l.href }}" class="flex h-[60px] items-center px-4 hover:text-primary-700">{{ l.label }}</a></li>
+      {% endfor %}
+      <li class="border-b border-[#dedede]"><a href="#" data-proto class="flex h-[60px] items-center px-4 hover:text-primary-700">Privacy Policy</a></li>
+      <li class="border-b border-[#dedede]"><a href="#" data-proto class="flex h-[60px] items-center px-4 hover:text-primary-700">Manage Cookies</a></li>
+    </ul>
+    <div class="flex items-center justify-between gap-3 px-4 py-6">
+      <ul class="flex gap-3">
+        {# Figma's mobile row: Facebook, LinkedIn, Instagram (no X). #}
+        {% for key in ["brand-facebook", "brand-linkedin", "brand-instagram"] %}{% set s = site.social | find("icon", key) %}
+        <li>
+          <a href="{{ s.href }}" target="_blank" rel="noreferrer" aria-label="{{ s.label }}" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-accent bg-white text-accent hover:bg-accent hover:text-white">{% icon s.icon, "h-6 w-6" %}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      <img src="/img/bbb.png" alt="BBB Accredited Business" class="h-[52px] w-auto">
+    </div>
+  </div>
+
+  {# Tablet and desktop #}
+  <div class="hidden bg-white md:block">
     <div class="container-page flex flex-col gap-10 py-10 xl:flex-row xl:gap-5">
-      <div class="xl:w-[345px] xl:shrink-0">
-        <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo.png" alt="Ambler Surgical" class="h-20 w-auto"></a>
+      <div class="xl:w-[298px] xl:shrink-0 2xl:w-[345px]">
+        <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo-footer.png" alt="Ambler Surgical" width="298" height="80" class="h-20 w-auto"></a>
       </div>
-      <div class="flex flex-1 flex-col gap-10 md:flex-row md:gap-5">
-        <div class="md:w-[223px]">
+      <div class="flex flex-1 flex-row gap-5">
+        {# 223px as drawn; narrower screens let it hug so the address stays on one line. #}
+        <div class="shrink-0 2xl:w-[223px]">
           <h2 class="text-base font-medium text-ink">Quick Links</h2>
           <ul class="mt-6 flex flex-col gap-2">
             {% for l in site.footerQuickLinks %}
@@ -22,7 +60,7 @@
             <li class="flex items-center gap-2">{% icon "map-pin", "h-7 w-7 text-accent" %}{{ site.contact.address }}</li>
           </ul>
         </div>
-        <div class="flex flex-col items-start gap-11 md:items-end">
+        <div class="flex flex-col items-end gap-11">
           <ul class="flex gap-3">
             {% for s in site.social %}
             <li>
@@ -35,10 +73,11 @@
       </div>
     </div>
   </div>
+
   <div class="bg-primary-500 text-base text-white">
-    <div class="container-page flex min-h-14 flex-col justify-between gap-2 py-4 sm:flex-row sm:items-center">
+    <div class="container-page flex min-h-14 items-center justify-center py-4 md:justify-between">
       <p>© 2026 Ambler Surgical</p>
-      <p class="flex items-center gap-2">
+      <p class="hidden items-center gap-2 md:flex">
         <a href="#" data-proto class="hover:underline">Privacy Policy</a>
         <span class="h-3 w-px bg-secondary-200" aria-hidden="true"></span>
         <a href="#" data-proto class="hover:underline">Manage Cookies</a>

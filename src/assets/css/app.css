@@ -6,6 +6,11 @@
   [x-cloak] {
     display: none !important;
   }
+  /* Scrolling inside an open dialog never carries on into the page behind it (see lockScroll in app.js). */
+  [aria-modal="true"],
+  [aria-modal="true"] * {
+    overscroll-behavior: contain;
+  }
   html {
     scroll-behavior: smooth;
   }
@@ -47,6 +52,15 @@
   }
   .label {
     @apply mb-2 block text-base text-ink;
+  }
+  /* Clickable cards: lift on hover like the Product Lines tiles (shadow 200). The card and everything
+     in it (title strip colours, icons, the description fading over the photo) ease in over 300ms. */
+  .card-hover,
+  .card-hover * {
+    @apply transition-[box-shadow,background-color,border-color,color,opacity] duration-300 ease-out;
+  }
+  .card-hover {
+    @apply hover:shadow-200;
   }
   /* Inline text links (styleguide "link states"): navy, underlined, dark navy on hover, darker when pressed. */
   .link {

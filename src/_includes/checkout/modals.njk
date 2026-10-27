@@ -8,7 +8,7 @@
 <div x-show="modal === 'address'" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="new-address-title"
      @keydown.escape.window="modal === 'address' && (modal = null)" data-figma="34799:88890">
   <div class="absolute inset-0 bg-secondary-700/60" @click="modal = null" x-show="modal === 'address'" x-transition.opacity></div>
-  <form x-ref="addressForm" @submit.prevent="saveAddress($refs.addressForm)" x-trap.noscroll="modal === 'address'"
+  <form x-ref="addressForm" @submit.prevent="saveAddress($refs.addressForm)" x-trap="modal === 'address'" x-effect="lockScroll('address-modal', modal === 'address')"
         class="relative flex max-h-full w-full max-w-[496px] flex-col overflow-y-auto rounded bg-white">
     <div class="flex shrink-0 border-b border-outline">
       <h2 id="new-address-title" class="flex-1 px-6 py-7 text-h2 font-medium tracking-title text-heading sm:px-10">New Address</h2>
@@ -29,7 +29,7 @@
 
 <div x-show="modal === 'merge'" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="merge-cart-title" aria-describedby="merge-cart-text" data-figma="34799:89993">
   <div class="absolute inset-0 bg-secondary-700/60" x-show="modal === 'merge'" x-transition.opacity></div>
-  <div x-trap.noscroll="modal === 'merge'" class="relative flex max-h-full w-full max-w-[496px] flex-col overflow-y-auto rounded bg-white">
+  <div x-trap="modal === 'merge'" x-effect="lockScroll('merge-modal', modal === 'merge')" class="relative flex max-h-full w-full max-w-[496px] flex-col overflow-y-auto rounded bg-white">
     <div class="shrink-0 border-b border-outline px-6 py-7 sm:px-10">
       <h2 id="merge-cart-title" class="text-h2 font-medium tracking-title text-heading">You're Signed In</h2>
     </div>

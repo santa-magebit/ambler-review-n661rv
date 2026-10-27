@@ -3,6 +3,7 @@
   "Mini Cart - Empty" 21596:85244). 560px panel from the right; state in Alpine.store("cart").
 #}
 {% import "macros/ui.njk" as ui with context %}
+{% import "pdp-cart/graphics.njk" as gfx %}
 <div x-show="$store.cart.open" x-cloak class="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="minicart-title" @keydown.escape.window="$store.cart.close()" data-figma="34266:78963">
   <div class="absolute inset-0 bg-secondary-700/30" @click="$store.cart.close()" x-show="$store.cart.open" x-transition.opacity></div>
   <div class="absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col bg-white shadow-top"
@@ -15,6 +16,7 @@
 
     {# Empty #}
     <div x-show="$store.cart.items.length === 0" class="flex flex-1 flex-col items-center justify-center gap-6 px-10 text-center">
+      {{ gfx.emptyBox() }}
       <div class="max-w-[300px]">
         <p class="text-h3 font-medium tracking-title text-ink">Your cart is empty</p>
         <p class="mt-2 text-base text-body">Looks like you haven&rsquo;t added any products to your cart yet.</p>

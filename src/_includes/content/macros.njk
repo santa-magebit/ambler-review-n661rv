@@ -50,8 +50,8 @@
 } %}
 {% set v = variants[variant] %}
 <a href="{{ card.href or ('#' + card.id if card.id else '#') }}" {% if card.id %}id="{{ card.id }}"{% endif %} {% if not card.href %}data-proto{% endif %} {% if card.figma %}data-figma="{{ card.figma }}"{% endif %}
-   class="group flex min-w-0 scroll-mt-6 flex-col overflow-hidden rounded border bg-white target:ring-2 target:ring-accent target:ring-offset-2 {{ v.box }}">
-  <span class="flex shrink-0 items-center font-medium text-primary-500 transition-colors group-hover:bg-primary-500 group-hover:text-white {{ v.head }}">
+   class="card-hover group flex min-w-0 scroll-mt-6 flex-col overflow-hidden rounded border bg-white target:ring-2 target:ring-accent target:ring-offset-2 {{ v.box }}">
+  <span class="flex shrink-0 items-center font-medium text-primary-500 transition-colors duration-300 ease-out group-hover:bg-primary-500 group-hover:text-white {{ v.head }}">
     <span class="truncate">{{ card.title }}</span>{% icon "arrow-narrow-right", "h-6 w-6" %}
   </span>
   <span class="relative block overflow-hidden bg-white {{ v.media }}">
@@ -62,7 +62,7 @@
 
 {# Title strip of the description cards: 56px, #f1f5f8, Medium 24/32 -2% primary. #}
 {% macro descriptionHead(title, arrow=false) %}
-<span class="flex min-h-14 shrink-0 items-center gap-3 bg-secondary-100 px-5 py-3 text-h4 font-medium tracking-title text-primary-500 transition-colors group-hover:bg-primary-500 group-hover:text-white sm:text-h3">
+<span class="flex min-h-14 shrink-0 items-center gap-3 bg-secondary-100 px-5 py-3 text-h4 font-medium tracking-title text-primary-500 transition-colors duration-300 ease-out group-hover:bg-primary-500 group-hover:text-white sm:text-h3">
   {{ title }}{% if arrow %}{% icon "arrow-narrow-right", "h-6 w-6" %}{% endif %}
 </span>
 {% endmacro %}
@@ -74,7 +74,7 @@
 #}
 {% macro descriptionCard(title, text, href="", figma="") %}
 {% if href %}
-<a href="{{ href }}" {% if figma %}data-figma="{{ figma }}"{% endif %} class="group flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5">
+<a href="{{ href }}" {% if figma %}data-figma="{{ figma }}"{% endif %} class="card-hover group flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5">
   {{ descriptionHead(title, true) }}
   <span class="block px-5 text-lg text-body">{{ text }}</span>
 </a>

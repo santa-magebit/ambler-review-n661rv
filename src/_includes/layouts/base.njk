@@ -27,7 +27,7 @@
   <script defer src="/assets/js/vendor/alpine-focus.min.js"></script>
   <script defer src="/assets/js/vendor/alpine.min.js"></script>
 </head>
-<body class="flex min-h-screen flex-col" x-data x-effect="document.documentElement.classList.toggle('overflow-hidden', $store.cart.open)">
+<body class="flex min-h-screen flex-col" x-data x-effect="lockScroll('minicart', $store.cart.open)">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
   {# minimalHeader: checkout pages have no store header in Figma (34799:87723); they draw the logo themselves. #}
   {% if not minimalHeader %}{% include "partials/header.njk" %}{% endif %}

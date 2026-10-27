@@ -26,7 +26,7 @@ title: Home
   <div class="container-page flex flex-col gap-10 py-10">
     <h2 class="text-h2 font-bold text-heading lg:text-h1">Specialized Surgical Instruments for Every Field</h2>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-[588fr_450fr_450fr]">
-      <div class="flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5 md:col-span-2 lg:col-span-1 lg:row-span-4" data-figma="34141:37904">
+      <div class="flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5 transition-shadow duration-300 ease-out has-[>a:hover]:shadow-200 md:col-span-2 lg:col-span-1 lg:row-span-4" data-figma="34141:37904">
         <a href="{{ oph.url }}" class="group flex flex-col">{{ c.descriptionHead(oph.name, true) }}</a>
         <p class="px-5 text-lg text-body">{{ oph.description }}</p>
         <ul class="grid grid-cols-1 gap-3 px-5 sm:grid-cols-2" data-figma="34141:37913">
@@ -69,7 +69,7 @@ title: Home
     <ul class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6" data-figma="34141:38042">
       {% for l in contentPages.home.logos %}
       <li class="min-w-0">
-        <a href="{{ l.url }}" class="flex h-20 items-center justify-center rounded border border-card bg-white px-4 transition-shadow hover:shadow-200">
+        <a href="{{ l.url }}" class="card-hover flex h-20 items-center justify-center rounded border border-card bg-white px-4">
           <img src="{{ l.logo }}" alt="{{ l.name }}" width="{{ l.width }}" height="{{ l.height }}" loading="lazy" class="h-auto max-w-full">
         </a>
       </li>

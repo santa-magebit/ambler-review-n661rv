@@ -37,7 +37,7 @@
   {# PDP - Zoom (21171:386870): white full screen, image centred at full height, 106px thumbnails
      down the left, 104px close box top right. Prev/next buttons and arrow keys added for the prototype. #}
   <template x-teleport="body">
-    <div x-show="zoom" x-cloak x-trap.noscroll="zoom" role="dialog" aria-modal="true" aria-label="{{ product.name }}, enlarged images"
+    <div x-show="zoom" x-cloak x-trap="zoom" x-effect="lockScroll('pdp-zoom', zoom)" role="dialog" aria-modal="true" aria-label="{{ product.name }}, enlarged images"
          @keydown.escape.window="zoom && close()" @keydown.arrow-right.window="zoom && many && next()" @keydown.arrow-left.window="zoom && many && prev()"
          class="fixed inset-0 z-50 bg-white" data-figma="21171:386870">
       <img :src="src" alt="{{ product.name }}"

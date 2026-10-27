@@ -9,7 +9,7 @@
   <div x-show="csvOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="qo-csv-title"
        @keydown.escape.window="csvOpen = false" data-figma="34547:112188">
     <div class="fixed inset-0 bg-secondary-700/60" @click="csvOpen = false" x-show="csvOpen" x-transition.opacity data-figma="34547:112476"></div>
-    <div x-show="csvOpen" x-trap.noscroll="csvOpen" x-transition
+    <div x-show="csvOpen" x-trap="csvOpen" x-effect="lockScroll('csv-summary', csvOpen)" x-transition
          class="relative mx-4 my-4 rounded bg-white md:mx-auto md:mt-20 md:w-[800px]" data-figma="34547:112478">
       <div class="flex border-b border-outline">
         <h2 id="qo-csv-title" class="flex flex-1 items-center px-6 py-5 text-h3 font-medium tracking-title text-heading md:px-10 md:py-7 md:text-[28px] md:leading-10">CSV Upload Summary</h2>

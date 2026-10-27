@@ -42,7 +42,7 @@ eleventyComputed:
     <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-figma="34887:119148">
       {% for n in bt.names %}
       <li class="min-w-0">
-        <a href="?name={{ n.name | urlencode }}" @click.prevent="$dispatch('plp-filter', '{{ n.key }}')" class="flex h-[58px] items-center justify-between gap-3 rounded border border-primary-500 bg-[#f5f7fa] px-5 text-primary-500 hover:bg-primary-500 hover:text-white" data-figma="34887:120029">
+        <a href="?name={{ n.name | urlencode }}" @click.prevent="$dispatch('plp-filter', '{{ n.key }}')" class="card-hover flex h-[58px] items-center justify-between gap-3 rounded border border-primary-500 bg-[#f5f7fa] px-5 text-primary-500 hover:bg-primary-500 hover:text-white" data-figma="34887:120029">
           <span class="flex min-w-0 items-baseline gap-2"><span class="truncate text-h3 font-medium">{{ n.name }}</span><span class="text-base opacity-80">({{ n.count }})</span></span>
           {% icon "arrow-narrow-right", "h-6 w-6" %}
         </a>

@@ -44,19 +44,24 @@ title: Home
 
 {{ c.trustBand("34141:38022") }}
 
-{# Repair Services band: navy offer card + four category cards; the card never gets narrower than its one-line button. #}
+{#
+  Repair Services band: navy offer card + four category cards. A card title needs a card of about 210px
+  (Figma draws 243), so the drawn side-by-side layout starts at 1440px; below it the navy card spans the
+  width on top (a row from 768px), with the cards four across from 1024px, 2x2 from 480px and in a
+  swipeable row of 243px cards on phones.
+#}
 <section class="bg-white" aria-labelledby="home-repair" data-figma="34141:38027">
-  <div class="container-page grid gap-6 py-10 lg:grid-cols-[minmax(min-content,467fr)_1045fr]">
-    <div class="flex min-w-0 flex-col items-start justify-center gap-5 rounded bg-primary-500 p-8 sm:p-10" data-figma="34141:38028">
+  <div class="container-page grid gap-6 py-10 min-[1440px]:grid-cols-[minmax(min-content,467fr)_1045fr]">
+    <div class="flex min-w-0 flex-col items-start justify-center gap-5 rounded bg-primary-500 p-8 sm:p-10 md:flex-row md:items-center md:justify-between md:gap-10 min-[1440px]:flex-col min-[1440px]:items-start min-[1440px]:justify-center min-[1440px]:gap-5" data-figma="34141:38028">
       <div class="flex flex-col gap-4">
         <h2 id="home-repair" class="text-h2 font-bold text-white">Repair Services</h2>
         <p class="text-lg text-[#d3dce5]">We offer expert repairs to help your surgical instruments last longer.</p>
       </div>
       {{ c.arrowButton("See All Services", "/repair-services/") }}
     </div>
-    <ul class="grid min-w-0 grid-cols-2 gap-6 md:grid-cols-4" data-figma="34141:38033">
+    <ul class="grid min-w-0 snap-x snap-mandatory auto-cols-[243px] grid-flow-col gap-6 overflow-x-auto [scrollbar-width:none] min-[480px]:grid-flow-row min-[480px]:grid-cols-2 min-[480px]:overflow-visible lg:grid-cols-4 [&::-webkit-scrollbar]:hidden" data-figma="34141:38033">
       {% for card in contentPages.home.repairCards %}
-      <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard(card, "medium") }}</li>
+      <li class="flex min-w-0 snap-start [&>*]:flex-1">{{ c.imageCard(card, "medium") }}</li>
       {% endfor %}
     </ul>
   </div>

@@ -24,6 +24,22 @@
   };
 
   /**
+   * Carousel arrows: move by half the cards in view, rounded up (3 of 5, 2 of 4 or 3, 1 on phones),
+   * so a couple of cards stay on screen as an anchor. scrollBy stops at either end and the track's
+   * snap-start lands on a card edge.
+   */
+  window.carouselStep = (track, dir) => {
+    const card = track.querySelector("li");
+    if (!card) return;
+    const cs = getComputedStyle(track);
+    const gap = parseFloat(cs.columnGap) || 0;
+    const pitch = card.offsetWidth + gap;
+    const inner = track.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const visible = Math.max(1, Math.floor((inner + gap + 1) / pitch));
+    track.scrollBy({ left: dir * Math.ceil(visible / 2) * pitch, behavior: "smooth" });
+  };
+
+  /**
    * Page scroll lock for drawers and modals: x-effect="lockScroll('minicart', $store.cart.open)".
    * The page scrollbar stays on screen, so nothing jumps sideways when a panel opens. While any lock
    * is on, wheel, touch and scroll keys outside the open dialog do nothing, scrolling inside it still

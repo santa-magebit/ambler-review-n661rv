@@ -87,9 +87,7 @@ document.addEventListener("alpine:init", () => {
       this.atEnd = max <= 1 || el.scrollLeft >= max - 1;
     },
     step(dir) {
-      const el = this.$refs.track;
-      const card = el.querySelector("li");
-      if (card) el.scrollBy({ left: dir * (card.offsetWidth + 24), behavior: "smooth" });
+      carouselStep(this.$refs.track, dir);
     },
   }));
 

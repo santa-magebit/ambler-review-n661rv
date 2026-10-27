@@ -71,10 +71,7 @@ document.addEventListener("alpine:init", () => {
       this.atEnd = t.scrollLeft >= max - 1;
     },
     step(dir) {
-      const t = this.$refs.track;
-      const card = t.firstElementChild;
-      const gap = parseFloat(getComputedStyle(t).columnGap) || 0;
-      t.scrollBy({ left: dir * ((card ? card.offsetWidth : t.clientWidth) + gap), behavior: "smooth" });
+      carouselStep(this.$refs.track, dir);
     },
   }));
 

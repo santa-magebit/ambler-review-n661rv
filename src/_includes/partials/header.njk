@@ -9,7 +9,7 @@
   {# Actions bar #}
   <div class="border-b-[3px] border-accent bg-primary-500">
     <div class="container-page flex items-center gap-4 py-4 lg:h-[120px] lg:gap-[60px] lg:py-6">
-      <button type="button" @click="drawer = true" class="-ml-2 p-2 text-white lg:hidden" aria-label="Open menu">
+      <button type="button" @click="drawer = true" class="-ml-2 p-2 text-white xl:hidden" aria-label="Open menu">
         <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
       </button>
       <a href="/" class="shrink-0" aria-label="Ambler Surgical home">
@@ -30,10 +30,11 @@
     <div class="container-page pb-4 md:hidden">{% include "partials/search.njk" %}</div>
   </div>
 
-  {# Links bar #}
+  {# Links bar. The five links need ~1390px on one line next to My Account and Cart, so they show
+     from 1280px (narrower screens use the menu drawer) and My Account is icon-only below 1400px. #}
   <nav aria-label="Main" class="relative">
     <div class="container-page flex h-[72px] items-center justify-between gap-6 lg:h-[88px]">
-      <ul class="hidden items-center gap-6 lg:flex">
+      <ul class="hidden items-center gap-6 xl:flex">
         {% for item in site.mainNav %}
         <li class="flex">
           {% if item.menu %}
@@ -54,10 +55,10 @@
       <div class="ml-auto flex items-center gap-3">
         {# My Account (Figma "Log In - Dropdown" 34194:128259 and "Logged In - Dropdown" 34194:128201) #}
         <div class="relative">
-          <button type="button" @click="toggle('account')" :aria-expanded="menu === 'account'"
-                  class="flex h-[52px] items-center gap-2 rounded px-3 text-lg font-medium text-primary-500 md:px-[30px]"
+          <button type="button" @click="toggle('account')" :aria-expanded="menu === 'account'" aria-label="My Account"
+                  class="flex h-[52px] items-center gap-2 rounded px-3 text-lg font-medium text-primary-500 md:px-[30px] xl:px-3 min-[1400px]:px-[30px]"
                   :class="menu === 'account' ? 'bg-ink/5' : 'hover:bg-ink/5'">
-            {% icon "user" %}<span class="hidden sm:inline">My Account</span>
+            {% icon "user" %}<span class="hidden sm:inline xl:hidden min-[1400px]:inline">My Account</span>
             <span x-show="menu !== 'account'">{% icon "dropdown" %}</span>
             <span x-show="menu === 'account'" x-cloak>{% icon "dropdown-up" %}</span>
           </button>
@@ -159,7 +160,7 @@
   </nav>
 
   {# Phone drawer (mobile frames exist in Figma; this prototype is desktop first) #}
-  <div x-show="drawer" x-cloak class="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <div x-show="drawer" x-cloak class="fixed inset-0 z-50 xl:hidden" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="absolute inset-0 bg-secondary-700/40" @click="drawer = false"></div>
     <div class="absolute inset-y-0 left-0 flex w-80 max-w-[85%] flex-col overflow-y-auto bg-white" x-trap.noscroll="drawer">
       <div class="flex h-16 items-center justify-between bg-primary-500 px-4 text-white">

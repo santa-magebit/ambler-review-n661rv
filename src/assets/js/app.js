@@ -175,6 +175,58 @@
       },
     }));
 
+    /**
+     * Mega menu specialty rail with "menu aim" (the safe-triangle pattern of jQuery-menu-aim): while
+     * the pointer heads from the open specialty towards its panel, crossing other specialties does
+     * not switch the panel. Switching waits (DELAY) and happens only once the pointer stops on a
+     * specialty or moves away from the panel. Keyboard focus switches straight away.
+     * Markup: x-ref="rail" on the rail column, @mousemove="track($event)", @mouseenter="aim(slug)".
+     */
+    Alpine.data("megaMenu", (first) => {
+      const DELAY = 300; // ms to wait while the pointer may be heading for the panel
+      const TOLERANCE = 75; // px the triangle reaches above and below the panel
+      const slope = (a, b) => (b.y - a.y) / (b.x - a.x);
+      return {
+        active: first,
+        locs: [],
+        lastMove: 0,
+        lastDelayLoc: null,
+        timer: null,
+        track(e) {
+          this.locs.push({ x: e.clientX, y: e.clientY });
+          if (this.locs.length > 3) this.locs.shift();
+          this.lastMove = performance.now();
+        },
+        /** ms to wait before switching: > 0 while the pointer moves inside the triangle towards the panel. */
+        delay() {
+          const r = this.$refs.rail.getBoundingClientRect();
+          const loc = this.locs[this.locs.length - 1];
+          const prev = this.locs[0] || loc;
+          if (!loc || prev.x < r.left || prev.x > r.right || prev.y < r.top || prev.y > r.bottom) return 0;
+          if (this.lastDelayLoc && loc.x === this.lastDelayLoc.x && loc.y === this.lastDelayLoc.y) return 0;
+          if (performance.now() - this.lastMove > 100) return 0; // the pointer has stopped
+          // The panel starts at the rail's right edge: the triangle runs from the pointer to its two corners.
+          const upper = { x: r.right, y: r.top - TOLERANCE };
+          const lower = { x: r.right, y: r.bottom + TOLERANCE };
+          if (slope(loc, upper) < slope(prev, upper) && slope(loc, lower) > slope(prev, lower)) {
+            this.lastDelayLoc = loc;
+            return DELAY;
+          }
+          this.lastDelayLoc = null;
+          return 0;
+        },
+        aim(slug) {
+          clearTimeout(this.timer);
+          const wait = this.delay();
+          if (wait) this.timer = setTimeout(() => this.aim(slug), wait);
+          else this.active = slug;
+        },
+        cancel() {
+          clearTimeout(this.timer);
+        },
+      };
+    });
+
     Alpine.data("searchBox", () => ({
       q: "",
       open: false,

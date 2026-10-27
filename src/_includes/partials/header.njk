@@ -101,14 +101,15 @@
 
     {# Mega menu (Figma "Megamenu - <Specialty>" frames, e.g. 34447:60218): specialty rail + group columns.
        Laid out in the page container so the rail lines up with the header content; the background
-       is white on the left half and #f5f8fa on the right so both colours run to the window edges. #}
-    <div x-show="menu === 'specialties'" x-cloak x-data="{ active: '{{ catalog.specialties[0].slug }}' }" class="absolute inset-x-0 top-full border-t border-secondary-200 bg-[linear-gradient(to_right,theme(colors.white)_50%,theme(colors.menu)_50%)] shadow-100" data-figma="34503:13347">
+       is white on the left half and #f5f8fa on the right so both colours run to the window edges.
+       It never runs past the bottom of the window (the header is sticky): taller menus scroll inside. #}
+    <div x-show="menu === 'specialties'" x-cloak x-data="megaMenu('{{ catalog.specialties[0].slug }}')" @mousemove="track($event)" class="absolute inset-x-0 top-full max-h-[calc(100vh-var(--header-h,0px))] overflow-y-auto overscroll-contain border-t border-secondary-200 bg-[linear-gradient(to_right,theme(colors.white)_50%,theme(colors.menu)_50%)] shadow-100" data-figma="34503:13347">
       <div class="container-page flex">
-        <div class="w-[240px] shrink-0 bg-white py-10 pr-10">
+        <div x-ref="rail" @mouseleave="cancel()" class="w-[240px] shrink-0 bg-white py-10 pr-10">
           <ul class="flex w-[200px] flex-col gap-2">
             {% for s in catalog.specialties %}
             <li>
-              <a href="{{ s.url }}" @mouseenter="active = '{{ s.slug }}'" @focus="active = '{{ s.slug }}'"
+              <a href="{{ s.url }}" @mouseenter="aim('{{ s.slug }}')" @focus="cancel(); active = '{{ s.slug }}'"
                  class="flex items-center gap-1 text-lg font-medium" :class="active === '{{ s.slug }}' ? 'text-accent' : 'text-primary-500 hover:text-accent'">
                 {{ s.name }}<span x-show="active === '{{ s.slug }}'">{% icon "chevron-right" %}</span>
               </a>
@@ -119,13 +120,15 @@
         <div class="min-w-0 flex-1 border-l border-secondary-200 bg-menu py-10 pl-10 pr-4">
           {% for s in catalog.specialties %}
           <div x-show="active === '{{ s.slug }}'" {% if not loop.first %}x-cloak{% endif %}>
-            <div class="grid max-w-[1256px] grid-cols-4 gap-10">
+            {# Titles and links stay on one line; columns drop to the next row below 240px (the widest title).
+               Gap 40 as drawn at 1536+, 32 below so 1440 still fits four columns. #}
+            <div class="grid max-w-[1256px] grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-x-8 gap-y-10 2xl:gap-x-10">
               {% for g in s.groups %}
               <div class="flex flex-col gap-4">
-                <a href="{{ s.url }}instruments/" class="flex items-center gap-1 text-lg font-extrabold text-primary-500 hover:underline">{{ g.title }}{% icon "arrow-narrow-right", "h-6 w-6" %}</a>
+                <a href="{{ s.url }}instruments/" class="flex items-center gap-1 whitespace-nowrap text-lg font-extrabold text-primary-500 hover:underline">{{ g.title }}{% icon "arrow-narrow-right", "h-6 w-6" %}</a>
                 <ul class="flex flex-col gap-2">
                   {% for it in g.items %}
-                  <li><a href="{{ s.url }}instruments/{{ it | slugify }}/" class="text-lg text-primary-500 hover:underline">{{ it }}</a></li>
+                  <li><a href="{{ s.url }}instruments/{{ it | slugify }}/" class="whitespace-nowrap text-lg text-primary-500 hover:underline">{{ it }}</a></li>
                   {% endfor %}
                 </ul>
               </div>

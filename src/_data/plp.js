@@ -8,6 +8,7 @@
 //   left out when it has none (the Figma numbers such as "1148 products" are mock data).
 import catalog from "./catalog.js";
 import images from "./images.js";
+import intros from "./intros.js";
 
 const { specialties, ophthalmologyCategories, instrumentTypes, productLines, products, listingProducts, slugify } = catalog;
 
@@ -392,7 +393,6 @@ const repairBanner = { title: "Free Lifetime Repair", text: "Free repair on most
 
 /** Ophthalmology specialty page (34777:58990). */
 const ophthalmologyPage = {
-  heroText: "Discover your virtual one-stop shop for premium ophthalmic surgical instruments.",
   // "Shop By Categories" card photos as drawn on this frame (Figma order).
   categories: [
     { slug: "instruments", image: "1907881e", position: "top" },
@@ -503,7 +503,7 @@ const ophthalmicForceps = {
 
 /** Browse by Type > Forceps (34887:118658). */
 const forcepsType = {
-  heroText: "Grasping, clamping and tissue-manipulation instruments across every specialty.",
+  heroText: intros.pages.forceps,
   subtypes: [
     {
       name: "Bipolar",
@@ -661,7 +661,8 @@ const specialtyPages = specialties.map((s) => {
     url: s.url,
     isOph,
     breadcrumbs: [{ label: "Browse by Specialty", href: "/browse-by-specialty/" }, { label: s.name }],
-    hero: { title: s.name, text: isOph ? ophthalmologyPage.heroText : s.description, image: "21fc3c67" },
+    description: s.description,
+    hero: { title: s.name, text: intros.specialties[s.slug] || s.description, image: "21fc3c67" },
     categories,
     products: list,
     popularCount: 8,
@@ -690,7 +691,7 @@ const categoryPages = specialties.flatMap((s) =>
       url,
       isOph,
       breadcrumbs: [...crumbsSpecialty(s), { label: c.name }],
-      hero: { eyebrow: s.name, title: c.name, text: extras ? extras.heroText : null, image: "be970610", flip: true, wide: true },
+      hero: { eyebrow: s.name, title: c.name, text: extras ? extras.heroText : intros.categories[`${s.slug}/${c.slug}`], image: "be970610", flip: true, wide: true },
       cards: cardTypes.map((t) => typeCard(t, typeUrl(t), countFor(t))),
       quickSelect: types.map((t) => ({ label: t.name, href: typeUrl(t) })),
       products: list,
@@ -717,7 +718,7 @@ const typePages = specialties.flatMap((s) =>
       breadcrumbs: [...crumbsSpecialty(s), { label: "Instruments", href: `${s.url}instruments/` }, { label: t.name }],
       hero: extras
         ? { eyebrow: s.name, title: t.name, text: extras.heroText, image: "aac4f963", placement: "right", wide: true }
-        : { eyebrow: s.name, title: t.name, image: "be970610", flip: true, wide: true },
+        : { eyebrow: s.name, title: t.name, text: intros.typeIntro(t, s), image: "be970610", flip: true, wide: true },
       listing: listing(list, { title: t.name }),
       faq: faq.instruments,
       extras,
@@ -741,7 +742,7 @@ const browseTypes = allTypes.map((t) => {
     breadcrumbs: [{ label: "Browse by Type", href: "/browse-by-type/" }, { label: t.name }],
     hero: isForceps
       ? { title: t.name, text: forcepsType.heroText, image: "aac4f963" }
-      : { title: t.name, image: "be970610", flip: true, wide: true },
+      : { title: t.name, text: intros.typeIntro(t), image: "be970610", flip: true, wide: true },
     subtypes: isForceps ? forcepsType.subtypes.map((x) => ({ ...x, image: images[x.image] })) : [],
     names,
     listing: listing(list, { title: t.name }),
@@ -762,7 +763,7 @@ const brandPages = lines.map((b) => {
     ...b,
     ownCount: own.length,
     breadcrumbs: [{ label: "Product Lines", href: "/product-lines/" }, { label: b.name }],
-    hero: { title: b.name, text: brandHero[b.slug] || null, image: "bdd345e8", placement: "right", wide: true },
+    hero: { title: b.name, text: brandHero[b.slug] || intros.brands[b.slug] || null, image: "bdd345e8", placement: "right", wide: true },
     cards: types.map((t) => {
       const product = own.find((p) => p.type === t.slug);
       return {

@@ -8,7 +8,7 @@ permalink: /browse-by-specialty/
 {% import "plp/macros.njk" as plp_ui with context %}
 
 {{ ui.breadcrumbs([{ label: "Browse by Specialty" }]) }}
-{{ plp_ui.hero({ title: "Browse by Specialty", image: "21fc3c67" }, "34777:58994") }}
+{{ plp_ui.hero({ title: "Browse by Specialty", text: intros.pages.browseBySpecialty, image: "21fc3c67" }, "34777:58994") }}
 
 <section class="bg-white" data-figma="34141:37903">
   <div class="container-page py-10">
@@ -21,7 +21,7 @@ permalink: /browse-by-specialty/
             <span class="text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ s.name }}</span>
             {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
           </span>
-          <span class="px-5 text-lg text-body">{{ s.hero.text if not s.isOph else catalog.specialties[0].description }}</span>
+          <span class="px-5 text-lg text-body">{{ s.description }}</span>
         </a>
       </li>
       {% endfor %}

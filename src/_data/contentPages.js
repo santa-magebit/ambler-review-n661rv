@@ -228,7 +228,9 @@ const repairCards = [
 });
 
 const repair = {
-  intro: "Ambler Surgical is your single-source solution for expert surgical instrument repair.",
+  // Figma's line first, then the old site's promise (2-4 lines, like the other heroes).
+  intro:
+    "Ambler Surgical is your single-source solution for expert surgical instrument repair. We keep phaco handpieces, diamond knives, micro and general instruments and lenses at peak performance.",
   services: repairCards,
   whyChoose: [
     {

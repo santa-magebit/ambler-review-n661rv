@@ -9,10 +9,13 @@
 <h1 class="inline-block bg-bottom bg-no-repeat pb-2.5 text-h1 font-medium text-white md:text-hero" style="background-image: {{ contentPages.gradients.titleLine }}; background-size: 100% 2px">{{ title }}</h1>
 {% endmacro %}
 
-{# Title band for pages Figma does not draw (Sterilization, Contact): the hero's navy and title, without a photo. #}
-{% macro titleBand(title) %}
+{# Title band for pages Figma does not draw (Sterilization, Contact): the hero's navy, title and optional intro, without a photo. #}
+{% macro titleBand(title, text) %}
 <section class="bg-primary-500">
-  <div class="container-page py-12 lg:py-16">{{ heroTitle(title) }}</div>
+  <div class="container-page flex flex-col items-start gap-7 py-12 lg:py-16">
+    {{ heroTitle(title) }}
+    {% if text %}<p class="max-w-[593px] text-lg text-white">{{ text }}</p>{% endif %}
+  </div>
 </section>
 {% endmacro %}
 

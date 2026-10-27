@@ -39,13 +39,13 @@
           {% if item.menu %}
           <button type="button" @click="toggle('{{ item.menu }}')" @mouseenter="menu && (menu = '{{ item.menu }}')" :aria-expanded="menu === '{{ item.menu }}'"
                   class="flex items-center gap-1 text-lg font-medium"
-                  :class="menu === '{{ item.menu }}' ? 'text-accent' : 'text-primary-500 hover:text-primary-700'">
+                  :class="menu === '{{ item.menu }}' ? 'text-accent' : 'text-primary-500 hover:text-accent'">
             {{ item.label }}
             <span x-show="menu !== '{{ item.menu }}'">{% icon "dropdown" %}</span>
             <span x-show="menu === '{{ item.menu }}'" x-cloak>{% icon "dropdown-up" %}</span>
           </button>
           {% else %}
-          <a href="{{ item.href }}" class="text-lg font-medium text-primary-500 hover:text-primary-700">{{ item.label }}</a>
+          <a href="{{ item.href }}" class="text-lg font-medium text-primary-500 hover:text-accent">{{ item.label }}</a>
           {% endif %}
         </li>
         {% endfor %}
@@ -105,7 +105,7 @@
           {% for s in catalog.specialties %}
           <li>
             <a href="{{ s.url }}" @mouseenter="active = '{{ s.slug }}'" @focus="active = '{{ s.slug }}'"
-               class="flex items-center gap-1 text-lg font-medium" :class="active === '{{ s.slug }}' ? 'text-accent' : 'text-primary-500 hover:text-primary-700'">
+               class="flex items-center gap-1 text-lg font-medium" :class="active === '{{ s.slug }}' ? 'text-accent' : 'text-primary-500 hover:text-accent'">
               {{ s.name }}<span x-show="active === '{{ s.slug }}'">{% icon "chevron-right" %}</span>
             </a>
           </li>

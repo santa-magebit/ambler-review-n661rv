@@ -15,7 +15,7 @@
     <button type="submit" aria-label="Search" class="flex w-[68px] items-center justify-center rounded-r-[30px] bg-accent text-white hover:bg-accent-dark">{% icon "search" %}</button>
   </form>
 
-  <div x-show="open" x-cloak class="absolute inset-x-0 top-full z-50 mt-0.5 max-h-[80vh] overflow-y-auto bg-white px-5 py-6 text-left shadow-300">
+  <div x-show="open" x-cloak class="absolute inset-x-0 top-full z-50 mt-0.5 max-h-[80vh] overflow-y-auto rounded bg-white px-5 py-6 text-left shadow-300">
     {# Suggestions #}
     <div x-show="!needle" class="flex flex-col gap-6">
       <section>

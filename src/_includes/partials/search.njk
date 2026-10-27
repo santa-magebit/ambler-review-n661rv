@@ -2,17 +2,22 @@
   Header search (styleguide "Search" input + Figma Search page):
   focused & empty = "Search - Suggestions" (34194:128358), typing = "Search - Results" (34194:128283),
   nothing found = "Search - No Search Results" (34194:128402). Logic: Alpine.data("searchBox").
+  searchMobile: the mobile header's 52px white search row (34739:21830) instead of the rounded web field.
 #}
 <div x-data="searchBox" @click.outside="open = false" @keydown.escape="open = false" class="relative w-full">
-  <form role="search" @submit.prevent="go(q)" action="/search/" class="flex h-[60px] w-full">
-    <label class="relative flex flex-1 items-center">
+  <form role="search" @submit.prevent="go(q)" action="/search/" class="flex w-full {{ 'h-[52px] border-b border-secondary-200 bg-white' if searchMobile else 'h-[60px]' }}">
+    <label class="relative flex min-w-0 flex-1 items-center">
       <span class="sr-only">Search the catalog</span>
-      <input name="q" x-model="q" @focus="open = true" @input="open = true" autocomplete="off"
+      <input name="q" x-model="q" @focus="open = true" @input="open = true" autocomplete="off" {% if searchMobile %}:class="q && '!pr-10'"{% endif %}
              placeholder="Cross-Reference Catalog # or Search by Description"
-             class="h-full w-full rounded-l-[30px] border border-white bg-white pl-6 pr-12 text-lg text-ink outline-none placeholder:text-body focus:border-accent">
+             class="{{ 'h-full w-full min-w-0 text-ellipsis bg-white pl-4 pr-1 text-base text-ink outline-none placeholder:text-card' if searchMobile else 'h-full w-full rounded-l-[30px] border border-white bg-white pl-6 pr-12 text-lg text-ink outline-none placeholder:text-body focus:border-accent' }}">
       <button type="button" x-show="q" x-cloak @click="q = ''" aria-label="Clear search" class="absolute right-4 text-ink">{% icon "close", "h-6 w-6" %}</button>
     </label>
+    {% if searchMobile %}
+    <button type="submit" aria-label="Search" class="flex w-[52px] shrink-0 items-center justify-center text-primary-500 hover:text-primary-700">{% icon "search", "h-6 w-6" %}</button>
+    {% else %}
     <button type="submit" aria-label="Search" class="flex w-[68px] items-center justify-center rounded-r-[30px] bg-accent text-white hover:bg-accent-dark">{% icon "search" %}</button>
+    {% endif %}
   </form>
 
   <div x-show="open" x-cloak class="absolute inset-x-0 top-full z-50 mt-0.5 max-h-[80vh] overflow-y-auto rounded bg-white px-5 py-6 text-left shadow-300">

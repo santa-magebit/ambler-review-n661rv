@@ -1,0 +1,11 @@
+---
+layout: layouts/base.njk
+minimalHeader: true
+mainClass: flex flex-1 flex-col border-b border-secondary-200
+---
+{#
+  Checkout page shell. The Figma checkout frames (34799:87723 and siblings) have no store
+  header: only the logo above the form, then the regular footer. In Hyvä this is the
+  checkout page layout (checkout_index_index without the default header).
+#}
+{{ content | safe }}

@@ -1,0 +1,48 @@
+---
+layout: account/layout.njk
+title: Dashboard
+permalink: /customer/account/
+figma: "14714:137050"
+---
+{% import "account/macros.njk" as acc with context %}
+<div class="flex flex-col gap-10" data-figma="14714:137072">
+  {{ acc.pageTitle("Dashboard") }}
+
+  {# Account Information #}
+  <section class="flex flex-col gap-6" data-figma="14714:137074">
+    {{ acc.sectionTitle("Account Information") }}
+    <div class="grid gap-6 xl:grid-cols-2">
+      {% call acc.infoCard("user", "Contact Information", "14714:137077") %}
+      <div class="flex flex-col gap-3 text-base text-body">
+        <p>{{ account.customer.name }}</p>
+        <p class="break-words">{{ account.customer.email }}</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/customer/account/edit/" class="btn-secondary">Edit</a>
+        <a href="/customer/account/edit/?changepass" class="btn-secondary">Change Password</a>
+      </div>
+      {% endcall %}
+    </div>
+  </section>
+
+  {# Address Book #}
+  <section class="flex flex-col gap-6" data-figma="14714:137097">
+    {{ acc.sectionTitle("Address Book", "/customer/address/", "Manage Addresses") }}
+    <div class="grid gap-6 xl:grid-cols-2" data-figma="14714:137101">
+      {% call acc.infoCard("report-money", "Default Billing Address", "14714:137102") %}
+      {{ acc.addressLines(account.defaultAddress, "T: ") }}
+      <a href="/customer/address/new/" class="btn-secondary w-fit px-6">Edit Address</a>
+      {% endcall %}
+      {% call acc.infoCard("truck", "Default Shipping Address", "14714:137109") %}
+      {{ acc.addressLines(account.defaultAddress, "T: ") }}
+      <a href="/customer/address/new/" class="btn-secondary w-fit px-6">Edit Address</a>
+      {% endcall %}
+    </div>
+  </section>
+
+  {# Recent Orders #}
+  <section class="flex flex-col gap-6" data-figma="14714:137116">
+    {{ acc.sectionTitle("Recent Orders", "/sales/order/history/", "View All") }}
+    {{ acc.ordersTable(account.orders, "14714:137120") }}
+  </section>
+</div>

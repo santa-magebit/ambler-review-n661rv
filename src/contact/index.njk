@@ -1,0 +1,44 @@
+---
+layout: layouts/base.njk
+title: Customer Support
+permalink: /contact/
+---
+{# Not designed in Figma (footer "Customer Support" link). Built in the Repair Services language:
+   breadcrumb, navy title band, a form column and a navy contact card like the FAQ's
+   "Can't find your answer?" card (34799:68654). The form posts nowhere: submit shows a toast and resets. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+
+{{ ui.breadcrumbs([{ label: "Customer Support" }]) }}
+
+{{ c.titleBand("Customer Support") }}
+
+<section class="bg-menu">
+  <div class="container-page grid items-start gap-10 py-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">
+    <form x-data="contactForm" @submit.prevent="submit()" class="flex min-w-0 flex-col gap-6 rounded border border-secondary-200 bg-white p-6 md:p-8" aria-labelledby="contact-form-title">
+      <h2 id="contact-form-title" class="text-h3 font-bold text-heading md:text-h2">Contact Our Team</h2>
+      <div class="grid gap-5 sm:grid-cols-2">
+        {{ ui.field("Name", "name", "text", true, "name", class="sm:col-span-2") }}
+        {{ ui.field("Email", "email", "email", true, "email") }}
+        {{ ui.field("Phone", "phone", "tel", false, "tel") }}
+        <label class="block sm:col-span-2">
+          <span class="label">Message<span class="text-error"> *</span></span>
+          <textarea name="message" required rows="6" class="input h-auto min-h-[160px] resize-y py-3"></textarea>
+        </label>
+      </div>
+      <button type="submit" class="btn-primary self-start">Send Message</button>
+    </form>
+
+    <div class="flex min-w-0 flex-col gap-6 rounded bg-primary-500 p-7">
+      <div class="flex flex-col gap-4">
+        <h2 class="text-h3 font-bold text-white md:text-h2">Contact Information</h2>
+        <p class="text-lg text-[#d3dce5]">Our instrument specialists respond within one business day.</p>
+      </div>
+      <ul class="flex flex-col gap-3 text-lg text-white">
+        <li><a href="{{ site.contact.phoneHref }}" class="flex items-center gap-2 font-medium hover:underline">{% icon "phone-call", "h-7 w-7 text-accent" %}{{ site.contact.phone }}</a></li>
+        <li><a href="mailto:{{ site.contact.email }}" class="flex min-w-0 items-center gap-2 break-all hover:underline">{% icon "mail", "h-7 w-7 text-accent" %}{{ site.contact.email }}</a></li>
+        <li class="flex items-start gap-2">{% icon "map-pin", "h-7 w-7 text-accent" %}<span class="min-w-0">{{ site.contact.address }}</span></li>
+      </ul>
+    </div>
+  </div>
+</section>

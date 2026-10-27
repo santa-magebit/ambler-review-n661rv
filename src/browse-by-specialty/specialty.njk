@@ -1,0 +1,33 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: plp.specialtyPages
+  size: 1
+  alias: sp
+permalink: "{{ sp.url }}"
+eleventyComputed:
+  title: "{{ sp.name | safe }}"
+---
+{#- Browse by Specialty > <Specialty>: Figma "PLP - 2nd level - 1920px" (34777:58990), drawn for Ophthalmology. -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs(sp.breadcrumbs) }}
+{{ plp_ui.hero(sp.hero, "34777:58994") }}
+
+{# Shop By Categories #}
+<section class="bg-white" data-figma="34777:58995">
+  <div class="container-page py-10">
+    <h2 class="text-h2 font-bold text-heading md:text-h1">Shop By Categories</h2>
+    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-figma="34777:58997">
+      {% for c in sp.categories %}<li class="min-w-0">{{ plp_ui.navCard(c) }}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ plp_ui.popularProducts(sp.products, sp.popularCount, "34777:59002") }}
+{{ plp_ui.repairBanner() }}
+{{ plp_ui.trustRow() }}
+{% if sp.band %}{{ plp_ui.infoBand(sp.band) }}{% endif %}
+{{ plp_ui.brandsStrip("white", "34777:59035") }}
+{{ plp_ui.faq(plp.faq.general, "34777:59083", "wide", "#f5f8fa") }}

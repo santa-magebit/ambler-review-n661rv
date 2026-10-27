@@ -1,0 +1,23 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: plp.typePages
+  size: 1
+  alias: tp
+permalink: "{{ tp.url }}"
+eleventyComputed:
+  title: "{{ tp.name | safe }} | {{ tp.specialty.name | safe }}"
+---
+{#- Browse by Specialty > <Specialty> > Instruments > <Type>: Figma "PLP - Product Type Page" (34723:17020), drawn for Ophthalmology > Forceps. -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs(tp.breadcrumbs) }}
+{{ plp_ui.hero(tp.hero, "34723:17024") }}
+{{ plp_ui.listing(tp.listing, "34723:17181") }}
+{% if tp.extras %}
+{{ plp_ui.infoBand(tp.extras.band) }}
+{{ plp_ui.features(tp.extras.features) }}
+{{ plp_ui.typesOf(tp.extras.typesOf) }}
+{% endif %}
+{{ plp_ui.faq(tp.faq, "34723:17357", "narrow", "#f5f7fa") }}

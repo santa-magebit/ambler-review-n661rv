@@ -1,0 +1,45 @@
+---
+layout: layouts/base.njk
+title: Customer Login
+permalink: /customer/account/login/
+---
+{% import "account/macros.njk" as acc with context %}
+{# Figma "Login" 14714:118247 #}
+<div class="container-page flex flex-col items-center gap-10 pb-20 pt-10" data-figma="27289:94768">
+  <h1 class="text-center text-h2 font-bold text-heading md:text-h1">Customer Login</h1>
+  <div class="grid w-full max-w-[1016px] items-start gap-6 md:grid-cols-2" data-figma="14714:118252">
+
+    {# Registered Customers #}
+    <section class="flex flex-col gap-6 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="login-registered" data-figma="14714:118253">
+      <div class="flex max-w-[376px] flex-col gap-1">
+        <h2 id="login-registered" class="text-h3 font-medium text-heading">Registered Customers</h2>
+        <p class="text-base text-body">If you have an account, sign in with your email address.</p>
+      </div>
+      <form x-data="accountAuthForm" @submit.prevent="submit" novalidate class="flex flex-col gap-7">
+        <div>
+          <label for="login-email" class="label">E-mail</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" required placeholder="Enter your email" class="input">
+        </div>
+        {{ acc.passwordField("Password", "login-password", "Enter your password", false, "current-password", "required") }}
+        <div class="flex flex-col gap-3">
+          <button type="submit" class="btn-primary w-full">Sign In</button>
+          <a href="/customer/account/forgotpassword/" class="btn-link w-full">Forgot Your Password?</a>
+        </div>
+      </form>
+    </section>
+
+    {# New Customers #}
+    <section class="flex flex-col gap-6 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="login-new" data-figma="14714:118263">
+      <div class="flex max-w-[376px] flex-col gap-1">
+        <h2 id="login-new" class="text-h3 font-medium text-heading">New Customers</h2>
+        <p class="text-base text-body">Creating an account has many benefits.</p>
+      </div>
+      <ul class="flex flex-col gap-2 text-base text-ink">
+        {% for b in ["Check out faster", "Store multiple shipping addresses", "View and track your orders"] %}
+        <li class="flex items-center gap-3">{% icon "check", "h-6 w-6 text-accent" %}{{ b }}</li>
+        {% endfor %}
+      </ul>
+      <a href="/customer/account/create/" class="btn-primary w-full">Create an Account</a>
+    </section>
+  </div>
+</div>

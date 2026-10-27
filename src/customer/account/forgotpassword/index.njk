@@ -1,0 +1,29 @@
+---
+layout: layouts/base.njk
+title: Forgot Your Password?
+permalink: /customer/account/forgotpassword/
+---
+{% import "account/macros.njk" as acc with context %}
+{# Figma "Password Reset" 14714:118400 #}
+<div class="container-page flex flex-col items-center gap-10 pb-20 pt-10" data-figma="14714:118401">
+  <h1 class="text-center text-h2 font-bold text-heading md:text-h1">Forgot Your Password?</h1>
+  <form x-data="forgotPassword" @submit.prevent="submit" novalidate
+        class="flex w-full max-w-[496px] flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" data-figma="14714:118403">
+    {# Confirmation: not drawn in Figma; styleguide success alert (34747:15526) with Magento's message. #}
+    <div x-show="sent" x-cloak role="status" class="flex items-start gap-4 rounded bg-success-light px-6 py-4 text-base text-ink">
+      {% icon "check", "h-6 w-6 text-success" %}
+      <p class="min-w-0 break-words">If there is an account associated with <strong class="font-medium" x-text="email || 'this email address'"></strong> you will receive an email with a link to reset your password.</p>
+    </div>
+    <div class="flex flex-col gap-6">
+      <p class="text-base text-body">Please enter your email address below to receive a password reset link.</p>
+      <div>
+        <label for="reset-email" class="label">E-mail</label>
+        <input id="reset-email" name="email" type="email" x-model="email" autocomplete="email" required placeholder="Enter your email" class="input">
+      </div>
+    </div>
+    <div class="flex flex-col gap-3">
+      <button type="submit" class="btn-primary w-full">Reset My Password</button>
+      <a href="/customer/account/login/" class="btn-link w-full">Return to Login</a>
+    </div>
+  </form>
+</div>

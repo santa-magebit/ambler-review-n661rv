@@ -1,0 +1,65 @@
+---
+layout: account/layout.njk
+title: Gift Card
+permalink: /giftcard/customer/
+figma: "34266:49954"
+---
+{% import "account/macros.njk" as acc with context %}
+{% set gc = account.checkedGiftCard %}
+{# "Gift Card" (34266:49954); Check Balance shows "Gift Card - Check Balance" (34266:54383). #}
+<div class="flex flex-col gap-10" data-figma="34266:49958">
+  {{ acc.pageTitle("Gift Card") }}
+  <div class="grid items-start gap-6 xl:grid-cols-2" data-figma="34266:54363">
+
+    {# Check Status and Balance #}
+    <section x-data="giftCard" class="flex flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="giftcard-check" data-figma="34266:54314">
+      <h2 id="giftcard-check" class="text-h3 font-medium text-heading">Check Status and Balance</h2>
+
+      <form x-show="!checked" @submit.prevent="check" novalidate class="flex flex-col gap-7">
+        <div>
+          <label for="giftcard-number" class="label">Gift card number</label>
+          <input id="giftcard-number" name="giftcard_code" x-ref="number" x-model="number" inputmode="numeric" autocomplete="off" placeholder="Enter gift card number" class="input">
+        </div>
+        <div class="flex flex-col gap-3">
+          <button type="submit" class="btn-primary w-full">Check Balance</button>
+          <button type="button" data-proto class="btn-secondary w-full">Redeem Gift Card</button>
+        </div>
+      </form>
+
+      <div x-show="checked" x-cloak class="flex flex-col gap-7" data-figma="34266:54389">
+        <div class="flex flex-col gap-4 rounded-lg border border-[#e6e6e6] bg-white p-6" role="status" data-figma="34266:54773">
+          <div class="flex items-center justify-between gap-4">
+            <p class="text-base text-[#726b77]">Card #<span x-text="number.trim() || '{{ gc.number }}'">{{ gc.number }}</span></p>
+            {{ acc.statusBadge("Active") }}
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-h2 font-medium tracking-title text-[#222222]">{{ gc.balance }}</p>
+            <div class="flex flex-wrap justify-between gap-x-4 text-base text-[#726b77]">
+              <span>Available</span><span>Expires: {{ gc.expires }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <button type="button" data-proto class="btn-primary w-full">Redeem Gift Card</button>
+          <button type="button" @click="another" class="btn-secondary w-full">Check Another Card</button>
+        </div>
+      </div>
+    </section>
+
+    {# Your Gift Cards #}
+    <section class="flex flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" aria-labelledby="giftcard-list" data-figma="34266:54349">
+      <h2 id="giftcard-list" class="text-h3 font-medium text-heading">Your Gift Cards</h2>
+      <ul class="flex flex-col gap-3" data-figma="34520:102843">
+        {% for c in account.giftCards %}
+        <li class="flex items-center justify-between gap-4 rounded-lg border border-[#e6e6e6] bg-white px-6 py-3">
+          <div class="flex flex-col text-base">
+            <span class="text-[#726b77]">{{ c.number }}</span>
+            <span class="font-bold text-[#222222]">{{ c.balance }}</span>
+          </div>
+          {{ acc.statusBadge("Active") }}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</div>

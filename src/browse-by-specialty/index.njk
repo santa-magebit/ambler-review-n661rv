@@ -1,0 +1,33 @@
+---
+layout: layouts/base.njk
+title: Browse by Specialty
+permalink: /browse-by-specialty/
+---
+{#- Not drawn in Figma: the nine specialties as "Category Description" cards (Landing Page 34141:37904 style). -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs([{ label: "Browse by Specialty" }]) }}
+{{ plp_ui.hero({ title: "Browse by Specialty", image: "21fc3c67" }, "34777:58994") }}
+
+<section class="bg-white" data-figma="34141:37903">
+  <div class="container-page py-10">
+    <h2 class="text-h2 font-bold text-heading md:text-h1">Specialized Surgical Instruments for Every Field</h2>
+    <ul class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {% for s in plp.specialtyPages %}
+      <li class="min-w-0">
+        <a href="{{ s.url }}" class="group flex h-full flex-col gap-4 rounded border border-body bg-white pb-5" data-figma="34141:37949">
+          <span class="flex h-14 items-center gap-3 rounded-t bg-secondary-100 px-5 group-hover:bg-primary-500">
+            <span class="text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ s.name }}</span>
+            {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
+          </span>
+          <span class="px-5 text-lg text-body">{{ s.hero.text if not s.isOph else catalog.specialties[0].description }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ plp_ui.trustRow() }}
+{{ plp_ui.brandsStrip("tint", "34719:11345") }}

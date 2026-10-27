@@ -1,0 +1,46 @@
+{#
+  Inline graphics for the pdp-cart pages that are vector layers in Figma and not
+  in the shared icon set. Import with:
+    {% import "pdp-cart/graphics.njk" as gfx %}
+#}
+
+{# Shield outline, cart "Purchasing Requirements & Compliance" panel (34314:11257). 24px grid, 2px stroke like icon/24px/*. #}
+{% macro shield(cls="h-6 w-6") %}
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 {{ cls }}" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3A12 12 0 0 1 12 21 12 12 0 0 1 3.5 6 12 12 0 0 0 12 3"/></svg>
+{% endmacro %}
+
+{# "icon.info" circled i, Quick Order "Order Upload" (34512:72728). #}
+{% macro infoCircle(cls="h-6 w-6") %}
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 {{ cls }}" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+{% endmacro %}
+
+{# PayPal wordmark on the yellow button (14714:103231), simplified. #}
+{% macro paypal(cls="h-4 w-[59px]") %}
+<svg viewBox="0 0 59 16" class="{{ cls }}" aria-hidden="true"><text x="0" y="13" font-family="Verdana, Arial, sans-serif" font-size="14" font-style="italic" font-weight="700" letter-spacing="-0.4"><tspan fill="#003087">Pay</tspan><tspan fill="#0070e0">Pal</tspan></text></svg>
+{% endmacro %}
+
+{# Google Pay mark on the black button (14714:103238), simplified. #}
+{% macro gpay(cls="h-[22px] w-[46px]") %}
+<svg viewBox="0 0 46 22" class="{{ cls }}" aria-hidden="true">
+  <path d="M17.6 11.2c0-.6-.1-1.1-.2-1.6H9v3h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.3Z" fill="#4285f4"/>
+  <path d="M9 19.6c2.4 0 4.5-.8 5.9-2.1L12 15.3c-.8.6-1.8.9-3 .9-2.3 0-4.3-1.6-5-3.7H1v2.3a9 9 0 0 0 8 4.8Z" fill="#34a853"/>
+  <path d="M4 12.5a5.3 5.3 0 0 1 0-3.4V6.8H1a9 9 0 0 0 0 8l3-2.3Z" fill="#fbbc04"/>
+  <path d="M9 5.3c1.3 0 2.5.5 3.4 1.3l2.6-2.6A8.7 8.7 0 0 0 9 1.6a9 9 0 0 0-8 5.2l3 2.3c.7-2.1 2.7-3.8 5-3.8Z" fill="#ea4335"/>
+  <text x="20" y="16" fill="#ffffff" font-family="Roboto, Arial, sans-serif" font-size="13" font-weight="500">Pay</text>
+</svg>
+{% endmacro %}
+
+{# "We Accept" 35x24 card badges (14714:103250): Visa, Amex, Mastercard, Maestro. #}
+{% macro cardBadges() %}
+<ul class="flex gap-1" aria-label="Accepted cards">
+  <li><svg viewBox="0 0 35 24" class="h-6 w-[35px]" role="img" aria-label="Visa"><rect x=".5" y=".5" width="34" height="23" rx="3.5" fill="#fff" stroke="#dde7ee"/><text x="17.5" y="15.5" text-anchor="middle" fill="#172b85" font-family="Arial, sans-serif" font-size="9" font-style="italic" font-weight="800">VISA</text></svg></li>
+  <li><svg viewBox="0 0 35 24" class="h-6 w-[35px]" role="img" aria-label="American Express"><rect x=".5" y=".5" width="34" height="23" rx="3.5" fill="#1f72cd" stroke="#dde7ee"/><text x="17.5" y="15" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="7.5" font-weight="800">AMEX</text></svg></li>
+  <li><svg viewBox="0 0 35 24" class="h-6 w-[35px]" role="img" aria-label="Mastercard"><rect x=".5" y=".5" width="34" height="23" rx="3.5" fill="#fff" stroke="#dde7ee"/><circle cx="14" cy="12" r="6.5" fill="#ed0006"/><circle cx="21" cy="12" r="6.5" fill="#f9a000"/><path d="M17.5 6.5a6.5 6.5 0 0 1 0 11 6.5 6.5 0 0 1 0-11Z" fill="#ff5e00"/></svg></li>
+  <li><svg viewBox="0 0 35 24" class="h-6 w-[35px]" role="img" aria-label="Maestro"><rect x=".5" y=".5" width="34" height="23" rx="3.5" fill="#fff" stroke="#dde7ee"/><circle cx="14" cy="12" r="6.5" fill="#ed0006"/><circle cx="21" cy="12" r="6.5" fill="#0099df"/><path d="M17.5 6.5a6.5 6.5 0 0 1 0 11 6.5 6.5 0 0 1 0-11Z" fill="#6c6bbd"/></svg></li>
+</ul>
+{% endmacro %}
+
+{# "illustration_empty-box" (21071:135312 / 32215:84213, 160x160), exported from Figma as SVG. #}
+{% macro emptyBox(cls="h-40 w-40") %}
+<img src="/img/illustrations/empty-box.svg" alt="" width="160" height="160" class="{{ cls }}">
+{% endmacro %}

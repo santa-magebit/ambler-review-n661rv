@@ -1,0 +1,217 @@
+---
+layout: account/layout.njk
+title: "Order #000000368"
+permalink: /sales/order/view/
+figma: "14714:137948"
+accountNavActive: /sales/order/history/
+---
+{% import "account/macros.njk" as acc with context %}
+{% set order = account.order %}
+
+{# Product cell: 108px image with #dde7ee border, item number + name (Regular 16/24), optional variant (12/16). #}
+{% macro itemCell(item, textWidth="max-w-[612px]") %}
+{% set p = catalog.products | find("sku", item.sku) %}
+<div class="flex items-center gap-6">
+  <a href="{{ p.url }}" tabindex="-1" aria-hidden="true" class="shrink-0"><img src="{{ p.image }}" alt="" width="108" height="108" class="h-[108px] w-[108px] rounded border border-outline bg-white object-contain"></a>
+  <div class="flex {{ textWidth }} flex-col gap-1">
+    <a href="{{ p.url }}" class="text-base text-body hover:text-primary-500 hover:underline">{{ item.name }}</a>
+    {% if item.variant %}<span class="text-xs text-body">{{ item.variant }}</span>{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{# Totals panel under the item tables ("totals" 14714:138028): 408px column aligned with Price. #}
+{% macro totals(extra=[], grandTotal=order.grandTotal, after=[]) %}
+<div class="rounded bg-secondary-100 p-6">
+  <dl class="ml-auto flex w-full max-w-[408px] flex-col gap-1 text-base text-body">
+    {% for t in order.totals.concat(extra) %}
+    <div class="flex justify-between gap-4"><dt>{{ t[0] }}</dt><dd>{{ t[1] }}</dd></div>
+    {% endfor %}
+    <div class="flex justify-between gap-4 text-lg font-bold tracking-title text-ink"><dt>Grand Total</dt><dd>{{ grandTotal }}</dd></div>
+    {% for t in after %}
+    <div class="flex justify-between gap-4"><dt>{{ t[0] }}</dt><dd>{{ t[1] }}</dd></div>
+    {% endfor %}
+  </dl>
+</div>
+{% endmacro %}
+
+{% set th = "px-3 py-5 font-normal" %}
+{% set thFirst = "rounded-l py-5 pl-6 pr-3 font-normal" %}
+{% set thLast = "rounded-r py-5 pl-3 pr-6 font-normal" %}
+{% set tdFirst = "rounded-l py-5 pl-6 pr-3" %}
+{% set tdLast = "rounded-r py-5 pl-3 pr-6" %}
+
+<div x-data="orderView" @hashchange.window="fromHash()" class="flex flex-col gap-10" data-figma="14714:137970">
+  {{ acc.pageTitle("My Orders") }}
+
+  {# Order number, status, date and actions ("order#" 14714:137972) #}
+  <div class="flex flex-wrap items-center justify-between gap-6" data-figma="14714:137972">
+    <div class="flex flex-col gap-1">
+      <div class="flex flex-wrap items-center gap-3">
+        <h2 class="text-h3 font-medium text-heading">Order #{{ order.number }}</h2>
+        {{ acc.statusBadge(order.status) }}
+      </div>
+      <p class="text-base text-body">Order Date: {{ order.date }}</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3" data-figma="14714:137978">
+      <a href="/sales/order/history/" class="btn pl-[30px] text-primary-500 hover:text-ink">{% icon "arrow-left" %}Back To Orders</a>
+      <button type="button" @click="print()" class="btn-secondary pl-[30px]">{% icon "printer" %}<span x-text="{ items: 'Print Order', invoices: 'Print Invoice', shipments: 'Print Shipment', refunds: 'Print Refund' }[tab]">Print Order</span></button>
+      <button type="button" @click="reorder()" data-reorder class="btn-primary pl-[30px]">{% icon "reload", "h-7 w-7" %}Reorder</button>
+    </div>
+  </div>
+
+  {# Tabs (states 14714:138066: normal, hover 1px navy, pressed 2px navy; selected 2px orange) #}
+  <div class="flex flex-col gap-6" data-figma="14714:137982">
+    <div role="tablist" aria-label="Order details" class="flex overflow-x-auto border-b border-outline" data-figma="14714:137983">
+      {% for t in [["items", "Items Ordered"], ["invoices", "Invoices"], ["shipments", "Shipments"], ["refunds", "Refunds"]] %}
+      <button type="button" role="tab" id="order-tab-{{ t[0] }}" x-ref="tab-{{ t[0] }}" aria-controls="order-panel-{{ t[0] }}"
+              :aria-selected="tab === '{{ t[0] }}'" :tabindex="tab === '{{ t[0] }}' ? 0 : -1" {% if not loop.first %}tabindex="-1"{% endif %}
+              @click="select('{{ t[0] }}')" @keydown.right.prevent="step(1)" @keydown.left.prevent="step(-1)"
+              class="-mb-px shrink-0 whitespace-nowrap border-b-2 px-6 pb-[14px] text-base"
+              :class="tab === '{{ t[0] }}' ? 'border-accent text-ink' : 'border-transparent text-body hover:shadow-[inset_0_-1px_0_theme(colors.primary.500)] active:border-primary-500 active:text-ink'">{{ t[1] }}</button>
+      {% endfor %}
+    </div>
+
+    {# Items Ordered (14714:137998) #}
+    <div role="tabpanel" id="order-panel-items" aria-labelledby="order-tab-items" x-show="tab === 'items'" data-figma="14714:137998">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[760px] text-left">
+          <thead>
+            <tr class="bg-secondary-100 text-sm text-heading">
+              <th scope="col" class="{{ thFirst }}">Item</th>
+              <th scope="col" class="w-[144px] {{ th }}">Price</th>
+              <th scope="col" class="w-[144px] {{ th }}">Qty</th>
+              <th scope="col" class="w-[156px] {{ thLast }}">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="text-base text-body">
+            {% for item in order.items %}
+            <tr class="even:bg-secondary-100">
+              <td class="{{ tdFirst }}">{{ itemCell(item) }}</td>
+              <td class="px-3 py-5 font-bold text-ink">{{ item.price }}</td>
+              <td class="px-3 py-5">Ordered: 1<br>Shipped: 1<br>Refunded: 1</td>
+              <td class="{{ tdLast }} font-bold text-ink">{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {{ totals() }}
+    </div>
+
+    {# Invoices (27033:13344) #}
+    <div role="tabpanel" id="order-panel-invoices" aria-labelledby="order-tab-invoices" x-show="tab === 'invoices'" x-cloak class="flex flex-col gap-6" data-figma="27033:13396">
+      <h3 class="text-h3 font-medium text-heading">Invoice #{{ order.number }}</h3>
+      <div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[760px] text-left">
+            <thead>
+              <tr class="bg-secondary-100 text-sm text-heading">
+                <th scope="col" class="{{ thFirst }}">Item</th>
+                <th scope="col" class="w-[144px] {{ th }}">Price</th>
+                <th scope="col" class="w-[144px] {{ th }}">Qty Invoiced</th>
+                <th scope="col" class="w-[156px] {{ thLast }}">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody class="text-base text-body">
+              {% for item in order.items %}
+              <tr class="even:bg-secondary-100">
+                <td class="{{ tdFirst }}">{{ itemCell(item) }}</td>
+                <td class="px-3 py-5 font-bold text-ink">{{ item.price }}</td>
+                <td class="px-3 py-5">1</td>
+                <td class="{{ tdLast }} font-bold text-ink">{{ item.subtotal }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {{ totals() }}
+      </div>
+    </div>
+
+    {# Order Shipments (27033:13248) #}
+    <div role="tabpanel" id="order-panel-shipments" aria-labelledby="order-tab-shipments" x-show="tab === 'shipments'" x-cloak class="flex flex-col gap-6" data-figma="27033:13298">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col gap-1">
+          <h3 class="text-h3 font-medium text-heading">Shipment #{{ order.number }}</h3>
+          <p class="text-base text-body">Tracking Number(s): {{ order.trackingNumber }}</p>
+        </div>
+        <a href="#" data-proto class="btn-secondary">Track This Shipment</a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[640px] text-left">
+          <thead>
+            <tr class="bg-secondary-100 text-sm text-heading">
+              <th scope="col" class="{{ thFirst }}">Item</th>
+              <th scope="col" class="w-[156px] {{ thLast }}">Qty Shipped</th>
+            </tr>
+          </thead>
+          <tbody class="text-base text-body">
+            {% for item in order.items %}
+            <tr class="even:bg-secondary-100">
+              <td class="{{ tdFirst }}">{{ itemCell(item) }}</td>
+              <td class="{{ tdLast }}">1</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {# Refunds (27033:13115) #}
+    <div role="tabpanel" id="order-panel-refunds" aria-labelledby="order-tab-refunds" x-show="tab === 'refunds'" x-cloak class="flex flex-col gap-6" data-figma="27033:13170">
+      <h3 class="text-h3 font-medium text-heading">Refund #{{ order.number }}</h3>
+      <div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[960px] text-left">
+            <thead>
+              <tr class="bg-secondary-100 text-sm text-heading">
+                <th scope="col" class="{{ thFirst }}">Item</th>
+                <th scope="col" class="w-[144px] {{ th }}">Price</th>
+                <th scope="col" class="w-[144px] {{ th }}">Qty Refunded</th>
+                <th scope="col" class="w-[144px] {{ th }}">Subtotal</th>
+                <th scope="col" class="w-[144px] {{ th }}">Discount Amount</th>
+                <th scope="col" class="w-[156px] {{ thLast }}">Row Total</th>
+              </tr>
+            </thead>
+            <tbody class="text-base text-body">
+              {% for item in order.items %}
+              <tr class="even:bg-secondary-100">
+                <td class="{{ tdFirst }}">{{ itemCell(item, "max-w-[324px]") }}</td>
+                <td class="px-3 py-5 font-bold text-ink">{{ item.price }}</td>
+                <td class="px-3 py-5">{{ item.qtyRefunded }}</td>
+                <td class="px-3 py-5 font-bold text-ink">{{ item.subtotal }}</td>
+                <td class="px-3 py-5">$0.00</td>
+                <td class="{{ tdLast }}">$0.00</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {{ totals([["Store Credit", order.refund.storeCredit]], order.refund.grandTotal, [["Refunded to Store Credit", order.refund.refundedToStoreCredit]]) }}
+      </div>
+    </div>
+  </div>
+
+  {# Order Information (14714:138044) #}
+  <section class="flex flex-col gap-6" data-figma="14714:138044">
+    <h2 class="text-h3 font-medium text-heading">Order Information</h2>
+    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4" data-figma="14714:138046">
+      {% for box in order.info %}
+      <div class="flex flex-col gap-3 rounded border border-outline bg-white p-[23px]">
+        <h3 class="text-base text-ink">{{ box.title }}</h3>
+        <p class="flex flex-col gap-2 text-base text-body">{% for l in box.lines %}<span>{{ l }}</span>{% endfor %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {# About Your Order (14714:138059), drawn on the Items Ordered tab only #}
+  <section x-show="tab === 'items'" class="flex flex-col gap-3" data-figma="14714:138059">
+    <h2 class="text-h3 font-medium text-ink">About Your Order</h2>
+    <div class="flex flex-col gap-2 rounded bg-secondary-100 p-6">
+      <p class="text-xs font-medium text-body">{{ order.comment.date }}</p>
+      <p class="text-base text-body">{{ order.comment.text }}</p>
+    </div>
+  </section>
+</div>

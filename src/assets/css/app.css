@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  [x-cloak] {
+    display: none !important;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white font-sans text-lg text-body antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-heading;
+  }
+}
+
+@layer components {
+  /* Page container: 1536px content (Figma 1920 frames with 192px side padding). */
+  .container-page {
+    @apply mx-auto w-full max-w-[1600px] px-4 md:px-8;
+  }
+  /* Buttons, styleguide "Buttons": 52px tall, Medium 18/28, radius 4. */
+  .btn {
+    @apply inline-flex h-[52px] items-center justify-center gap-2 rounded px-8 text-lg font-medium transition-colors disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-primary-500 text-white hover:bg-primary-700 active:bg-primary-900 disabled:bg-secondary-200 disabled:text-secondary-300;
+  }
+  .btn-secondary {
+    @apply btn border border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5] hover:text-ink active:bg-outline disabled:text-secondary-300;
+  }
+  .btn-accent {
+    @apply btn bg-accent text-white hover:bg-accent-dark;
+  }
+  .btn-link {
+    @apply btn px-0 text-primary-500 hover:text-ink;
+  }
+  /* Inputs, styleguide "Large input": 52px, white, 1px #dee7ed, radius 4. */
+  .input {
+    @apply h-[52px] w-full rounded border border-secondary-200 bg-white px-5 text-lg text-ink outline-none placeholder:text-body hover:border-grayscale-400 focus:border-primary-500;
+  }
+  .label {
+    @apply mb-2 block text-base text-ink;
+  }
+  .link {
+    @apply text-primary-500 underline-offset-2 hover:text-ink hover:underline;
+  }
+}

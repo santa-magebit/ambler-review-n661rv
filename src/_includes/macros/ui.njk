@@ -1,0 +1,86 @@
+{#
+  Shared UI macros. Import in a page or partial with:
+    {% import "macros/ui.njk" as ui with context %}
+  Icons: {% icon "name", "classes" %} shortcode. Images: {{ "hash8" | img }} filter.
+#}
+
+{# Breadcrumb bar (PLP 34723:17022): 44px, #f1f5f8, links in primary, current page in body grey.
+   items: [{ label, href }] — "Home" is added automatically. #}
+{% macro breadcrumbs(items) %}
+<nav aria-label="Breadcrumb" class="bg-secondary-100" data-figma="34723:17022">
+  <ol class="container-page flex flex-wrap items-center gap-1 py-2.5 text-base">
+    <li class="flex items-center gap-1"><a href="/" class="text-primary-500 hover:underline">Home</a></li>
+    {% for c in items %}
+    <li class="flex items-center gap-1">
+      {% icon "arrow-breadcrumb", "h-6 w-6 text-primary-500" %}
+      {% if c.href and not loop.last %}
+      <a href="{{ c.href }}" class="text-primary-500 hover:underline">{{ c.label }}</a>
+      {% else %}
+      <span {% if loop.last %}aria-current="page"{% endif %} class="text-body">{{ c.label }}</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</nav>
+{% endmacro %}
+
+{# Product card, styleguide "PRODUCT CARD WEB" (34739:92926): 1px #3a526d border, 48px title strip
+   (Popular + ITEM#), 200px image, name Bold 18/28 + 2-line description, 52px price bar with Add to Cart. #}
+{% macro productCard(p) %}
+<article class="flex h-full flex-col overflow-hidden rounded border border-card bg-white" data-figma="34739:92926">
+  <div class="flex h-12 items-center justify-between gap-3 bg-secondary-100 px-3">
+    {% if p.badge %}
+    <span class="flex items-center gap-1.5 text-base font-medium text-primary-500">{% icon "heart", "h-4 w-4" %}{{ p.badge }}</span>
+    {% else %}<span></span>{% endif %}
+    {% if p.sku %}<span class="text-base font-bold text-primary-500">ITEM#: {{ p.sku }}</span>{% endif %}
+  </div>
+  <a href="{{ p.url }}" tabindex="-1" aria-hidden="true" class="block h-[200px] bg-white">
+    <img src="{{ p.image }}" alt="" loading="lazy" class="h-full w-full object-contain">
+  </a>
+  {# Figma body is a fixed 136px (2-line name + 2-line description), so cards line up at 436px. #}
+  <div class="flex min-h-[136px] flex-1 flex-col gap-2 border-t border-outline px-4 py-3">
+    <h3 class="line-clamp-2 text-lg font-bold text-primary-500"><a href="{{ p.url }}" class="hover:underline">{{ p.name }}</a></h3>
+    <p class="line-clamp-2 text-base text-body">{{ p.description }}</p>
+  </div>
+  <div class="flex h-[52px] items-center justify-between border-t border-card bg-secondary-100 pl-3">
+    <span class="flex items-baseline gap-2 text-lg font-bold text-primary-500">{{ p.price | money }}{% if p.oldPrice %}<s class="text-sm font-normal text-body">{{ p.oldPrice | money }}</s>{% endif %}</span>
+    <button type="button" @click="$store.cart.add('{{ p.slug }}')" class="h-full rounded-br bg-primary-500 px-4 text-lg font-medium text-white hover:bg-primary-700">Add to Cart</button>
+  </div>
+</article>
+{% endmacro %}
+
+{# Quantity stepper (Mini Cart / Cart): three 44px boxes with #dee7ed borders.
+   get: Alpine expression for the current value, e.g. "qty" or "item.qty".
+   set: Alpine function expression receiving the new value, e.g. "v => qty = v"
+        or "v => $store.cart.setQty(item.slug, v)". #}
+{% macro qtyStepper(get, set, label="Quantity", size=44, textClass="") %}
+{% set box = "h-[52px] w-[52px]" if size == 52 else "h-11 w-11" %}
+{% set textClass = textClass or ("text-lg" if size == 52 else "text-sm") %}
+<div class="flex">
+  <button type="button" @click="({{ set }})(Math.max(1, ({{ get }}) - 1))" aria-label="Decrease quantity" class="{{ box }} flex items-center justify-center rounded-l border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100">{% icon "minus-xs", "h-6 w-6" %}</button>
+  <input aria-label="{{ label }}" inputmode="numeric" :value="{{ get }}" @change="({{ set }})(Math.max(1, parseInt($event.target.value.replace(/\D/g, '')) || 1))" class="{{ box }} border-y border-secondary-200 bg-white text-center {{ textClass }} text-body outline-none focus:border-primary-500">
+  <button type="button" @click="({{ set }})(({{ get }}) + 1)" aria-label="Increase quantity" class="{{ box }} flex items-center justify-center rounded-r border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100">{% icon "plus-xs", "h-6 w-6" %}</button>
+</div>
+{% endmacro %}
+
+{# Labelled text input, styleguide "Large input". #}
+{% macro field(label, name, type="text", required=false, autocomplete="", placeholder="", value="", class="", hint="") %}
+<label class="block {{ class }}">
+  <span class="label">{{ label }}{% if required %}<span class="text-error"> *</span>{% endif %}</span>
+  <input name="{{ name }}" type="{{ type }}" {% if required %}required{% endif %} {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %} {% if placeholder %}placeholder="{{ placeholder }}"{% endif %} {% if value %}value="{{ value }}"{% endif %} class="input">
+  {% if hint %}<span class="mt-1 block text-xs text-body">{{ hint }}</span>{% endif %}
+</label>
+{% endmacro %}
+
+{# Section heading row: web/heading/h2 (Bold 32/40), optional navy button on the right. #}
+{% macro sectionHeading(title, href="", linkLabel="") %}
+<div class="flex flex-wrap items-center justify-between gap-5">
+  <h2 class="text-h3 font-bold text-heading md:text-h2">{{ title }}</h2>
+  {% if href %}<a href="{{ href }}" class="btn-primary">{{ linkLabel }}</a>{% endif %}
+</div>
+{% endmacro %}
+
+{# "card-title" strip label used by category cards: primary text + arrow. size "lg" = 24/32 title. #}
+{% macro cardTitle(label, size="md") %}
+<span class="flex items-center gap-3 text-primary-500 {{ 'text-h3 font-medium tracking-title' if size == 'lg' else 'text-lg font-medium' }}">{{ label }}{% icon "arrow-narrow-right", "h-6 w-6" %}</span>
+{% endmacro %}

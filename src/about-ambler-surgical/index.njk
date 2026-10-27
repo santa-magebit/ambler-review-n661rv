@@ -1,0 +1,179 @@
+---
+layout: layouts/base.njk
+title: About Ambler Surgical
+permalink: /about-ambler-surgical/
+---
+{# CMS - About Ambler Surgical (Figma 34974:1141); sticky sub-nav scrolled state 34971:56679. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% set a = contentPages.about %}
+
+{{ ui.breadcrumbs([{ label: "About Ambler Surgical" }]) }}
+
+{# Hero: surgeon photo (mirrored in Figma) under a navy fade. #}
+<section class="relative isolate overflow-hidden bg-primary-500" data-figma="34971:47249">
+  <img src="{{ 'fb1d6319' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full -scale-x-100 object-cover lg:inset-auto lg:right-0 lg:top-[-155px] lg:h-[848px] lg:w-[1600px] lg:max-w-none">
+  <div aria-hidden="true" class="absolute inset-0 -z-10" style="background-image: {{ contentPages.gradients.aboutFade }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/60 md:hidden"></div>
+  <div class="container-page flex min-h-[360px] items-center py-12 lg:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col items-start gap-7">
+      {{ c.heroTitle("About Ambler Surgical") }}
+      <p class="text-lg text-white">{{ a.intro }}</p>
+    </div>
+  </div>
+</section>
+
+{# Sticky sub-navigation: anchor tabs (orange underline on the section in view) + links to other pages. #}
+<nav x-data="aboutSubnav" aria-label="On this page" class="sticky top-[var(--header-h,0px)] z-30 border-b border-outline bg-white" data-figma="34974:1154">
+  <div class="container-page flex items-center justify-between gap-10">
+    <ul x-ref="tabs" class="-mx-4 flex min-w-0 gap-10 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden" data-figma="34974:1155">
+      {% for s in a.sections %}
+      <li class="shrink-0">
+        <a href="#{{ s.id }}" data-section="{{ s.id }}" @click="go('{{ s.id }}')"
+           :aria-current="active === '{{ s.id }}' ? 'location' : null"
+           :class="active === '{{ s.id }}' ? '!border-accent' : 'hover:border-secondary-200'"
+           class="block whitespace-nowrap border-b-[3px] border-transparent pb-[19px] pt-[22px] text-base font-medium text-primary-500 transition-colors">{{ s.label }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="hidden shrink-0 items-center gap-8 min-[1400px]:flex" data-figma="34974:1166">
+      <span aria-hidden="true" class="h-6 w-px bg-outline"></span>
+      <a href="#" data-proto class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-ink">Upcoming Meetings{% icon "arrow-narrow-right" %}</a>
+      <a href="#" data-proto class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-ink">Ambler Alliance{% icon "arrow-narrow-right" %}</a>
+      <a href="/search/" x-data="catalogSearch" @click.prevent="open()" class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-ink">Cross Reference{% icon "arrow-narrow-right" %}</a>
+    </div>
+  </div>
+</nav>
+
+{# Who We Are + recent additions. #}
+<section id="about-us" class="scroll-mt-[69px] bg-white" data-figma="34974:1171">
+  <div class="container-page grid gap-12 py-10 lg:grid-cols-[720fr_768fr]">
+    <div class="flex min-w-0 flex-col gap-6" data-figma="34974:1173">
+      <h2 class="text-h2 font-bold text-heading">Who We Are</h2>
+      <p class="text-lg text-body">{{ a.whoWeAre }}</p>
+    </div>
+    <div class="flex min-w-0 flex-col gap-5 rounded bg-secondary-100 p-6 sm:p-8" data-figma="34974:1176">
+      <h3 class="text-h4 font-medium text-primary-500">Recent additions to our online catalog:</h3>
+      <div class="grid gap-3 sm:grid-cols-2 sm:gap-8">
+        {% for col in a.recentAdditions %}
+        <ul class="flex flex-col gap-3 text-lg text-ink">
+          {% for item in col %}{% call c.bullet() %}{{ item }}{% endcall %}{% endfor %}
+        </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Why Us: nurse photo (mirrored in Figma) fading into navy behind the text column. #}
+<section id="why-us" class="relative isolate scroll-mt-[69px] overflow-hidden bg-primary-500" data-figma="34974:1221">
+  <img src="{{ '8c9b5f40' | img }}" alt="" loading="lazy" class="absolute inset-y-0 left-0 -z-10 h-full w-full -scale-x-100 object-cover lg:w-[65.1%]">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden lg:block" style="background-image: {{ contentPages.gradients.whyFade }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/85 lg:hidden"></div>
+  <div class="container-page flex py-10 lg:min-h-[732px] lg:items-center">
+    <div class="flex max-w-[856px] flex-col gap-7 text-lg text-white lg:ml-auto" data-figma="34974:1224">
+      <h2 class="text-h3 font-bold text-white md:text-h2">Why Us?<br><span class="text-accent">The Smarter Source for affordable specialty instruments.</span></h2>
+      <div class="flex flex-col gap-6">
+        <p><strong class="font-bold">{{ a.whyLead.title }}</strong> {{ a.whyLead.text }}</p>
+        <ul class="flex flex-col gap-3" data-figma="34974:1228">
+          {% for w in a.why %}
+          {% call c.bullet() %}<strong class="font-bold">{{ w.title }}</strong> {{ w.text }}{% if w.link %} {% if w.link.proto %}<a href="#" data-proto class="underline underline-offset-2 hover:text-accent">{{ w.link.label }}</a>{% else %}<a href="{{ w.link.href }}" class="underline underline-offset-2 hover:text-accent">{{ w.link.label }}</a>{% endif %}{{ w.after }}{% endif %}{% endcall %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Executive Board: headshot placeholders with initials, name, role, email and bio. #}
+<section id="executive-board" class="scroll-mt-[69px] bg-[#f5f7fa]" data-figma="34974:1257">
+  <div class="container-page flex flex-col gap-6 py-10">
+    <h2 class="text-h2 font-bold text-heading">Executive Board</h2>
+    <div class="flex flex-col gap-10" data-figma="34974:1259">
+      {% for p in a.board %}
+      {% if not loop.first %}<hr class="border-outline">{% endif %}
+      <article class="flex flex-col gap-6 md:flex-row md:items-center md:gap-12" data-figma="{{ p.figma }}">
+        <div class="flex aspect-square w-full max-w-[240px] shrink-0 items-center justify-center rounded border border-outline bg-secondary-100 md:max-w-[280px] xl:max-w-[360px]" role="img" aria-label="Photo of {{ p.name }} coming soon">
+          <span aria-hidden="true" class="text-[64px] font-bold leading-none text-primary-500/25 xl:text-[96px] xl:leading-[112px]">{{ p.initials }}</span>
+        </div>
+        <div class="flex min-w-0 max-w-[1000px] flex-col gap-4">
+          <div class="flex flex-col gap-1">
+            <h3 class="text-h3 font-medium text-accent">{{ p.name }}</h3>
+            <p class="text-h4 text-primary-500">{{ p.role }}</p>
+            <a href="mailto:{{ p.email }}" class="self-start break-all text-base text-primary-500 underline underline-offset-2 hover:text-ink">{{ p.email }}</a>
+          </div>
+          <p class="text-lg text-body">{{ p.bio }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# Societies & Affiliations. #}
+<section id="societies-affiliations" class="scroll-mt-[69px] bg-white" data-figma="34974:1279">
+  <div class="container-page flex flex-col gap-6 pb-5 pt-10">
+    <h2 class="text-h2 font-bold text-heading">Societies &amp; Affiliations</h2>
+    <div class="grid gap-12 lg:grid-cols-[720fr_768fr] lg:items-center">
+      <p class="min-w-0 text-lg text-body">{{ a.societiesText }}</p>
+      <ul class="grid min-w-0 grid-cols-2 gap-5 sm:grid-cols-3" data-figma="34974:1283">
+        {% for s in a.societies %}
+        <li class="flex h-20 items-center justify-center rounded border border-outline bg-white {{ 'p-6' if s.image else 'px-5 py-3' }}">
+          {% if s.image %}
+          <img src="{{ s.image }}" alt="{{ s.name }}" loading="lazy" class="h-8 w-full object-contain">
+          {% else %}
+          <span class="text-center font-medium tracking-title text-black {{ s.size }}">{{ s.name }}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{# Customer Testimonials slider: cards run off the right edge; progress line + previous/next. #}
+<section id="customer-testimonials" x-data="slider" class="flex scroll-mt-[69px] flex-col gap-8 bg-white pb-10 pt-5" aria-labelledby="testimonials-title" data-figma="34974:1292">
+  <div class="container-page"><h2 id="testimonials-title" class="text-h2 font-bold text-heading">Customer Testimonials</h2></div>
+  <ul x-ref="track" @scroll.passive="update()" class="flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 [scroll-padding-inline:1rem] [scrollbar-width:none] md:px-[max(2rem,calc((100%-1536px)/2))] md:[scroll-padding-inline:max(2rem,calc((100%-1536px)/2))] [&::-webkit-scrollbar]:hidden" data-figma="34974:1295">
+    {% for t in a.testimonials %}
+    <li class="flex w-[min(744px,85vw)] shrink-0 snap-start flex-col gap-6 rounded border border-card bg-secondary-100 p-6 md:p-8" data-figma="{{ t.figma }}">
+      {{ c.quoteMark() }}
+      <blockquote class="flex-1 text-lg text-heading">{{ t.quote }}</blockquote>
+      <hr class="border-outline">
+      <p class="flex flex-col gap-0.5">
+        <span class="text-lg font-bold text-primary-500">{{ t.name }}</span>
+        <span class="text-base text-body">{{ t.place }}</span>
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="container-page">
+    <div class="flex items-center gap-6" data-figma="34974:1323">
+      <div class="relative h-0.5 flex-1 bg-grayscale-300" aria-hidden="true">
+        <span class="absolute inset-y-0 w-[24.36%] bg-primary-500 transition-[left] duration-150" :style="`left: ${progress * 75.64}%`"></span>
+      </div>
+      <div class="flex gap-3">
+        <button type="button" @click="step(-1)" :disabled="atStart" aria-label="Previous testimonial" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100 disabled:text-secondary-300 disabled:hover:bg-white">{% icon "arrow-left" %}</button>
+        <button type="button" @click="step(1)" :disabled="atEnd" aria-label="Next testimonial" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100 disabled:text-secondary-300 disabled:hover:bg-white">{% icon "arrow-right" %}</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# More from Ambler: three navy cards. #}
+<section class="bg-secondary-100" aria-label="More from Ambler" data-figma="34974:1331">
+  <ul class="container-page grid gap-6 py-10 md:grid-cols-3">
+    {% for card in a.ctas %}
+    <li class="flex min-w-0 flex-col items-start gap-4 rounded bg-primary-500 p-6 lg:min-h-[365px] lg:p-8" data-figma="{{ card.figma }}">
+      {% if card.icon %}{% icon card.icon, "h-14 w-14 text-white" %}{% else %}<img src="{{ card.image }}" alt="" class="h-14 w-14 object-contain">{% endif %}
+      <h2 class="text-h3 font-medium text-white">{{ card.title }}</h2>
+      <p class="flex-1 text-base text-secondary-200">{{ card.text }}</p>
+      {% if card.action == "search" %}
+      {{ c.arrowButton(card.button, "/search/", 'x-data="catalogSearch" @click.prevent="open()"') }}
+      {% else %}
+      {{ c.arrowButton(card.button, "#", "data-proto") }}
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>

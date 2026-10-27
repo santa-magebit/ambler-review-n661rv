@@ -1,0 +1,157 @@
+{#
+  Checkout building blocks. Import with:
+    {% import "checkout/macros.njk" as co with context %}
+  Sizes and colours from the Figma checkout frames (34799:87723 and siblings).
+#}
+
+{# Section heading: Medium 24/32 #0c2a4b, 12px gap, 1px #dde7ee line. Optional right-hand slot via {% call %}. #}
+{% macro heading(title, id) %}
+<div class="flex flex-col gap-3">
+  <div class="flex min-h-8 items-center justify-between gap-3">
+    <h2 id="{{ id }}" class="text-h3 font-medium text-heading">{{ title }}</h2>
+    {% if caller %}{{ caller() }}{% endif %}
+  </div>
+  <hr class="border-outline">
+</div>
+{% endmacro %}
+
+{# Styleguide checkbox (20px, radius 4, #dee7ed; checked: #004776 with a white check). Label via {% call %}. #}
+{% macro checkbox(model, id, labelClass="text-body") %}
+<div class="flex items-start gap-3">
+  <span class="relative mt-0.5 flex h-5 w-5 shrink-0">
+    <input id="{{ id }}" type="checkbox" x-model="{{ model }}" class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-secondary-200 bg-white checked:border-primary-500 checked:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500">
+    {% icon "check-small", "pointer-events-none absolute inset-0 hidden h-5 w-5 text-white peer-checked:block" %}
+  </span>
+  <label for="{{ id }}" class="cursor-pointer text-base {{ labelClass }}">{{ caller() }}</label>
+</div>
+{% endmacro %}
+
+{# Styleguide radio (20px; selected: #004776 ring around a 6px white dot). #}
+{% macro radioClass(border="border-secondary-200") %}h-5 w-5 shrink-0 cursor-pointer appearance-none rounded-full border {{ border }} bg-white checked:border-[7px] checked:border-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500{% endmacro %}
+
+{# "Or" divider: two #dde7ee lines with Regular 14/20 text. #}
+{% macro orDivider() %}
+<div class="flex items-center gap-3 text-sm text-body" role="separator">
+  <span class="h-px flex-1 bg-outline"></span>Or<span class="h-px flex-1 bg-outline"></span>
+</div>
+{% endmacro %}
+
+{# 52px "info" square with a help-circle icon, right of the e-mail, phone and CVV inputs (not designed). #}
+{% macro helpButton(label) %}
+<button type="button" data-proto aria-label="{{ label }}" class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-r text-primary-500 hover:text-ink">{% icon "help-circle", "h-6 w-6" %}</button>
+{% endmacro %}
+
+{# Native select styled as the 52px "Large input" with the dropdown icon. #}
+{% macro select(id, name, options, placeholder="", label="", textClass="text-lg") %}
+<div class="relative">
+  <select id="{{ id }}" {% if name %}name="{{ name }}"{% endif %} {% if label %}aria-label="{{ label }}"{% endif %} class="input cursor-pointer appearance-none pr-14 {{ textClass }} text-body">
+    {% if placeholder %}<option value="">{{ placeholder }}</option>{% endif %}
+    {% for o in options %}<option>{{ o }}</option>{% endfor %}
+  </select>
+  {% icon "dropdown", "pointer-events-none absolute right-5 top-3 h-7 w-7 text-primary-500" %}
+</div>
+{% endmacro %}
+
+{#
+  Address fields (guest Shipping/Billing Address, New Address modal): first/last name, phone,
+  then either the address finder ("Your Address", 34799:88054) or the manual fields in a grey
+  box ("Frame 5672", 34799:87832). ns: field name prefix; manual: Alpine boolean expression.
+#}
+{% macro addressFields(ns, manual) %}
+<div class="grid grid-cols-1 gap-x-3 gap-y-7 sm:grid-cols-2">
+  <label class="block">
+    <span class="label">First name</span>
+    <input name="{{ ns }}[firstname]" autocomplete="given-name" placeholder="Enter first name" class="input">
+  </label>
+  <label class="block">
+    <span class="label">Last name</span>
+    <input name="{{ ns }}[lastname]" autocomplete="family-name" placeholder="Enter last name" class="input">
+  </label>
+  <div class="sm:col-span-2">
+    <label for="{{ ns }}-telephone" class="label">Phone number</label>
+    <div class="flex">
+      <input id="{{ ns }}-telephone" name="{{ ns }}[telephone]" type="tel" autocomplete="tel" placeholder="Enter phone number" class="input">
+      {{ helpButton("About the phone number") }}
+    </div>
+  </div>
+
+  {# Address finder #}
+  <div x-show="!({{ manual }})" class="sm:col-span-2">
+    <label for="{{ ns }}-search" class="mb-2 block text-sm text-ink">Your Address</label>
+    <div class="relative">
+      <input id="{{ ns }}-search" name="{{ ns }}[search]" autocomplete="off" placeholder="Enter your address" class="input pr-14 text-base">
+      {% icon "search", "pointer-events-none absolute right-3.5 top-3.5 h-6 w-6 text-primary-500" %}
+    </div>
+    <button type="button" @click="{{ manual }} = true" class="mt-2 text-base text-primary-500 underline underline-offset-2 hover:text-ink">Enter address manually</button>
+  </div>
+
+  {# Manual entry #}
+  <div x-show="{{ manual }}" class="flex flex-col gap-2 sm:col-span-2">
+    <div class="flex flex-col gap-7 rounded border border-outline bg-[#f5f5f5] p-5">
+      <div>
+        <label for="{{ ns }}-country" class="label">Country</label>
+        {{ select(ns + "-country", ns + "[country]", checkout.countries) }}
+      </div>
+      <div class="flex flex-col gap-3">
+        <label class="block">
+          <span class="label">Street address</span>
+          <input name="{{ ns }}[street1]" autocomplete="address-line1" placeholder="Enter street address 1" class="input">
+        </label>
+        <input name="{{ ns }}[street2]" autocomplete="address-line2" placeholder="Enter street address 2" aria-label="Street address line 2" class="input">
+      </div>
+      <div>
+        <label for="{{ ns }}-region" class="label">State/Province</label>
+        {{ select(ns + "-region", ns + "[region]", checkout.states, "Please select") }}
+      </div>
+      <label class="block">
+        <span class="label">City <span class="text-body">(optional)</span></span>
+        <input name="{{ ns }}[city]" autocomplete="address-level2" placeholder="Enter city" class="input">
+      </label>
+      <label class="block">
+        <span class="label">Zip/Postal Code</span>
+        <input name="{{ ns }}[postcode]" autocomplete="postal-code" placeholder="Zip/postal code" class="input">
+      </label>
+    </div>
+    <button type="button" @click="{{ manual }} = false" class="self-start text-base text-primary-500 underline underline-offset-2 hover:text-ink">Switch back to address finder</button>
+  </div>
+</div>
+{% endmacro %}
+
+{# Express checkout wordmarks and payment badges. Figma draws them as vectors; these are close stand-ins. #}
+{% macro fedex() %}
+<span role="img" aria-label="FedEx" class="select-none text-[20px] font-extrabold leading-none tracking-[-0.06em]"><span class="text-[#442e8c]">Fed</span><span class="text-[#f47624]">Ex</span></span>
+{% endmacro %}
+
+{% macro cardBadges() %}
+<span class="flex gap-1" aria-label="Visa, American Express, Mastercard, Discover" role="img">
+  <span class="flex h-6 w-[35px] items-center justify-center rounded border border-outline bg-white text-[9px] font-extrabold italic leading-none text-[#172b85]">VISA</span>
+  <span class="flex h-6 w-[35px] items-center justify-center rounded border border-outline bg-[#1f72cd] text-[7px] font-extrabold leading-none text-white">AMEX</span>
+  <span class="flex h-6 w-[35px] items-center justify-center rounded border border-outline bg-white">
+    <svg viewBox="0 0 23 14" class="h-3.5 w-[23px]" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#ed0006"/><circle cx="16" cy="7" r="7" fill="#f9a000"/><path d="M11.5 1.64a7 7 0 0 1 0 10.72a7 7 0 0 1 0-10.72Z" fill="#ff5e00"/></svg>
+  </span>
+  <span class="flex h-6 w-[35px] flex-col items-center justify-center rounded border border-outline bg-white">
+    <span class="text-[5px] font-bold leading-none tracking-tight text-black">DISC<span class="text-[#fd6020]">O</span>VER</span>
+    <span class="mt-0.5 h-[3px] w-6 rounded-full bg-[#fd6020]"></span>
+  </span>
+</span>
+{% endmacro %}
+
+{% macro paypalBadge() %}
+<span role="img" aria-label="PayPal" class="flex h-6 w-[35px] shrink-0 items-center justify-center rounded border border-outline bg-white">
+  <span aria-hidden="true" class="relative text-[13px] font-extrabold italic leading-none"><span class="text-[#253b80]">P</span><span class="absolute left-[2px] top-[1px] text-[#179bd7] opacity-80">P</span></span>
+</span>
+{% endmacro %}
+
+{% macro poBadge() %}
+<span aria-hidden="true" class="flex h-6 w-[35px] shrink-0 items-center justify-center rounded border border-[#d9d9d9] bg-white text-body">{% icon "checklist", "h-[18px] w-[18px]" %}</span>
+{% endmacro %}
+
+{# Browser window with an arrow above the PayPal redirect note ("Frame 5651", 71x48). #}
+{% macro redirectIllustration() %}
+<svg viewBox="0 0 72 48" class="h-12 w-[72px] text-body" fill="none" aria-hidden="true">
+  <path d="M59 20V5a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v38a4 4 0 0 0 4 4h50a4 4 0 0 0 4-4V32" stroke="currentColor" stroke-width="2"/>
+  <path d="M2 9h56" stroke="currentColor" stroke-width="2"/>
+  <circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="13" cy="5" r="1" fill="currentColor"/>
+  <path d="M48 26h22m-4-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+{% endmacro %}

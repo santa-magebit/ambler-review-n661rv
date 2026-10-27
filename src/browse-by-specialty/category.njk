@@ -1,0 +1,35 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: plp.categoryPages
+  size: 1
+  alias: cp
+permalink: "{{ cp.url }}"
+eleventyComputed:
+  title: "{{ cp.name | safe }} | {{ cp.specialty.name | safe }}"
+---
+{#- Browse by Specialty > <Specialty> > <Category>: Figma "PLP - Category page" (34719:11290), drawn for Ophthalmology > Instruments. -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs(cp.breadcrumbs) }}
+{{ plp_ui.hero(cp.hero, "34719:11294") }}
+
+{% if cp.cards.length %}
+{# Popular Categories #}
+<section class="bg-white" data-figma="34719:11304">
+  <div class="container-page py-10">
+    {% call plp_ui.titleRow("Popular Categories") %}{{ plp_ui.quickSelect(cp.quickSelect, "All Categories", "34873:118749") }}{% endcall %}
+    <div class="mt-8">{{ plp_ui.cardGrid(cp.cards, "34719:11310") }}</div>
+  </div>
+</section>
+{% endif %}
+
+{{ plp_ui.popularProducts(cp.products, cp.popularCount, "34719:11327", not cp.cards.length) }}
+{{ plp_ui.brandsStrip("tint", "34719:11345") }}
+{% if cp.extras %}
+{{ plp_ui.infoBand(cp.extras.band) }}
+{{ plp_ui.features(cp.extras.features) }}
+{{ plp_ui.typesOf(cp.extras.typesOf) }}
+{% endif %}
+{{ plp_ui.faq(plp.faq.general, "34719:11514", "narrow", "#f5f7fa") }}

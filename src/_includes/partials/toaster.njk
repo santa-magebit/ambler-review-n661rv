@@ -1,0 +1,10 @@
+{# Short notices: window.toast({ message, href?, linkLabel? }) and clicks on [data-proto] elements. #}
+<div x-data="toaster" x-show="t" x-cloak role="status" class="fixed bottom-4 left-4 right-4 z-[60] sm:left-auto sm:w-96">
+  <div class="flex items-start gap-3 rounded bg-ink px-4 py-3 text-base text-white shadow-300">
+    <p class="flex-1 pt-0.5">
+      <span x-text="t && t.message"></span>
+      <template x-if="t && t.href"><a :href="url(t.href)" class="font-semibold underline underline-offset-2" x-text="t.linkLabel || 'Open'"></a></template>
+    </p>
+    <button type="button" @click="t = null" aria-label="Dismiss" class="-mr-1 rounded p-1 hover:bg-white/10">{% icon "close-x", "h-5 w-5" %}</button>
+  </div>
+</div>

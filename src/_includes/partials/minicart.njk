@@ -1,0 +1,55 @@
+{#
+  Mini cart drawer (Figma Cart page: "Mini Cart" 21596:85217, "Mini Cart - Added" 34266:78963,
+  "Mini Cart - Empty" 21596:85244). 560px panel from the right; state in Alpine.store("cart").
+#}
+{% import "macros/ui.njk" as ui with context %}
+<div x-show="$store.cart.open" x-cloak class="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="minicart-title" @keydown.escape.window="$store.cart.close()" data-figma="34266:78963">
+  <div class="absolute inset-0 bg-secondary-700/30" @click="$store.cart.close()" x-show="$store.cart.open" x-transition.opacity></div>
+  <div class="absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col bg-white shadow-top"
+       x-show="$store.cart.open" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+       x-trap="$store.cart.open">
+    <div class="flex h-[104px] shrink-0 items-stretch border-b border-outline">
+      <h2 id="minicart-title" class="flex flex-1 items-center px-10 text-h2 font-medium tracking-title text-heading">My Cart</h2>
+      <button type="button" @click="$store.cart.close()" aria-label="Close cart" class="flex w-[104px] items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100">{% icon "close-x", "h-6 w-6" %}</button>
+    </div>
+
+    {# Empty #}
+    <div x-show="$store.cart.items.length === 0" class="flex flex-1 flex-col items-center justify-center gap-6 px-10 text-center">
+      <div class="max-w-[300px]">
+        <p class="text-h3 font-medium tracking-title text-ink">Your cart is empty</p>
+        <p class="mt-2 text-base text-body">Looks like you haven&rsquo;t added any products to your cart yet.</p>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <a href="/browse-by-specialty/" class="btn-primary">Start Shopping</a>
+        <a href="/quick-order/" class="btn-link h-auto py-3 text-base">Order by SKU</a>
+      </div>
+    </div>
+
+    {# Lines #}
+    <ul x-show="$store.cart.items.length > 0" class="flex-1 overflow-y-auto">
+      <template x-for="item in $store.cart.items" :key="item.slug">
+        <li class="flex gap-6 border-b border-outline px-10 py-5" :class="$store.cart.lastAdded === item.slug && 'bg-[#e8f8ea]'">
+          <a :href="url(item.product.url)" class="shrink-0"><img :src="url(item.product.image)" alt="" class="h-[108px] w-[108px] rounded border border-outline bg-white object-contain"></a>
+          <div class="flex min-w-0 flex-1 flex-col gap-2">
+            <a :href="url(item.product.url)" class="text-base text-body hover:text-primary-500 hover:underline"
+               x-text="(item.product.sku ? item.product.sku + ' ' : '') + item.product.name + (item.product.variant ? '' : ', ' + item.product.description)"></a>
+            <span x-show="item.product.variant" class="text-xs text-body" x-text="item.product.variant"></span>
+            <span class="text-lg font-bold tracking-title text-ink" x-text="money(item.product.price)"></span>
+            <div class="mt-1 flex items-center justify-between gap-4">
+              {{ ui.qtyStepper("item.qty", "v => $store.cart.setQty(item.slug, v)", "Quantity") }}
+              <div class="flex text-primary-500">
+                <button type="button" data-proto aria-label="Move to wish list" class="flex h-11 w-11 items-center justify-center hover:text-ink">{% icon "heart", "h-6 w-6" %}</button>
+                <a :href="url(item.product.url)" :aria-label="'Edit ' + item.product.name" class="flex h-11 w-11 items-center justify-center hover:text-ink">{% icon "pencil", "h-6 w-6" %}</a>
+                <button type="button" @click="$store.cart.remove(item.slug)" :aria-label="'Remove ' + item.product.name" class="flex h-11 w-11 items-center justify-center hover:text-error">{% icon "trash", "h-6 w-6" %}</button>
+              </div>
+            </div>
+          </div>
+        </li>
+      </template>
+    </ul>
+    <div x-show="$store.cart.items.length > 0" class="flex shrink-0 flex-col gap-3 px-10 py-8 shadow-bar">
+      <a href="/checkout/" class="btn-primary w-full" x-text="'Checkout ' + money($store.cart.subtotal)">Checkout</a>
+      <a href="/checkout/cart/" class="btn-secondary w-full">View and Edit Cart</a>
+    </div>
+  </div>
+</div>

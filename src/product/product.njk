@@ -1,0 +1,36 @@
+---
+# Product page, Figma "PDP - Simple - 1920px" (34224:49536) + "PDP - Zoom" (21171:386870).
+# One page per catalogue product; the Figma frame depicts the Braunstein fixed caliper 2100E.
+layout: layouts/base.njk
+pagination:
+  data: catalog.products
+  size: 1
+  alias: product
+permalink: "/product/{{ product.slug }}/"
+eleventyComputed:
+  title: "{{ product.name | safe }}"
+---
+{% import "macros/ui.njk" as ui with context %}
+{% set gallery = pdpCart.galleries[product.slug] %}
+{% set related = pdpCart.related[product.slug] %}
+
+{# Type crumb: the Ophthalmology type page when one exists, else the Browse by Type page, else plain text. #}
+{% set typeHref = "/browse-by-specialty/ophthalmology/instruments/" + product.type + "/" %}
+{% if not (plp.typePages | find("url", typeHref)) %}
+  {% set browseType = plp.browseTypes | find("slug", product.type) %}
+  {% set typeHref = browseType.url if browseType else "" %}
+{% endif %}
+{{ ui.breadcrumbs([
+  { label: "Browse by Specialty", href: "/browse-by-specialty/" },
+  { label: "Ophthalmology", href: "/browse-by-specialty/ophthalmology/" },
+  { label: product.typeName, href: typeHref },
+  { label: product.name }
+]) }}
+
+<div class="container-page grid gap-6 pt-6 md:pt-10 lg:grid-cols-[minmax(0,1fr)_400px] xl:grid-cols-[minmax(0,1fr)_496px]" data-figma="34224:49540">
+  {% include "pdp-cart/gallery.njk" %}
+  {% include "pdp-cart/details.njk" %}
+</div>
+
+{% include "pdp-cart/related.njk" %}
+{% include "pdp-cart/return-policy.njk" %}

@@ -1,0 +1,20 @@
+{
+  "name": "ambler-venta-prototype",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Clickable prototype of the Ambler Surgical redesign (Venta/Hyvä): static HTML, Alpine.js, Tailwind CSS.",
+  "scripts": {
+    "dev": "eleventy --serve --port=8431",
+    "build": "eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.5",
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "alpinejs": "^3.14.9",
+    "@alpinejs/collapse": "^3.14.9",
+    "@alpinejs/focus": "^3.14.9"
+  }
+}

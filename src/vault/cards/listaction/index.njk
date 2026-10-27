@@ -1,0 +1,49 @@
+---
+layout: account/layout.njk
+title: Stored Payment Methods
+permalink: /vault/cards/listaction/
+figma: "34266:54872"
+---
+{% import "account/macros.njk" as acc with context %}
+{# Card brand badges ("Payment Method/Visa" and "/Mastercard", 35x24 with #dee7ed border). #}
+{% macro cardBadge(kind) %}
+<span role="img" aria-label="{{ kind }}" class="flex h-6 w-[35px] items-center justify-center rounded border border-secondary-200 bg-white">
+  {% if kind == "Visa" %}
+  <svg viewBox="0 0 25 8" class="h-2 w-[25px]" aria-hidden="true"><text x="12.5" y="7.6" text-anchor="middle" font-family="Arial, sans-serif" font-size="9.6" font-style="italic" font-weight="900" fill="#172b85" letter-spacing="-0.2">VISA</text></svg>
+  {% else %}
+  <svg viewBox="0 0 23 14" class="h-3.5 w-[23px]" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="#ed0006"/><circle cx="16" cy="7" r="7" fill="#f9a000"/><path d="M11.5 1.64a7 7 0 0 1 0 10.72a7 7 0 0 1 0-10.72z" fill="#ff5e00"/></svg>
+  {% endif %}
+</span>
+{% endmacro %}
+
+<div x-data="storedCards({{ account.storedCards | length }})" class="flex flex-col gap-10" data-figma="34266:54876">
+  {{ acc.pageTitle("Stored Payment Methods") }}
+  <div x-show="count > 0" class="overflow-x-auto" data-figma="34266:59289">
+    <table class="w-full min-w-[640px] text-left">
+      <thead>
+        <tr class="bg-secondary-100 text-sm text-heading">
+          <th scope="col" class="w-[196px] rounded-l py-5 pl-6 pr-3 font-normal">Card number</th>
+          <th scope="col" class="w-[184px] px-3 py-5 font-normal">Expiration date</th>
+          <th scope="col" class="px-3 py-5 font-normal">Kind</th>
+          <th scope="col" class="w-[84px] rounded-r py-5 pl-3 pr-6 text-right font-normal">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="text-base text-body">
+        {% for c in account.storedCards %}
+        <tr class="even:bg-secondary-100">
+          <td class="h-[68px] rounded-l py-3 pl-6 pr-3">{{ c.number }}</td>
+          <td class="px-3 py-3">{{ c.expires }}</td>
+          <td class="px-3 py-3">{{ cardBadge(c.kind) }}</td>
+          <td class="rounded-r py-3 pl-3 pr-6">
+            <span class="flex justify-end">
+              <button type="button" @click="remove($el.closest('tr'))" aria-label="Delete {{ c.kind }} card ending {{ c.number | replace('*', '') }}" class="mr-[7px] flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "trash", "h-6 w-6" %}</button>
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {# Not drawn in Figma: Magento's empty message once every card is deleted. #}
+  <p x-show="count === 0" x-cloak class="rounded bg-secondary-100 px-6 py-5 text-base text-body">You have no stored payment methods.</p>
+</div>

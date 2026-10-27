@@ -1,0 +1,162 @@
+{#
+  My Account building blocks. Import with:
+    {% import "account/macros.njk" as acc with context %}
+#}
+
+{# Page title, web/heading/h1 (Bold 40/48). #}
+{% macro pageTitle(text) %}
+<h1 class="text-h2 font-bold text-heading md:text-h1">{{ text }}</h1>
+{% endmacro %}
+
+{# Section heading (Medium 24/32) with an optional "Label ->" link under it (dashboard "h3" 14714:137098). #}
+{% macro sectionTitle(text, href="", linkLabel="") %}
+<div class="flex flex-col gap-1">
+  <h2 class="text-h3 font-medium text-heading">{{ text }}</h2>
+  {% if href %}
+  <a href="{{ href }}" class="flex w-fit items-center gap-1 text-base text-primary-500 hover:text-ink hover:underline">{{ linkLabel }}{% icon "arrow-right", "h-7 w-7" %}</a>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{# Grey card with the 52px orange icon disc (dashboard "contact.information" 14714:137077, privacy cards). #}
+{% macro infoCard(icon, title, figma="") %}
+<div class="flex gap-4 rounded bg-secondary-100 p-6 sm:gap-6 sm:p-10" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-accent text-white" aria-hidden="true">{% icon icon, "h-6 w-6" %}</span>
+  <div class="flex min-w-0 flex-1 flex-col gap-6">
+    <h3 class="text-h4 font-medium tracking-title text-heading">{{ title }}</h3>
+    {{ caller() }}
+  </div>
+</div>
+{% endmacro %}
+
+{# Address lines as drawn in the address cards: Regular 16/24, 8px paragraph spacing. #}
+{% macro addressLines(a, phonePrefix="") %}
+<address class="flex flex-col gap-2 text-base not-italic text-body">
+  <span>{{ a.name }}</span><span>{{ a.street }}</span><span>{{ a.cityLine }}</span><span>{{ a.country }}</span><span>{{ phonePrefix }}{{ a.phone }}</span>
+</address>
+{% endmacro %}
+
+{# Order status badge (styleguide "status" 34747:15393): 28px, 1px border, 6px dot, Bold 12/16. #}
+{% macro statusBadge(status) %}
+<span class="inline-flex h-7 shrink-0 items-center gap-2 rounded border px-[9px] text-xs font-bold text-heading {{ account.statusStyles[status] }}">
+  <span class="h-1.5 w-1.5 rounded-full {{ account.statusDots[status] }}" aria-hidden="true"></span>{{ status }}
+</span>
+{% endmacro %}
+
+{# Checkbox, styleguide "checkmark" (14714:56988): 20px box, #dee7ed border, navy when checked.
+   attrs: extra attributes for the <input>, e.g. 'x-model="changeEmail"'. #}
+{% macro checkbox(label, attrs="", name="") %}
+<label class="group flex w-fit cursor-pointer items-start gap-3 text-base text-body hover:text-ink has-[:checked]:text-ink">
+  <span class="relative mt-0.5 flex h-5 w-5 shrink-0">
+    <input type="checkbox" {% if name %}name="{{ name }}"{% endif %} {{ attrs | safe }} class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-secondary-200 bg-white outline-none group-hover:border-grayscale-400 checked:border-primary-500 checked:bg-primary-500 focus-visible:ring-2 focus-visible:ring-primary-200 focus-visible:ring-offset-1">
+    {% icon "check-small", "pointer-events-none absolute inset-0 hidden h-5 w-5 text-white peer-checked:block" %}
+  </span>
+  <span>{{ caller() if caller else label }}</span>
+</label>
+{% endmacro %}
+
+{# Password input with the eye toggle (styleguide "Large input" with icon/24px/eye). #}
+{% macro passwordField(label, id, placeholder="", required=false, autocomplete="current-password", attrs="") %}
+<div x-data="{ show: false }">
+  <label for="{{ id }}" class="label">{{ label }}{% if required %}<span class="text-error"> *</span>{% endif %}</label>
+  <div class="relative">
+    <input id="{{ id }}" name="{{ id }}" type="password" :type="show ? 'text' : 'password'" {% if required %}required{% endif %} autocomplete="{{ autocomplete }}" {% if placeholder %}placeholder="{{ placeholder }}"{% endif %} {{ attrs | safe }} class="input pr-14">
+    <button type="button" @click="show = !show" :aria-pressed="show" aria-label="Show password" class="absolute right-4 top-1/2 -translate-y-1/2 rounded p-1 text-body hover:text-primary-500">
+      <span x-show="!show">{% icon "eye", "h-7 w-7" %}</span>
+      <span x-show="show" x-cloak>{% icon "eye-off", "h-7 w-7" %}</span>
+    </button>
+  </div>
+</div>
+{% endmacro %}
+
+{# Styleguide alert "error.states" (34747:15521): 56px, light state colour, icon + Regular 16/24 ink. #}
+{% macro alert(message, type="warning", icon="alert-square-rounded", attrs="") %}
+{% set bg = {"success": "bg-success-light", "info": "bg-info-light", "warning": "bg-warning-light", "error": "bg-error-light"}[type] %}
+<div role="{{ 'alert' if type == 'error' else 'status' }}" {{ attrs | safe }} class="flex items-start gap-4 rounded px-6 py-4 text-base text-ink {{ bg }}">
+  {% icon icon, "h-6 w-6 text-ink" %}<p>{{ message }}</p>
+</div>
+{% endmacro %}
+
+{# Empty state (Address Book 23115:35472, My Orders 32215:84211): white box, #dde7ee border, 160px illustration. #}
+{% macro emptyState(image, title, text, href, linkLabel, figma="", padding="py-[60px]") %}
+<div class="flex flex-col items-center rounded border border-outline bg-white px-6 text-center {{ padding }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <img src="{{ image }}" alt="" width="160" height="160" class="h-40 w-40">
+  <h2 class="mt-8 text-h3 font-bold text-heading md:text-h2">{{ title }}</h2>
+  <p class="mt-2 max-w-[500px] text-base text-body">{{ text }}</p>
+  <a href="{{ href }}" class="btn-primary mt-8">{{ linkLabel }}</a>
+</div>
+{% endmacro %}
+
+{# Table pager row: "Items x-y of z", Previous / pages / Next, "Show: 16" (Address Book 14714:137308). #}
+{% macro pager(summary, figma="") %}
+<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <p class="text-base text-body lg:w-[168px]">{{ summary }}</p>
+  <nav aria-label="Pages" class="flex flex-wrap items-center gap-3">
+    <a href="#" data-proto class="btn-secondary pl-4 pr-8">{% icon "arrow-left" %}Previous</a>
+    <a href="#" data-proto class="btn-secondary w-[52px] px-0">1</a>
+    <span aria-current="page" class="btn w-[52px] bg-secondary-200 px-0 text-secondary-300">2</span>
+    <a href="#" data-proto class="btn-secondary w-[52px] px-0">3</a>
+    <a href="#" data-proto class="btn-secondary pl-8 pr-4">Next{% icon "arrow-right" %}</a>
+  </nav>
+  <label class="flex items-center gap-5 text-base text-body">
+    Show:
+    <span class="relative">
+      <select class="input h-[52px] w-[104px] cursor-pointer appearance-none pr-12 text-body">
+        <option>16</option><option>32</option><option>64</option>
+      </select>
+      {% icon "dropdown", "pointer-events-none absolute right-5 top-1/2 h-7 w-7 -translate-y-1/2 text-body" %}
+    </span>
+  </label>
+</div>
+{% endmacro %}
+
+{# Orders table (dashboard "Recent Orders" 14714:137120, "My Orders" 14714:137460).
+   Columns from Figma: 100 / 100 / fill / 100 / 100 / 100 with 24px gaps and padding. #}
+{% macro ordersTable(orders, figma="") %}
+<div x-data="orderActions" class="overflow-x-auto" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <table class="w-full min-w-[860px] text-left">
+    <thead>
+      <tr class="bg-secondary-100 text-sm text-heading">
+        <th scope="col" class="w-[136px] rounded-l py-5 pl-6 pr-3 font-normal">Order #</th>
+        <th scope="col" class="w-[124px] px-3 py-5 font-normal">Date</th>
+        <th scope="col" class="px-3 py-5 font-normal">Ship To</th>
+        <th scope="col" class="w-[124px] px-3 py-5 font-normal">Order Total</th>
+        <th scope="col" class="w-[124px] px-3 py-5 font-normal">Status</th>
+        <th scope="col" class="w-[136px] rounded-r py-5 pl-3 pr-6 font-normal">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="text-base text-body">
+      {% for o in orders %}
+      <tr class="even:bg-secondary-100">
+        <td class="h-[68px] rounded-l py-3 pl-6 pr-3"><a href="/sales/order/view/" class="hover:text-primary-500 hover:underline">{{ o.number }}</a></td>
+        <td class="px-3 py-3">{{ o.date }}</td>
+        <td class="px-3 py-3">{{ o.shipTo }}</td>
+        <td class="px-3 py-3 font-bold text-ink">{{ o.total }}</td>
+        <td class="px-3 py-3">{{ statusBadge(o.status) }}</td>
+        <td class="rounded-r py-3 pl-3 pr-6">
+          <span class="flex">
+            <a href="/sales/order/view/" aria-label="View order {{ o.number }}" class="flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "eye", "h-6 w-6" %}</a>
+            <button type="button" @click="reorder()" aria-label="Reorder {{ o.number }}" class="flex h-11 w-11 items-center justify-center rounded text-body hover:bg-secondary-200/60 hover:text-primary-500">{% icon "reload", "h-6 w-6" %}</button>
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}
+
+{# Modal (Privacy Settings modals 34547:110757): 496px white panel, 96px title bar with a 96px close cell,
+   navy 60% overlay. open: Alpine expression, close: Alpine statement. #}
+{% macro modal(id, title, open, close, figma="") %}
+<div x-show="{{ open }}" x-cloak class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-4 py-10 md:pt-20" role="dialog" aria-modal="true" aria-labelledby="{{ id }}-title" @keydown.escape.window="{{ close }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+  <div class="fixed inset-0 bg-heading/60" @click="{{ close }}" x-show="{{ open }}" x-transition.opacity></div>
+  <div class="relative w-full max-w-[496px] rounded bg-white" x-show="{{ open }}" x-transition x-trap.noscroll="{{ open }}">
+    <div class="flex border-b border-outline">
+      <h2 id="{{ id }}-title" class="flex flex-1 items-center px-6 py-7 text-h3 font-medium tracking-title text-heading sm:px-10 sm:text-[28px] sm:leading-10">{{ title }}</h2>
+      <button type="button" @click="{{ close }}" aria-label="Close" class="flex w-20 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100 sm:w-24">{% icon "close-x", "h-6 w-6" %}</button>
+    </div>
+    {{ caller() }}
+  </div>
+</div>
+{% endmacro %}

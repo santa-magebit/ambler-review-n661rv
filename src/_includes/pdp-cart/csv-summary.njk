@@ -1,0 +1,50 @@
+{#
+  "CSV Upload Summary" modal (34547:112478): 800px, 96px title bar with close box, the
+  rows the simulated file could not use, Cancel / "Add 12 Valid Items". Opens when any
+  file is chosen. Teleported to <body> so the #0c2a4b99 overlay covers the header.
+#}
+{% import "pdp-cart/graphics.njk" as gfx %}
+{% set qo = pdpCart.quickOrder %}
+<template x-teleport="body">
+  <div x-show="csvOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="qo-csv-title"
+       @keydown.escape.window="csvOpen = false" data-figma="34547:112188">
+    <div class="fixed inset-0 bg-secondary-700/60" @click="csvOpen = false" x-show="csvOpen" x-transition.opacity data-figma="34547:112476"></div>
+    <div x-show="csvOpen" x-trap.noscroll="csvOpen" x-transition
+         class="relative mx-4 my-4 rounded bg-white md:mx-auto md:mt-20 md:w-[800px]" data-figma="34547:112478">
+      <div class="flex border-b border-outline">
+        <h2 id="qo-csv-title" class="flex flex-1 items-center px-6 py-5 text-h3 font-medium tracking-title text-heading md:px-10 md:py-7 md:text-[28px] md:leading-10">CSV Upload Summary</h2>
+        <button type="button" @click="csvOpen = false" aria-label="Close" class="flex w-16 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100 md:w-24">{% icon "close-x", "h-6 w-6" %}</button>
+      </div>
+      <div class="flex flex-col gap-7 px-6 py-7 md:px-10" data-figma="34547:112484">
+        <p class="text-base text-body">We found <strong class="font-bold text-ink">{{ qo.csvValid.length }} valid</strong> items and <strong class="font-bold text-ink">{{ qo.csvErrors.length }} errors</strong> in your file. The errors below will be skipped if you continue.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[520px] border-separate border-spacing-0 text-left" data-figma="34547:112995">
+            <thead>
+              <tr class="text-sm text-ink">
+                <th scope="col" class="w-[120px] rounded-l bg-secondary-100 py-3 pl-6 pr-4 font-normal">Row</th>
+                <th scope="col" class="bg-secondary-100 px-0 py-3 pr-4 font-normal">SKU</th>
+                <th scope="col" class="w-[96px] bg-secondary-100 py-3 pr-4 font-normal">Qty</th>
+                <th scope="col" class="w-[256px] rounded-r bg-secondary-100 py-3 pr-6 font-normal">Reason</th>
+              </tr>
+            </thead>
+            <tbody class="text-lg text-body">
+              {% for e in qo.csvErrors %}
+              {% set bg = "bg-secondary-100" if loop.index is even else "bg-white" %}
+              <tr>
+                <td class="{{ bg }} rounded-l py-3 pl-6 pr-4">{{ e.row }}</td>
+                <td class="{{ bg }} py-3 pr-4">{{ e.sku }}</td>
+                <td class="{{ bg }} py-3 pr-4">{{ e.qty }}</td>
+                <td class="{{ bg }} rounded-r py-3 pr-6">{{ e.reason }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex flex-wrap justify-center gap-3 px-6 pb-10 md:px-10" data-figma="34547:112487">
+        <button type="button" @click="csvOpen = false" class="btn-link px-8">Cancel</button>
+        <button type="button" @click="addValid()" class="btn-primary">Add {{ qo.csvValid.length }} Valid Items</button>
+      </div>
+    </div>
+  </div>
+</template>

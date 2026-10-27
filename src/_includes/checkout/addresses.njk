@@ -1,0 +1,58 @@
+{#
+  Shipping and billing addresses.
+  Guest (34799:87821 manual fields, 34799:88044 address finder, billing 34799:88071): the
+  billing block shows when "My billing and shipping address are the same" is unticked.
+  Signed in (34799:88551, billing 34799:88569): saved address cards, a billing address select,
+  "Add New Address" opens the New Address modal (34799:88890).
+#}
+{% import "checkout/macros.njk" as co with context %}
+
+{# Guest #}
+<section x-show="!$store.auth.loggedIn" aria-labelledby="shipping-address-title" class="flex flex-col gap-7" data-figma="34799:87821">
+  {{ co.heading("Shipping Address", "shipping-address-title") }}
+  {{ co.addressFields("shipping", "manual.shipping") }}
+  {% call co.checkbox("billingSame", "billing-same-guest") %}My billing and shipping address are the same{% endcall %}
+</section>
+
+<section x-show="!$store.auth.loggedIn && !billingSame" aria-labelledby="billing-address-title" class="flex flex-col gap-7" data-figma="34799:88071">
+  {{ co.heading("Billing Address", "billing-address-title") }}
+  {{ co.addressFields("billing", "manual.billing") }}
+</section>
+
+{# Signed in #}
+<section x-show="$store.auth.loggedIn" aria-labelledby="saved-shipping-title" class="flex flex-col gap-7" data-figma="34799:88551">
+  {{ co.heading("Shipping Address", "saved-shipping-title") }}
+  <div role="radiogroup" aria-labelledby="saved-shipping-title" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <template x-for="a in addresses" :key="a.id">
+      <label class="relative flex min-h-[200px] cursor-pointer rounded border p-[23px] text-base text-body"
+             :class="shippingAddress === a.id ? 'border-primary-500 bg-[#f5f5f5]' : 'border-secondary-200 bg-white hover:border-grayscale-400'">
+        <span class="flex min-w-0 flex-1 flex-col gap-2">
+          <template x-for="(l, i) in a.lines" :key="i"><span x-text="l"></span></template>
+        </span>
+        <input type="radio" name="shipping_address" :value="a.id" x-model="shippingAddress" :aria-label="a.lines.join(', ')" class="{{ co.radioClass('border-grayscale-400') }}">
+      </label>
+    </template>
+  </div>
+  {{ co.orDivider() }}
+  <button type="button" @click="openAddress('shipping')" class="btn-secondary w-full">Add New Address</button>
+  {% call co.checkbox("billingSame", "billing-same-customer") %}My billing and shipping address are the same{% endcall %}
+</section>
+
+<section x-show="$store.auth.loggedIn && !billingSame" aria-labelledby="saved-billing-title" class="flex flex-col gap-7" data-figma="34799:88569">
+  {{ co.heading("Billing Address", "saved-billing-title") }}
+  <div>
+    <label for="billing-address-select" class="label">Select Address</label>
+    {# Native select under a wrapping label box: Figma shows the full address over two lines. #}
+    <div class="relative">
+      <div aria-hidden="true" class="flex min-h-[80px] items-start justify-between gap-3 rounded border border-secondary-200 bg-white py-3 pl-5 pr-5 text-lg text-body">
+        <span x-text="oneLine(billingAddress)"></span>
+        {% icon "dropdown", "h-7 w-7 text-primary-500" %}
+      </div>
+      <select id="billing-address-select" name="billing_address" x-model="billingAddress" class="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0">
+        <template x-for="a in addresses" :key="a.id"><option :value="a.id" x-text="oneLine(a.id)" :selected="a.id === billingAddress"></option></template>
+      </select>
+    </div>
+  </div>
+  {{ co.orDivider() }}
+  <button type="button" @click="openAddress('billing')" class="btn-secondary w-full">Add New Address</button>
+</section>

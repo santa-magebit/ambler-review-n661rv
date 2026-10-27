@@ -1,0 +1,110 @@
+{#
+  Building blocks for the content pages (Home, About, Repair Services, Sterilization, Contact).
+  Import with: {% import "content/macros.njk" as c with context %}
+  Gradients and copy live in src/_data/contentPages.js (global `contentPages`).
+#}
+
+{# Hero title (Landing Page 34141:37899): Medium 56/64 white, 8px gap, 2px gradient line under the text. #}
+{% macro heroTitle(title) %}
+<h1 class="inline-block bg-bottom bg-no-repeat pb-2.5 text-h1 font-medium text-white md:text-hero" style="background-image: {{ contentPages.gradients.titleLine }}; background-size: 100% 2px">{{ title }}</h1>
+{% endmacro %}
+
+{# Title band for pages Figma does not draw (Sterilization, Contact): the hero's navy and title, without a photo. #}
+{% macro titleBand(title) %}
+<section class="bg-primary-500">
+  <div class="container-page py-12 lg:py-16">{{ heroTitle(title) }}</div>
+</section>
+{% endmacro %}
+
+{# "why us?" band (34141:38022): #f1f5f8, four items with 52px round navy icons. #}
+{% macro trustBand(figma) %}
+<section class="bg-secondary-100" aria-label="Why Ambler Surgical" data-figma="{{ figma }}">
+  <ul class="container-page grid gap-6 py-10 sm:grid-cols-2 xl:grid-cols-4">
+    {% for t in contentPages.trust %}
+    <li class="flex min-w-0 items-center gap-4">
+      <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon t.icon %}</span>
+      <span class="min-w-0">
+        <span class="block text-lg font-medium text-ink">{{ t.title }}</span>
+        <span class="block text-base text-body">{{ t.text }}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endmacro %}
+
+{#
+  Category card with a title strip and a photo (styleguide "Category card", 14714:57254).
+  Hover turns the strip navy with white text (styleguide hover state).
+  variant: "sub"    Landing Page Ophthalmology sub-cards (268x244, #dde7ee border, #f1f5f8 strip, 18px title)
+           "medium" Landing Page repair band (243x264, navy border, #f5f8fa strip, 18px title)
+           "large"  Repair Services grid (496x342, navy border, #f5f8fa strip, 24px title)
+  card: { title, image, href?, id?, figma?, imgClass? }. Without href the card is data-proto.
+  imgClass reproduces the Figma crop or flip of a photo (e.g. object-top, -scale-y-100).
+#}
+{% macro imageCard(card, variant) %}
+{% set variants = {
+  sub: { box: "border-outline", head: "h-[52px] gap-2 bg-secondary-100 px-4 text-lg", media: "aspect-[268/192]" },
+  medium: { box: "border-primary-500", head: "h-[52px] gap-3 bg-menu px-5 text-lg", media: "aspect-[243/212]" },
+  large: { box: "border-primary-500", head: "h-14 gap-3 bg-menu px-5 text-h4 tracking-title sm:text-h3", media: "aspect-[496/286]" }
+} %}
+{% set v = variants[variant] %}
+<a href="{{ card.href or ('#' + card.id if card.id else '#') }}" {% if card.id %}id="{{ card.id }}"{% endif %} {% if not card.href %}data-proto{% endif %} {% if card.figma %}data-figma="{{ card.figma }}"{% endif %}
+   class="group flex min-w-0 scroll-mt-6 flex-col overflow-hidden rounded border bg-white target:ring-2 target:ring-accent target:ring-offset-2 {{ v.box }}">
+  <span class="flex shrink-0 items-center font-medium text-primary-500 transition-colors group-hover:bg-primary-500 group-hover:text-white {{ v.head }}">
+    <span class="truncate">{{ card.title }}</span>{% icon "arrow-narrow-right", "h-6 w-6" %}
+  </span>
+  <span class="relative block overflow-hidden bg-white {{ v.media }}">
+    <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover {{ card.imgClass }}">
+  </span>
+</a>
+{% endmacro %}
+
+{# Title strip of the description cards: 56px, #f1f5f8, Medium 24/32 -2% primary. #}
+{% macro descriptionHead(title, arrow=false) %}
+<span class="flex min-h-14 shrink-0 items-center gap-3 bg-secondary-100 px-5 py-3 text-h4 font-medium tracking-title text-primary-500 transition-colors group-hover:bg-primary-500 group-hover:text-white sm:text-h3">
+  {{ title }}{% if arrow %}{% icon "arrow-narrow-right", "h-6 w-6" %}{% endif %}
+</span>
+{% endmacro %}
+
+{#
+  Card with a title strip and a short text (Landing Page specialty cards 34141:37949,
+  Repair Services "Why Choose" cards 34799:68590): #4e6284 border, 16px gap, 20px sides and bottom.
+  With href the whole card is a link and the strip gets an arrow.
+#}
+{% macro descriptionCard(title, text, href="", figma="") %}
+{% if href %}
+<a href="{{ href }}" {% if figma %}data-figma="{{ figma }}"{% endif %} class="group flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5">
+  {{ descriptionHead(title, true) }}
+  <span class="block px-5 text-lg text-body">{{ text }}</span>
+</a>
+{% else %}
+<div {% if figma %}data-figma="{{ figma }}"{% endif %} class="flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5">
+  {{ descriptionHead(title) }}
+  <p class="px-5 text-lg text-body">{{ text }}{% if caller %}{{ caller() }}{% endif %}</p>
+</div>
+{% endif %}
+{% endmacro %}
+
+{# Bullet item (About 34974:1180): 8x2 orange dash centred on the first 28px line, 12px gap. #}
+{% macro bullet(class="") %}
+<li class="flex gap-3 {{ class }}">
+  <span aria-hidden="true" class="mt-[13px] h-0.5 w-2 shrink-0 rounded-[1px] bg-accent"></span>
+  <span class="min-w-0">{{ caller() }}</span>
+</li>
+{% endmacro %}
+
+{# Orange outline quote mark (36px "Frame" in each testimonial card, 34974:1297). #}
+{% macro quoteMark() %}
+<svg viewBox="0 0 36 36" class="h-9 w-9 shrink-0 text-accent" fill="none" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+    <path d="M15 6.5C10 8 6 12.5 6 18v10.5A2.5 2.5 0 0 0 8.5 31h4a2.5 2.5 0 0 0 2.5-2.5V22a2.5 2.5 0 0 0-2.5-2.5H11c0-4 1.5-7 4-8.5z"/>
+    <path d="M31 6.5C26 8 22 12.5 22 18v10.5a2.5 2.5 0 0 0 2.5 2.5h4a2.5 2.5 0 0 0 2.5-2.5V22a2.5 2.5 0 0 0-2.5-2.5H27c0-4 1.5-7 4-8.5z"/>
+  </g>
+</svg>
+{% endmacro %}
+
+{# Orange button with the arrow (Landing Page hero 34141:37899 "btn": 12/30/12/32 padding). #}
+{% macro arrowButton(label, href, attrs="") %}
+<a href="{{ href }}" class="btn-accent pr-[30px]" {{ attrs | safe }}>{{ label }}{% icon "arrow-narrow-right" %}</a>
+{% endmacro %}

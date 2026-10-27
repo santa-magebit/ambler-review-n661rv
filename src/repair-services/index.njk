@@ -1,0 +1,113 @@
+---
+layout: layouts/base.njk
+title: Repair Services
+permalink: /repair-services/
+---
+{# Repair Services - 1920px (Figma 34799:68554). Each service card has id="<catalog.repairServices slug>"
+   so the header menu links /repair-services/#<slug> land on it. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% set r = contentPages.repair %}
+
+{{ ui.breadcrumbs([{ label: "Repair Services" }]) }}
+
+{# Hero: instruments photo on the right, navy fade from the left over white. #}
+<section class="relative isolate overflow-hidden bg-white" data-figma="34799:68558">
+  <img src="{{ '91e2c639' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover md:inset-auto md:right-0 md:top-[3px] md:h-[484px] md:w-[67.14%]">
+  <div aria-hidden="true" class="absolute inset-0 -z-10" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/70 md:hidden"></div>
+  <div class="container-page flex min-h-[360px] items-center py-12 lg:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col items-start gap-7">
+      {{ c.heroTitle("Repair Services") }}
+      <p class="text-lg text-white">{{ r.intro }}</p>
+    </div>
+  </div>
+</section>
+
+{# The six repair services. #}
+<section class="bg-white" data-figma="34799:68567">
+  <div class="container-page flex flex-col gap-8 py-10">
+    <h2 class="text-h2 font-bold text-heading lg:text-h1">Expert Surgical Instrument Repair Services</h2>
+    <ul class="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3" data-figma="34799:68570">
+      {% for s in r.services %}
+      <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard({ title: s.title, image: s.image, id: s.slug, figma: s.figma, imgClass: s.imgClass }, "large") }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ c.trustBand("34799:68578") }}
+
+{# Why Choose Ambler for Instrument Repair? #}
+<section class="bg-white" data-figma="34799:68583">
+  <div class="container-page flex flex-col gap-8 py-10">
+    <h2 class="text-h3 font-bold text-heading md:text-h2">Why Choose Ambler for Instrument Repair?</h2>
+    <div class="grid gap-6 md:grid-cols-2 md:[&>*]:min-h-[176px]" data-figma="34799:68588">
+      {% for w in r.whyChoose %}
+      {% if w.link %}
+      {% call c.descriptionCard(w.title, w.text, "", w.figma) %} <a href="#" data-proto class="link underline">{{ w.link }}</a>.{% endcall %}
+      {% else %}
+      {{ c.descriptionCard(w.title, w.text, "", w.figma) }}
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# Surgical Instrument Repair for Every Need: technician photo band, text on the right. #}
+<section class="relative isolate overflow-hidden bg-primary-500" data-figma="34799:68611">
+  <img src="{{ 'de7cda38' | img }}" alt="" loading="lazy" class="absolute inset-0 -z-10 h-full w-full object-cover object-left">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/80 lg:hidden"></div>
+  <div class="container-page flex py-10 lg:min-h-[424px] lg:items-center">
+    <div class="flex max-w-[886px] flex-col gap-7 lg:ml-auto" data-figma="34799:68612">
+      <h2 class="text-h3 font-bold text-white md:text-h2">Surgical Instrument Repair for Every Need<br><span class="text-accent">Restore Precision. Extend Instrument Life.</span></h2>
+      <div class="flex flex-col gap-3 text-lg text-white">
+        {% for p in r.everyNeed %}<p>{{ p }}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Frequently Asked Questions + contact card. #}
+<section class="bg-menu" data-figma="34799:68629">
+  <div class="container-page flex flex-col gap-8 py-10">
+    <h2 class="text-h2 font-bold text-heading">Frequently Asked Questions</h2>
+    <div class="grid items-start gap-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">
+      <div x-data="faq('materials')" class="min-w-0" data-figma="34799:68632">
+        {% for f in r.faq %}
+        <div class="border-b border-secondary-200 py-4">
+          {% if f.a %}
+          <h3>
+            <button type="button" @click="toggle('{{ f.id }}')" :aria-expanded="open === '{{ f.id }}'" aria-controls="faq-{{ f.id }}"
+                    class="flex w-full items-center gap-3 text-left text-lg font-medium" :class="open === '{{ f.id }}' ? 'text-accent' : 'text-ink hover:text-primary-500'">
+              <span class="flex-1">{{ f.q }}</span>
+              <span x-show="open !== '{{ f.id }}'" x-cloak>{% icon "dropdown", "h-6 w-6" %}</span>
+              <span x-show="open === '{{ f.id }}'">{% icon "dropdown-up", "h-6 w-6" %}</span>
+            </button>
+          </h3>
+          <div id="faq-{{ f.id }}" x-show="open === '{{ f.id }}'" x-collapse>
+            <div class="flex flex-col gap-3 pt-3 text-lg text-body">
+              {% for p in f.a %}<p>{{ p }}</p>{% endfor %}
+            </div>
+          </div>
+          {% else %}
+          {# Answer not written in Figma yet. #}
+          <h3>
+            <button type="button" data-proto aria-expanded="false" class="flex w-full items-center gap-3 text-left text-lg font-medium text-ink hover:text-primary-500">
+              <span class="flex-1">{{ f.q }}</span>{% icon "dropdown", "h-6 w-6" %}
+            </button>
+          </h3>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="flex min-w-0 flex-col items-start gap-6 rounded bg-primary-500 p-7" data-figma="34799:68654">
+        <div class="flex flex-col gap-4">
+          <h2 class="text-h3 font-bold text-white md:text-h2">Can't find your answer?</h2>
+          <p class="text-lg text-[#d3dce5]">Our instrument specialists respond within one business day.</p>
+        </div>
+        {{ c.arrowButton("Contact Our Team", "/contact/") }}
+      </div>
+    </div>
+  </div>
+</section>

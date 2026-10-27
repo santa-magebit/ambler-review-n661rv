@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }} | {% endif %}Ambler Surgical</title>
+  <meta name="description" content="Clickable prototype of the Ambler Surgical redesign (Venta 2026).">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  {# The Figma file sets every text style in Roboto (400, 500, 600, 700, 800, italic 400). #}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap">
+  <link rel="stylesheet" href="/assets/css/app.css">
+  <script>
+    window.BASE = "{{ base }}";
+    window.CATALOG = {{ catalog.products | json | safe }};
+  </script>
+  {# Store/component registration must run before Alpine starts. #}
+  <script src="/assets/js/app.js"></script>
+  <script src="/assets/js/content.js"></script>
+  <script src="/assets/js/plp.js"></script>
+  <script src="/assets/js/pdp-cart.js"></script>
+  <script src="/assets/js/checkout.js"></script>
+  <script src="/assets/js/account.js"></script>
+  <script defer src="/assets/js/vendor/alpine-collapse.min.js"></script>
+  <script defer src="/assets/js/vendor/alpine-focus.min.js"></script>
+  <script defer src="/assets/js/vendor/alpine.min.js"></script>
+</head>
+<body class="flex min-h-screen flex-col" x-data x-effect="document.documentElement.classList.toggle('overflow-hidden', $store.cart.open)">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
+  {# minimalHeader: checkout pages have no store header in Figma (34799:87723); they draw the logo themselves. #}
+  {% if not minimalHeader %}{% include "partials/header.njk" %}{% endif %}
+  <main id="main" class="{{ mainClass or 'flex-1' }}">
+    {{ content | safe }}
+  </main>
+  {% include "partials/footer.njk" %}
+  {% if not minimalHeader %}{% include "partials/minicart.njk" %}{% endif %}
+  {% include "partials/toaster.njk" %}
+</body>
+</html>

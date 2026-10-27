@@ -1,0 +1,87 @@
+{#
+  Order Summary sidebar ("sidebar" 34799:87737): the cart lines from $store.cart, three
+  collapsible panels (discount code, gift card, order comment), totals and two info boxes.
+  Guest frames draw the panels open, the signed-in frame closed (state in checkout.js).
+#}
+{% import "checkout/macros.njk" as co with context %}
+
+{% macro panel(key, title, figma) %}
+<div class="flex flex-col gap-4" data-figma="{{ figma }}">
+  <button type="button" @click="panels.{{ key }} = !panels.{{ key }}" :aria-expanded="panels.{{ key }}" aria-controls="summary-{{ key }}"
+          class="flex items-center justify-between gap-3 text-left text-base text-heading hover:text-primary-500">
+    {{ title }}
+    <span x-show="!panels.{{ key }}">{% icon "dropdown", "h-6 w-6" %}</span>
+    <span x-show="panels.{{ key }}">{% icon "dropdown-up", "h-6 w-6" %}</span>
+  </button>
+  <div id="summary-{{ key }}" x-show="panels.{{ key }}" x-collapse>
+    <div class="pb-3">{{ caller() }}</div>
+  </div>
+  <hr class="border-outline">
+</div>
+{% endmacro %}
+
+<div class="flex flex-col gap-6" data-figma="34799:87737">
+  <h2 id="summary-title" class="text-h3 font-medium text-heading">Order Summary</h2>
+  <div class="flex flex-col gap-4">
+    <ul class="flex flex-col gap-4" aria-label="Items in your order">
+      <template x-for="line in lines" :key="line.key">
+        <li class="flex items-start gap-6">
+          <img :src="url(line.image)" alt="" class="h-[108px] w-[108px] shrink-0 rounded border border-outline bg-white object-contain">
+          <div class="flex min-w-0 flex-col gap-1">
+            <p class="text-base text-body" x-text="line.qty + ' x ' + line.name"></p>
+            <p class="text-lg font-bold tracking-title text-ink" x-text="price(line.total)"></p>
+          </div>
+        </li>
+      </template>
+    </ul>
+    <hr class="border-outline">
+
+    {% call panel("discount", "Apply Discount Code", "34799:87759") %}
+    <form @submit.prevent class="flex flex-col gap-7">
+      <label class="block">
+        <span class="label">Discount Code</span>
+        <input name="discount_code" autocomplete="off" placeholder="Enter discount code" class="input">
+      </label>
+      <button type="submit" data-proto class="btn-secondary w-full">Apply</button>
+    </form>
+    {% endcall %}
+
+    {% call panel("giftcard", "Apply Gift Card", "34826:8834") %}
+    <form @submit.prevent class="flex flex-col gap-7">
+      <label class="block">
+        <span class="label">Gift Card Code</span>
+        <input name="giftcard_code" autocomplete="off" placeholder="Enter gift card code" class="input">
+      </label>
+      <button type="submit" data-proto class="btn-secondary w-full">Apply</button>
+    </form>
+    {% endcall %}
+
+    {% call panel("comment", "Add Order Comment", "34799:87767") %}
+    <label class="block">
+      <span class="label">Order Comment (Optional)</span>
+      <textarea name="order_comment" rows="4" placeholder="Enter order comment" class="input block h-[120px] resize-none py-3"></textarea>
+    </label>
+    {% endcall %}
+
+    <dl class="flex flex-col gap-2 text-base text-body" data-figma="34799:87773">
+      <div class="flex justify-between gap-4"><dt>Subtotal</dt><dd x-text="price(subtotal)"></dd></div>
+      <div class="flex justify-between gap-4"><dt>Discount</dt><dd x-text="'- ' + price(discount)"></dd></div>
+      <div class="flex items-center justify-between gap-4">
+        <dt>Shipping<span class="block text-xs" x-text="method.label"></span></dt>
+        <dd x-text="price(method.price)"></dd>
+      </div>
+      <div class="flex justify-between gap-4 text-lg font-bold text-ink"><dt>Grand Total</dt><dd x-text="price(grandTotal)"></dd></div>
+    </dl>
+
+    <div class="flex flex-col gap-2" data-figma="34820:4266">
+      <div class="flex flex-col gap-5 rounded border border-outline p-[23px]">
+        <p class="flex items-center gap-2 text-base text-ink">{% icon "truck-delivery", "h-6 w-6 text-accent" %}Delivery information</p>
+        <p class="text-base text-body">Orders placed before 12 PM EST normally ship within 1-2 business days. On occasion we might not have the item you ordered in stock.</p>
+      </div>
+      <div class="flex flex-col gap-5 rounded border border-outline p-[23px]">
+        <p class="flex items-center gap-2 text-base text-ink">{% icon "help-circle", "h-6 w-6 text-accent" %}Backorders &amp; Delivery Times</p>
+        <p class="text-base text-body">For more information on backorders and delivery times please <a href="/contact/" class="text-ink underline underline-offset-2 hover:text-primary-500">contact us</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>

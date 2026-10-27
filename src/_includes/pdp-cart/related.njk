@@ -1,0 +1,26 @@
+{#
+  "Related Products" (34224:49612): five 288px styleguide product cards per view, a 2px
+  progress bar and prev/next buttons (34826:20504). Expects `related` (products) in scope.
+  State: Alpine.data("relatedCarousel").
+#}
+{% import "macros/ui.njk" as ui with context %}
+<section x-data="relatedCarousel" aria-labelledby="related-title" class="py-10 lg:py-20" data-figma="34224:49612">
+  <div class="container-page flex flex-col gap-10">
+    <h2 id="related-title" class="text-h3 font-bold text-heading md:text-h2">Related Products</h2>
+    <ul x-ref="track" data-figma="34224:49615"
+        class="grid snap-x snap-mandatory auto-cols-[minmax(240px,calc((100%-24px)/2))] grid-flow-col gap-6 overflow-x-auto [scrollbar-width:none] md:auto-cols-[calc((100%-48px)/3)] lg:auto-cols-[calc((100%-72px)/4)] xl:auto-cols-[calc((100%-96px)/5)] [&::-webkit-scrollbar]:hidden">
+      {% for p in related %}
+      <li class="min-w-0 snap-start">{{ ui.productCard(p) }}</li>
+      {% endfor %}
+    </ul>
+    <div class="flex items-center gap-6" data-figma="34826:20504">
+      <div class="relative h-0.5 flex-1 bg-grayscale-300" aria-hidden="true">
+        <div class="absolute inset-y-0 left-0 w-1/4 bg-primary-500" :style="`width:${thumb}%;left:${offset}%`"></div>
+      </div>
+      <div class="flex gap-3">
+        <button type="button" @click="step(-1)" :disabled="atStart" aria-label="Previous products" class="btn-secondary w-[52px] px-0">{% icon "arrow-left" %}</button>
+        <button type="button" @click="step(1)" :disabled="atEnd" aria-label="Next products" class="btn-secondary w-[52px] px-0">{% icon "arrow-right" %}</button>
+      </div>
+    </div>
+  </div>
+</section>

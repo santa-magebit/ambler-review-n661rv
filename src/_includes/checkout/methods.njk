@@ -1,0 +1,113 @@
+{#
+  Shipping Method (34799:87843), Payment Method (34799:87867), terms and Place Order (34799:87941).
+  Radio cards: 64px rows with #dee7ed borders; the selected one gets a #004776 border and, for
+  payment, opens its panel: card form (34799:87882), PayPal note (34799:88135) or PO number (34799:88628).
+  The card form is a visual mock: its inputs have no name, are not bound and are never read.
+#}
+{% import "checkout/macros.njk" as co with context %}
+
+<section aria-labelledby="shipping-method-title" class="flex flex-col gap-7" data-figma="34799:87843">
+  {% call co.heading("Shipping Method", "shipping-method-title") %}{{ co.fedex() }}{% endcall %}
+  <div role="radiogroup" aria-labelledby="shipping-method-title" class="flex flex-col">
+    {% for m in checkout.shippingMethods %}
+    <label class="relative -mt-px flex h-[65px] cursor-pointer items-center gap-3 border bg-white px-5 first:mt-0 first:rounded-t last:rounded-b"
+           :class="shipping === '{{ m.id }}' ? 'z-10 border-primary-500' : 'border-secondary-200 hover:bg-secondary-100'">
+      <input type="radio" name="shipping_method" value="{{ m.id }}" x-model="shipping" class="{{ co.radioClass() }}">
+      <span class="flex-1 text-base" :class="shipping === '{{ m.id }}' ? 'text-ink' : 'text-body'">{{ m.label }} <strong class="font-bold text-ink">{{ m.priceLabel }}</strong></span>
+      {% if loop.first %}{# "Best Price" status, drawn on Ground in the signed-in frames (34799:89862) #}
+      <span x-show="$store.auth.loggedIn" class="rounded bg-success px-2.5 py-1 text-xs font-medium text-white">Best Price</span>{% endif %}
+    </label>
+    {% endfor %}
+  </div>
+</section>
+
+<section aria-labelledby="payment-method-title" class="flex flex-col gap-7" data-figma="34799:87867">
+  {{ co.heading("Payment Method", "payment-method-title") }}
+  <div role="radiogroup" aria-labelledby="payment-method-title" class="flex flex-col">
+
+    {# Credit/Debit card #}
+    <div class="relative -mt-px overflow-hidden rounded-t border first:mt-0" :class="payment === 'card' ? 'z-10 border-primary-500' : 'border-secondary-200'">
+      <label class="flex h-16 cursor-pointer items-center justify-between gap-3 px-5">
+        <span class="flex items-center gap-3">
+          <input type="radio" name="payment_method" value="card" x-model="payment" class="{{ co.radioClass() }}">
+          <span class="text-base" :class="payment === 'card' ? 'text-ink' : 'text-body'">Credit/Debit card</span>
+        </span>
+        {{ co.cardBadges() }}
+      </label>
+      <div x-show="payment === 'card'" x-collapse>
+        <div class="flex flex-col gap-5 border-t border-outline bg-[#f5f5f5] p-5">
+          <label class="block">
+            <span class="mb-2 block text-sm text-ink">Name on Card</span>
+            <input autocomplete="off" placeholder="Cardholder Name" class="input text-base">
+          </label>
+          <div>
+            <div class="mb-2 flex items-center justify-between gap-3">
+              <label for="card-number" class="text-sm text-ink">Card number</label>
+              <span class="flex gap-[5px]" aria-hidden="true">
+                {% for h in ["3a05cae8", "03b29f40", "4e0a54ee", "6bda460e"] %}<img src="{{ h | img }}" alt="" class="h-6 w-[37px] object-cover">{% endfor %}
+              </span>
+            </div>
+            <input id="card-number" autocomplete="off" inputmode="numeric" placeholder="0000 0000 0000 0000" class="input text-base">
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <fieldset class="min-w-0 flex-[356_1_240px]">
+              <legend class="mb-2 text-sm text-ink">Expiry date</legend>
+              <div class="flex gap-2">
+                <div class="min-w-0 flex-[208_1_0]">{{ co.select("card-month", "", checkout.months, "Month", "Expiry month", "text-base") }}</div>
+                <div class="min-w-0 flex-[140_1_0]">{{ co.select("card-year", "", checkout.years, "Year", "Expiry year", "text-base") }}</div>
+              </div>
+            </fieldset>
+            <div class="flex-[192_1_160px]">
+              <label for="card-cvv" class="mb-2 block text-sm text-ink">CVV</label>
+              <div class="flex">
+                <input id="card-cvv" autocomplete="off" inputmode="numeric" placeholder="000" class="input text-base">
+                {{ co.helpButton("About the CVV") }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# PayPal #}
+    <div class="relative -mt-px overflow-hidden border" :class="payment === 'paypal' ? 'z-10 border-primary-500' : 'border-secondary-200'">
+      <label class="flex h-16 cursor-pointer items-center justify-between gap-3 px-5">
+        <span class="flex items-center gap-3">
+          <input type="radio" name="payment_method" value="paypal" x-model="payment" class="{{ co.radioClass() }}">
+          <span class="text-base" :class="payment === 'paypal' ? 'text-ink' : 'text-body'">PayPal</span>
+        </span>
+        {{ co.paypalBadge() }}
+      </label>
+      <div x-show="payment === 'paypal'" x-collapse>
+        <div class="flex flex-col items-center gap-5 border-t border-outline bg-[#f5f5f5] p-5 text-center">
+          {{ co.redirectIllustration() }}
+          <p class="text-base text-body">After clicking "Place Order", you will be redirected to PayPal to complete your purchase securely.</p>
+        </div>
+      </div>
+    </div>
+
+    {# Purchase Order #}
+    <div class="relative -mt-px overflow-hidden rounded-b border" :class="payment === 'po' ? 'z-10 border-primary-500' : 'border-secondary-200'">
+      <label class="flex h-16 cursor-pointer items-center justify-between gap-3 px-5">
+        <span class="flex items-center gap-3">
+          <input type="radio" name="payment_method" value="po" x-model="payment" class="{{ co.radioClass() }}">
+          <span class="text-base" :class="payment === 'po' ? 'text-ink' : 'text-body'">Purchase Order</span>
+        </span>
+        {{ co.poBadge() }}
+      </label>
+      <div x-show="payment === 'po'" x-collapse>
+        <div class="border-t border-outline bg-[#f5f5f5] p-5">
+          <label class="block">
+            <span class="mb-2 block text-sm text-ink">Purchase Order Number</span>
+            <input name="po_number" autocomplete="off" placeholder="Enter purchase order number" class="input text-base">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flex flex-col gap-6" data-figma="34799:87941">
+  {% call co.checkbox("terms", "accept-terms") %}I accept <a href="#" data-proto class="text-ink underline underline-offset-2 hover:text-primary-500">Terms &amp; Conditions</a> and <a href="#" data-proto class="text-ink underline underline-offset-2 hover:text-primary-500">Privacy Policy</a>{% endcall %}
+  <button type="submit" disabled :disabled="!terms" class="btn-primary h-[60px] w-full">{% icon "checks", "h-7 w-7" %}Place Order</button>
+</div>

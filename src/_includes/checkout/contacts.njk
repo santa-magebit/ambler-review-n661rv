@@ -1,0 +1,50 @@
+{#
+  Guest only. Contacts (34799:87804) with the SUR-359 prompt (34799:89460) that opens when the
+  e-mail belongs to an account (checkout.client.accountEmail in src/_data/checkout.js).
+#}
+{% import "checkout/macros.njk" as co with context %}
+
+<section x-show="!$store.auth.loggedIn" aria-labelledby="contacts-title" class="flex flex-col gap-7" data-figma="34799:87804">
+  {% call co.heading("Contacts", "contacts-title") %}
+  <a href="/customer/account/login/" class="flex items-center gap-1 text-base text-primary-500 hover:text-ink hover:underline">{% icon "user", "h-7 w-7" %}Sign In</a>
+  {% endcall %}
+
+  <div class="flex flex-col gap-7">
+    <div class="flex flex-col gap-1">
+      <div>
+        <label for="checkout-email" class="label">E-mail address</label>
+        <div class="flex">
+          <input id="checkout-email" name="email" type="email" autocomplete="email" placeholder="Enter e-mail address" x-model="email" class="input">
+          {{ co.helpButton("About the e-mail address") }}
+        </div>
+      </div>
+      <p class="flex items-center gap-1 text-base text-body">{% icon "info-square-rounded", "h-6 w-6" %}You can create an account after checkout.</p>
+    </div>
+
+    {# SUR-359 Prompt Login on Email Match During Guest Checkout #}
+    <div x-show="accountMatch" x-transition.opacity role="region" aria-labelledby="account-match-title" class="flex flex-col gap-4 rounded bg-secondary-100 p-6 sm:p-8" data-figma="34799:89460">
+      <div class="flex flex-col gap-1">
+        <h3 id="account-match-title" class="text-h4 font-medium tracking-title text-ink">Looks like you already have an account</h3>
+        <p class="text-base text-body">Want to sign in for a faster checkout?</p>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-wrap items-end gap-3">
+          <div class="min-w-0 flex-1 basis-[240px]">
+            <label for="checkout-password" class="label">Password</label>
+            <div class="relative">
+              <input id="checkout-password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" placeholder="Enter your password" @keydown.enter.prevent="signIn()" class="input pr-14">
+              <button type="button" @click="showPassword = !showPassword" :aria-label="showPassword ? 'Hide password' : 'Show password'" :aria-pressed="showPassword"
+                      class="absolute right-0 top-0 flex h-[52px] w-14 items-center justify-center text-primary-500 hover:text-ink">
+                <span x-show="!showPassword">{% icon "eye", "h-7 w-7" %}</span>
+                <span x-show="showPassword">{% icon "eye-off", "h-7 w-7" %}</span>
+              </button>
+            </div>
+          </div>
+          <button type="button" @click="signIn()" class="btn-primary w-[120px] shrink-0 px-0">Sign In</button>
+        </div>
+        {{ co.orDivider() }}
+        <button type="button" @click="continueAsGuest()" class="btn-secondary w-full">Continue as Guest</button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,77 @@
+{#
+  Header search (styleguide "Search" input + Figma Search page):
+  focused & empty = "Search - Suggestions" (34194:128358), typing = "Search - Results" (34194:128283),
+  nothing found = "Search - No Search Results" (34194:128402). Logic: Alpine.data("searchBox").
+#}
+<div x-data="searchBox" @click.outside="open = false" @keydown.escape="open = false" class="relative w-full">
+  <form role="search" @submit.prevent="go(q)" action="/search/" class="flex h-[60px] w-full">
+    <label class="relative flex flex-1 items-center">
+      <span class="sr-only">Search the catalog</span>
+      <input name="q" x-model="q" @focus="open = true" @input="open = true" autocomplete="off"
+             placeholder="Cross-Reference Catalog # or Search by Description"
+             class="h-full w-full rounded-l-[30px] border border-white bg-white pl-6 pr-12 text-lg text-ink outline-none placeholder:text-body focus:border-accent">
+      <button type="button" x-show="q" x-cloak @click="q = ''" aria-label="Clear search" class="absolute right-4 text-ink">{% icon "close", "h-6 w-6" %}</button>
+    </label>
+    <button type="submit" aria-label="Search" class="flex w-[68px] items-center justify-center rounded-r-[30px] bg-accent text-white hover:bg-accent-dark">{% icon "search" %}</button>
+  </form>
+
+  <div x-show="open" x-cloak class="absolute inset-x-0 top-full z-50 mt-0.5 max-h-[80vh] overflow-y-auto bg-white px-5 py-6 text-left shadow-300">
+    {# Suggestions #}
+    <div x-show="!needle" class="flex flex-col gap-6">
+      <section>
+        <h3 class="mb-4 text-sm font-bold text-heading">Popular Search Terms</h3>
+        <div class="flex flex-wrap gap-2">
+          {% for t in site.search.popularTerms %}
+          <button type="button" @click="go('{{ t }}')" class="rounded border border-secondary-200 px-5 py-3 text-base text-ink hover:border-primary-500">{{ t }}</button>
+          {% endfor %}
+        </div>
+      </section>
+      <section>
+        <h3 class="mb-4 text-sm font-bold text-heading">Recently Viewed</h3>
+        <ul class="flex flex-col gap-2">
+          <template x-for="p in recent" :key="p.slug">{% include "partials/search-row.njk" %}</template>
+        </ul>
+      </section>
+    </div>
+    {# No results #}
+    <p x-show="needle && hits.length === 0" class="py-4 text-center text-sm text-heading">We couldn&rsquo;t find anything for your search</p>
+    {# Results #}
+    <div x-show="needle && hits.length > 0" class="flex flex-col gap-6">
+      <section>
+        <h3 class="mb-4 text-sm font-bold text-heading">Search Terms</h3>
+        <div class="flex flex-wrap gap-2">
+          {% for t in site.search.termCounts %}
+          <button type="button" @click="go('{{ t[0] }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500">{{ t[0] }}<span class="px-1 text-sm font-bold text-ink">{{ t[1] }}</span></button>
+          {% endfor %}
+        </div>
+      </section>
+      <section>
+        <h3 class="mb-4 text-sm font-bold text-heading">Products</h3>
+        <ul class="flex flex-col gap-2">
+          <template x-for="p in hits" :key="p.slug">{% include "partials/search-row.njk" %}</template>
+        </ul>
+      </section>
+      <section>
+        <h3 class="mb-4 text-sm font-bold text-heading">Categories</h3>
+        <ul class="flex flex-col gap-4 text-base">
+          <li>
+            <a href="/browse-by-specialty/ophthalmology/instruments/scissors/" class="text-body hover:text-primary-500">Surgical Scissors</a>
+            <span class="mt-0.5 flex items-center gap-1 text-sm italic text-body">in Ophthalmology {% icon "chevron-right", "h-5 w-5" %} General Surgery</span>
+          </li>
+          <li>
+            <a href="/browse-by-type/needle-holders/" class="text-body hover:text-primary-500">Needle Holders</a>
+            <span class="mt-0.5 block text-sm italic text-body">in Orthopedics</span>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h3 class="mb-4 text-sm font-bold text-heading">Size</h3>
+        <div class="flex flex-wrap gap-2">
+          {% for t in site.search.sizes %}
+          <button type="button" @click="go(q + ' {{ t[0] | replace('"', '') }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500">{{ t[0] }}<span class="px-1 text-sm font-bold text-ink">{{ t[1] }}</span></button>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

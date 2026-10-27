@@ -1,0 +1,28 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: plp.brandPages
+  size: 1
+  alias: br
+permalink: "{{ br.url }}"
+eleventyComputed:
+  title: "{{ br.name | safe }}"
+---
+{#- Product Lines > <Line>: Figma "PLP - Brand Page - Duckworth & Kent - 1920px" (34926:9036). -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs(br.breadcrumbs) }}
+{{ plp_ui.hero(br.hero, "34926:9040") }}
+
+{% if br.cards.length %}
+{# Popular Categories: the line's product types; each opens the type listing filtered by this manufacturer #}
+<section class="bg-white" data-figma="34926:120968">
+  <div class="container-page pb-5 pt-10">
+    {% call plp_ui.titleRow("Popular Categories") %}{{ plp_ui.quickSelect(br.quickSelect, "All Categories", "34926:120995") }}{% endcall %}
+    <div class="mt-8">{{ plp_ui.cardGrid(br.cards, "34926:120978") }}</div>
+  </div>
+</section>
+{% endif %}
+
+{{ plp_ui.listing(br.listing, "34926:9196") }}

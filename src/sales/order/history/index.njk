@@ -1,0 +1,18 @@
+---
+layout: account/layout.njk
+title: My Orders
+permalink: /sales/order/history/
+figma: "14714:137435"
+---
+{% import "account/macros.njk" as acc with context %}
+{# My Orders (14714:137435); empty state "You haven't ordered yet" (32215:84205) with ?empty. #}
+<div x-data="orderHistory" class="flex flex-col" data-figma="14714:137457">
+  {{ acc.pageTitle("My Orders") }}
+  <div x-show="!empty" class="mt-10 flex flex-col gap-6" data-figma="14714:137459">
+    {{ acc.ordersTable(account.orders, "14714:137460") }}
+    {{ acc.pager("Items 1-6 of 6", "14714:137540") }}
+  </div>
+  <div x-show="empty" x-cloak class="mt-5">
+    {{ acc.emptyState(account.illustrations.emptyBox, "You haven't ordered yet", "It looks like you haven't placed any orders. Once you make a purchase, your orders will appear here.", "/browse-by-specialty/", "Start Shopping", "32215:84211", "py-9") }}
+  </div>
+</div>

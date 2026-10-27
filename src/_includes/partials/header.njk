@@ -1,0 +1,176 @@
+{#
+  Header (styleguide "header web", Landing Page 34141:37898):
+  120px navy bar with a 3px orange bottom border (logo, search, phone), then an
+  88px white bar (navigation, My Account, Cart). Shadow 0 5 10 #1f29371a.
+  State lives in Alpine.data("siteHeader") in assets/js/app.js.
+#}
+{# Sticky on desktop: the Figma "sticky sub-nav" example (34971:56679) keeps the header on screen while scrolled. #}
+<header x-data="siteHeader" @keydown.escape.window="menu = null" @click.outside="menu = null" class="relative z-40 bg-white shadow-100 lg:sticky lg:top-0" data-figma="34141:37898">
+  {# Actions bar #}
+  <div class="border-b-[3px] border-accent bg-primary-500">
+    <div class="container-page flex items-center gap-4 py-4 lg:h-[120px] lg:gap-[60px] lg:py-6">
+      <button type="button" @click="drawer = true" class="-ml-2 p-2 text-white lg:hidden" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
+      </button>
+      <a href="/" class="shrink-0" aria-label="Ambler Surgical home">
+        {# Exported as rendered: the header logo has a +1 exposure filter in Figma. #}
+        <img src="/img/logo-header.png" alt="Ambler Surgical" class="h-9 w-auto lg:h-[52px]">
+      </a>
+      <div class="hidden flex-1 md:block">{% include "partials/search.njk" %}</div>
+      {# Quick Order link: drawn in the Quick Order frames' header (34391:65511), next to the phone. #}
+      <div class="ml-auto hidden items-center gap-8 xl:flex">
+        <a href="/quick-order/" class="flex items-center gap-3 text-h3 font-semibold text-white hover:underline" data-figma="34391:65511">
+          {% icon "checkup-list", "h-7 w-7 text-accent" %}Quick Order
+        </a>
+        <a href="{{ site.contact.phoneHref }}" class="flex items-center gap-3 text-h3 font-semibold text-white">
+          {% icon "phone-call", "h-7 w-7 text-accent" %}{{ site.contact.phone }}
+        </a>
+      </div>
+    </div>
+    <div class="container-page pb-4 md:hidden">{% include "partials/search.njk" %}</div>
+  </div>
+
+  {# Links bar #}
+  <nav aria-label="Main" class="relative">
+    <div class="container-page flex h-[72px] items-center justify-between gap-6 lg:h-[88px]">
+      <ul class="hidden items-center gap-6 lg:flex">
+        {% for item in site.mainNav %}
+        <li class="flex">
+          {% if item.menu %}
+          <button type="button" @click="toggle('{{ item.menu }}')" @mouseenter="menu && (menu = '{{ item.menu }}')" :aria-expanded="menu === '{{ item.menu }}'"
+                  class="flex items-center gap-1 text-lg font-medium"
+                  :class="menu === '{{ item.menu }}' || '{{ page.url }}'.startsWith('{{ item.href }}') ? 'text-accent' : 'text-primary-500 hover:text-accent'">
+            {{ item.label }}
+            <span x-show="menu !== '{{ item.menu }}'">{% icon "dropdown" %}</span>
+            <span x-show="menu === '{{ item.menu }}'" x-cloak>{% icon "dropdown-up" %}</span>
+          </button>
+          {% else %}
+          <a href="{{ item.href }}" class="text-lg font-medium {{ 'text-accent' if page.url.startsWith(item.href) else 'text-primary-500 hover:text-accent' }}">{{ item.label }}</a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="ml-auto flex items-center gap-3">
+        {# My Account (Figma "Log In - Dropdown" 34194:128259 and "Logged In - Dropdown" 34194:128201) #}
+        <div class="relative">
+          <button type="button" @click="toggle('account')" :aria-expanded="menu === 'account'"
+                  class="flex h-[52px] items-center gap-2 rounded px-3 text-lg font-medium text-primary-500 md:px-[30px]"
+                  :class="menu === 'account' ? 'bg-ink/5' : 'hover:bg-ink/5'">
+            {% icon "user" %}<span class="hidden sm:inline">My Account</span>
+            <span x-show="menu !== 'account'">{% icon "dropdown" %}</span>
+            <span x-show="menu === 'account'" x-cloak>{% icon "dropdown-up" %}</span>
+          </button>
+          <div x-show="menu === 'account'" x-cloak x-transition.opacity class="absolute right-0 top-full z-50 mt-0.5 w-[320px] overflow-hidden rounded bg-white shadow-300">
+            <ul x-show="$store.auth.loggedIn" data-figma="34194:128204">
+              {% for n in site.accountNav %}
+              <li>
+                <a href="{{ n.href }}" class="flex h-[52px] items-center gap-3 border-b border-outline px-5 text-lg font-medium {{ 'bg-[#f5f5f5] text-primary-500' if page.url == n.href else 'text-body hover:bg-[#f5f5f5] hover:text-primary-500' }}">
+                  {% icon n.icon, "h-7 w-7 text-primary-500" %}{{ n.label }}
+                </a>
+              </li>
+              {% endfor %}
+              <li>
+                <button type="button" @click="$store.auth.signOut(); window.location.href = url('/')" class="flex h-[52px] w-full items-center gap-3 px-5 text-lg font-medium text-body hover:bg-[#f5f5f5] hover:text-primary-500">
+                  {% icon "door-exit", "h-7 w-7 text-primary-500" %}Sign Out
+                </button>
+              </li>
+            </ul>
+            <div x-show="!$store.auth.loggedIn">
+              <div class="flex flex-col gap-3 border-b border-outline p-5">
+                <p class="text-base font-medium text-ink">Authorize</p>
+                <a href="/customer/account/login/" class="btn-primary h-11 text-base">Sign In</a>
+              </div>
+              <div class="flex flex-col gap-3 p-5">
+                <p class="text-base font-medium text-ink">Don&rsquo;t have account?</p>
+                <a href="/customer/account/create/" class="btn-secondary h-11 text-base">Create an Account</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {# Cart: opens the mini cart drawer #}
+        <button type="button" @click="menu = null; $store.cart.open = true" class="relative flex h-[52px] items-center gap-2 rounded bg-accent pl-[30px] pr-8 text-lg font-medium text-white hover:bg-accent-dark">
+          {% icon "shopping-cart" %}Cart
+          <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute -right-2 -top-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-primary-500 px-1.5 text-xs font-bold text-white ring-2 ring-white"></span>
+        </button>
+      </div>
+    </div>
+
+    {# Mega menu (Figma "Megamenu - <Specialty>" frames, e.g. 34447:60218): specialty rail + group columns #}
+    <div x-show="menu === 'specialties'" x-cloak x-data="{ active: '{{ catalog.specialties[0].slug }}' }" class="absolute inset-x-0 top-full flex border-t border-secondary-200 shadow-100" data-figma="34503:13347">
+      <div class="flex w-[max(432px,calc((100vw-1536px)/2+240px))] shrink-0 justify-end bg-white py-10 pr-10">
+        <ul class="flex w-[200px] flex-col gap-2">
+          {% for s in catalog.specialties %}
+          <li>
+            <a href="{{ s.url }}" @mouseenter="active = '{{ s.slug }}'" @focus="active = '{{ s.slug }}'"
+               class="flex items-center gap-1 text-lg font-medium" :class="active === '{{ s.slug }}' ? 'text-accent' : 'text-primary-500 hover:text-accent'">
+              {{ s.name }}<span x-show="active === '{{ s.slug }}'">{% icon "chevron-right" %}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="flex-1 border-l border-secondary-200 bg-menu py-10 pl-10 pr-4">
+        {% for s in catalog.specialties %}
+        <div x-show="active === '{{ s.slug }}'" {% if not loop.first %}x-cloak{% endif %}>
+          <div class="grid max-w-[1256px] grid-cols-4 gap-10">
+            {% for g in s.groups %}
+            <div class="flex flex-col gap-4">
+              <a href="{{ s.url }}instruments/" class="flex items-center gap-1 text-lg font-extrabold text-primary-500 hover:underline">{{ g.title }}{% icon "arrow-narrow-right", "h-6 w-6" %}</a>
+              <ul class="flex flex-col gap-2">
+                {% for it in g.items %}
+                <li><a href="{{ s.url }}instruments/{{ it | slugify }}/" class="text-lg text-primary-500 hover:underline">{{ it }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+          <a href="{{ s.url }}" class="mt-10 inline-flex items-center gap-1 text-lg font-medium text-primary-500 hover:underline">{{ s.viewAllLabel }}{% icon "arrow-narrow-right", "h-6 w-6" %}</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# The other menus are not drawn in Figma; they reuse the mega menu panel styling. #}
+    {% set lists = [
+      { key: "productLines", title: "Product Lines", all: "/product-lines/", allLabel: "View All Product Lines" },
+      { key: "sterilization", title: "Sterilization Products", all: "/sterilization-cleaning/", allLabel: "View All Sterilization Products" },
+      { key: "repair", title: "Repair Services", all: "/repair-services/", allLabel: "View All Repair Services" }
+    ] %}
+    {% for l in lists %}
+    <div x-show="menu === '{{ l.key }}'" x-cloak class="absolute inset-x-0 top-full border-t border-secondary-200 bg-menu shadow-100">
+      <div class="container-page py-10">
+        <p class="mb-4 text-lg font-extrabold text-primary-500">{{ l.title }}</p>
+        <ul class="grid grid-cols-4 gap-x-10 gap-y-2">
+          {% if l.key == "productLines" %}
+            {% for b in catalog.productLines %}<li><a href="{{ b.url }}" class="text-lg text-primary-500 hover:underline">{{ b.name }}</a></li>{% endfor %}
+          {% elif l.key == "sterilization" %}
+            {% for s in catalog.sterilization %}<li><a href="/sterilization-cleaning/#{{ s.slug }}" class="text-lg text-primary-500 hover:underline">{{ s.name }}</a></li>{% endfor %}
+          {% else %}
+            {% for s in catalog.repairServices %}<li><a href="/repair-services/#{{ s.slug }}" class="text-lg text-primary-500 hover:underline">{{ s.name }}</a></li>{% endfor %}
+          {% endif %}
+        </ul>
+        <a href="{{ l.all }}" class="mt-8 inline-flex items-center gap-1 text-lg font-medium text-primary-500 hover:underline">{{ l.allLabel }}{% icon "arrow-narrow-right", "h-6 w-6" %}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </nav>
+
+  {# Phone drawer (mobile frames exist in Figma; this prototype is desktop first) #}
+  <div x-show="drawer" x-cloak class="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="absolute inset-0 bg-secondary-700/40" @click="drawer = false"></div>
+    <div class="absolute inset-y-0 left-0 flex w-80 max-w-[85%] flex-col overflow-y-auto bg-white" x-trap.noscroll="drawer">
+      <div class="flex h-16 items-center justify-between bg-primary-500 px-4 text-white">
+        <span class="font-medium">Menu</span>
+        <button type="button" @click="drawer = false" aria-label="Close menu" class="p-2">{% icon "close-x" %}</button>
+      </div>
+      <ul class="divide-y divide-outline">
+        {% for item in site.mainNav %}
+        <li><a href="{{ item.href }}" class="flex items-center justify-between px-4 py-4 text-lg font-medium text-primary-500">{{ item.label }}{% icon "chevron-right" %}</a></li>
+        {% endfor %}
+        <li><a href="{{ site.contact.phoneHref }}" class="flex items-center gap-3 px-4 py-4 text-lg font-medium text-primary-500">{% icon "phone-call", "h-7 w-7 text-accent" %}{{ site.contact.phone }}</a></li>
+      </ul>
+    </div>
+  </div>
+</header>

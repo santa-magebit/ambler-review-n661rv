@@ -1,0 +1,65 @@
+{#
+  New Address modal (34799:88890, from "Add New Address") and the merge cart modal
+  (34799:89993 / 34799:90204 "if more than 4": the list scrolls under a white fade),
+  shown once after signing in from the e-mail match prompt. Overlay #0c2a4b at 60%.
+#}
+{% import "checkout/macros.njk" as co with context %}
+
+<div x-show="modal === 'address'" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="new-address-title"
+     @keydown.escape.window="modal === 'address' && (modal = null)" data-figma="34799:88890">
+  <div class="absolute inset-0 bg-secondary-700/60" @click="modal = null" x-show="modal === 'address'" x-transition.opacity></div>
+  <form x-ref="addressForm" @submit.prevent="saveAddress($refs.addressForm)" x-trap.noscroll="modal === 'address'"
+        class="relative flex max-h-full w-full max-w-[496px] flex-col overflow-y-auto rounded bg-white">
+    <div class="flex shrink-0 border-b border-outline">
+      <h2 id="new-address-title" class="flex-1 px-6 py-7 text-h2 font-medium tracking-title text-heading sm:px-10">New Address</h2>
+      <button type="button" @click="modal = null" aria-label="Close" class="flex w-24 shrink-0 items-center justify-center border-l border-outline text-primary-500 hover:bg-secondary-100">{% icon "close-x", "h-6 w-6" %}</button>
+    </div>
+    <div class="flex flex-col gap-7 px-6 py-7 sm:px-10">
+      {{ co.addressFields("address", "draftManual") }}
+      <div x-data="{ save: true }">
+        {% call co.checkbox("save", "address-save", "text-ink") %}Save in address book{% endcall %}
+      </div>
+    </div>
+    <div class="flex flex-col gap-3 px-6 pb-10 sm:px-10">
+      <button type="submit" class="btn-primary w-full">Ship Here</button>
+      <button type="button" @click="modal = null" class="btn-link w-full">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div x-show="modal === 'merge'" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="merge-cart-title" aria-describedby="merge-cart-text" data-figma="34799:89993">
+  <div class="absolute inset-0 bg-secondary-700/60" x-show="modal === 'merge'" x-transition.opacity></div>
+  <div x-trap.noscroll="modal === 'merge'" class="relative flex max-h-full w-full max-w-[496px] flex-col overflow-y-auto rounded bg-white">
+    <div class="shrink-0 border-b border-outline px-6 py-7 sm:px-10">
+      <h2 id="merge-cart-title" class="text-h2 font-medium tracking-title text-heading">You're Signed In</h2>
+    </div>
+    <div class="flex flex-col gap-7 px-6 py-7 sm:px-10">
+      <div class="flex flex-col gap-3">
+        <h3 class="text-h3 font-medium text-ink">We Found Items in Your Account’s Cart</h3>
+        <p id="merge-cart-text" class="text-base text-body">You’re using a guest cart. To keep all your items, you can merge it with your account cart. Or, continue with the guest cart and the items in your account cart will be removed.</p>
+      </div>
+      <div class="flex flex-col gap-4">
+        <h4 class="text-lg font-bold text-ink">Your Account Cart ({{ checkout.accountCartCount }})</h4>
+        {% set long = checkout.accountCart | length > 4 %}
+        <div class="relative">
+          <ul class="flex flex-col gap-4 {{ 'max-h-[344px] overflow-y-auto pb-10 pr-3 [scrollbar-color:#dde7ee_transparent] [scrollbar-width:thin]' if long }}" {% if long %}tabindex="0" aria-label="Your Account Cart"{% endif %}>
+            {% for i in checkout.accountCart %}
+            <li class="flex items-start gap-6">
+              <img src="{{ i.image }}" alt="" class="h-20 w-20 shrink-0 rounded border border-outline bg-white object-contain">
+              <div class="flex min-w-0 flex-col gap-1">
+                <p class="text-base text-body">{{ i.qty }} x {{ i.name }}</p>
+                <p class="text-lg font-bold tracking-title text-ink">{{ i.priceLabel }}</p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% if long %}<div class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white" data-figma="34799:90244"></div>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-3 px-6 pb-10 sm:px-10">
+      <button type="button" @click="mergeCarts()" class="btn-primary h-auto min-h-[52px] w-full py-3 text-center">Merge Guest Cart with Account Cart</button>
+      <button type="button" @click="keepGuestCart()" class="btn-link w-full">Keep Only Guest Cart</button>
+    </div>
+  </div>
+</div>

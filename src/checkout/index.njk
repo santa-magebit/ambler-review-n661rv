@@ -1,0 +1,57 @@
+---
+layout: checkout/layout.njk
+title: Checkout
+permalink: /checkout/
+---
+{#
+  One-page checkout (Figma page "Checkout"):
+  guest 34799:87723 / 34799:87947, signed in 34799:88544, express checkout + gift card 34799:90318,
+  e-mail match prompt 34799:89361, New Address modal 34799:88710, merge cart modals 34799:89813 / 34799:90024.
+  Guest vs signed in comes from $store.auth.loggedIn. Behaviour: Alpine.data("checkout") in assets/js/checkout.js.
+  Layout: 600px form column and 380px summary on a #f5f5f5 panel that runs to the right edge
+  (split at 1070px of the 1920 frame, i.e. 50% + 110px).
+#}
+<script type="application/json" id="checkout-config">{{ checkout.client | json | safe }}</script>
+
+<div x-data="checkout" class="flex flex-1 flex-col">
+  <h1 class="sr-only">Checkout</h1>
+
+  {# Empty cart: copy and buttons from "Cart - Empty" (21071:135310) #}
+  <div x-show="empty" x-cloak class="container-page flex flex-1 flex-col items-center gap-12 pb-20 pt-7">
+    <a href="/" class="shrink-0"><img src="{{ 'b36bba42' | img }}" alt="Ambler Surgical" class="h-10 w-[149px] object-cover"></a>
+    <div class="w-full max-w-[1060px] rounded border border-outline px-6 py-[60px]" data-figma="21071:135310">
+      <div class="mx-auto flex max-w-[414px] flex-col items-center gap-8 text-center">
+        <div class="flex flex-col gap-2">
+          <h2 class="text-h2 font-bold text-heading">Your cart is empty</h2>
+          <p class="text-base text-body">Looks like you haven&rsquo;t added any products to your cart yet.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href="/browse-by-specialty/" class="btn-primary">Start Shopping</a>
+          <a href="/quick-order/" class="btn-secondary px-6 text-base">{% icon "checkup-list", "h-6 w-6" %}Order by SKU</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div x-show="!empty" x-cloak class="flex flex-1 flex-col lg:flex-row" data-figma="34799:87723">
+    <div class="px-4 md:px-8 lg:w-[calc(50%+110px)] lg:shrink-0 lg:pl-8 lg:pr-10">
+      <form @submit.prevent="placeOrder()" novalidate aria-label="Checkout" class="mx-auto flex w-full max-w-[600px] flex-col gap-12 pb-12 pt-7 lg:ml-auto lg:mr-0" data-figma="34799:87800">
+        <div class="flex flex-col gap-7" data-figma="34799:87801">
+          <a href="/" class="self-center"><img src="{{ 'b36bba42' | img }}" alt="Ambler Surgical" class="h-10 w-[149px] object-cover"></a>
+          {% include "checkout/express.njk" %}
+        </div>
+        {% include "checkout/contacts.njk" %}
+        {% include "checkout/addresses.njk" %}
+        {% include "checkout/methods.njk" %}
+      </form>
+    </div>
+
+    <aside aria-labelledby="summary-title" class="border-t border-outline bg-[#f5f5f5] px-4 pb-12 pt-7 md:px-8 lg:flex-1 lg:border-l lg:border-t-0 lg:pl-[39px]" data-figma="34799:87724">
+      <div class="mx-auto max-w-[380px] lg:mx-0">
+        {% include "checkout/summary.njk" %}
+      </div>
+    </aside>
+  </div>
+
+  {% include "checkout/modals.njk" %}
+</div>

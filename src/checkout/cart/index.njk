@@ -1,0 +1,35 @@
+---
+# Cart page, Figma "Cart" (14714:103185) and "Cart - Empty" (21071:135304).
+# Lines, totals and the empty state are driven by Alpine.store("cart").
+layout: layouts/base.njk
+title: Cart
+permalink: /checkout/cart/
+---
+{% import "pdp-cart/graphics.njk" as gfx %}
+<div x-data="cartPage" class="container-page flex flex-col gap-5 pb-20 pt-10" data-figma="27290:12068">
+  <h1 class="text-h2 font-bold text-heading md:text-h1">Cart</h1>
+
+  {# Cart - Empty (21071:135310) #}
+  <div x-show="$store.cart.items.length === 0" x-cloak class="flex justify-center rounded border border-outline bg-white px-6 py-[60px]" data-figma="21071:135310">
+    <div class="flex max-w-[414px] flex-col items-center gap-8 text-center" data-figma="21071:135311">
+      {{ gfx.emptyBox() }}
+      <div class="flex flex-col gap-2">
+        <h2 class="text-h3 font-bold text-heading md:text-h2">Your cart is empty</h2>
+        <p class="text-base text-body">Looks like you haven&rsquo;t added any products to your cart yet.</p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-3" data-figma="34331:36279">
+        <a href="/browse-by-specialty/" class="btn-primary">Start Shopping</a>
+        <a href="/quick-order/" class="btn-secondary px-6 text-base" data-figma="34331:36270">{% icon "checkup-list", "h-6 w-6" %}Order by SKU</a>
+      </div>
+    </div>
+  </div>
+
+  {# Cart with items (27290:12067) #}
+  <div x-show="$store.cart.items.length > 0" x-cloak class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_288px]" data-figma="27290:12067">
+    <div class="flex min-w-0 flex-col gap-6" data-figma="14714:103260">
+      {% include "pdp-cart/cart-lines.njk" %}
+      {% include "pdp-cart/compliance.njk" %}
+    </div>
+    {% include "pdp-cart/cart-summary.njk" %}
+  </div>
+</div>

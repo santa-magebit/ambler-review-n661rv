@@ -1,0 +1,20 @@
+---
+layout: layouts/base.njk
+title: Search results
+permalink: /search/
+---
+{#- Not drawn in Figma: the header search submits here (?q=). Same listing as the Product Type Page,
+    over every catalog product whose name, item number, description or type matches. -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs([{ label: "Search results" }]) }}
+<section class="bg-white" x-data="{ q: (new URLSearchParams(location.search).get('q') || '').trim() }">
+  <div class="container-page pt-10">
+    <h1 class="text-h2 font-bold text-heading md:text-h1">
+      <span x-show="q" x-cloak>Search results for &ldquo;<span x-text="q"></span>&rdquo;</span>
+      <span x-show="!q">Search results</span>
+    </h1>
+  </div>
+</section>
+{{ plp_ui.listing(plp.search, "34723:17181", true) }}

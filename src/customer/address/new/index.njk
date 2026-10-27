@@ -1,0 +1,52 @@
+---
+layout: account/layout.njk
+title: New Address
+permalink: /customer/address/new/
+figma: "14714:137391"
+accountNavActive: /customer/address/
+---
+{% import "macros/ui.njk" as ui with context %}
+{% import "account/macros.njk" as acc with context %}
+{% set selectCls = "input cursor-pointer appearance-none pr-14 invalid:text-body" %}
+<div class="flex flex-col gap-10" data-figma="14714:137413">
+  {{ acc.pageTitle("New Address") }}
+  <form x-data="addressForm" @submit.prevent="submit" novalidate
+        class="flex w-full max-w-[600px] flex-col gap-7 rounded bg-secondary-100 p-6 sm:p-10" data-figma="14714:137416">
+    <h2 class="text-h3 font-medium text-heading">Contact Information</h2>
+    {{ ui.field("First Name", "firstname", "text", true, "given-name", "Enter first name") }}
+    {{ ui.field("Last Name", "lastname", "text", true, "family-name", "Enter last name") }}
+    {{ ui.field("Phone Number", "telephone", "tel", false, "tel", "Enter phone number") }}
+
+    <h2 class="text-h3 font-medium text-heading">Address</h2>
+    {{ ui.field("Street Address 1", "street[0]", "text", true, "address-line1", "Enter street address") }}
+    {{ ui.field("Street Address 2", "street[1]", "text", false, "address-line2", "Enter street address") }}
+    <div>
+      <label for="address-country" class="label">Country<span class="text-error"> *</span></label>
+      <div class="relative">
+        <select id="address-country" name="country_id" required autocomplete="country-name" class="{{ selectCls }}">
+          <option value="" selected>Select country</option>
+          {% for c in account.countries %}<option class="text-ink">{{ c }}</option>{% endfor %}
+        </select>
+        {% icon "dropdown", "pointer-events-none absolute right-5 top-1/2 h-7 w-7 -translate-y-1/2 text-body" %}
+      </div>
+    </div>
+    <div>
+      <label for="address-region" class="label">State/Province<span class="text-error"> *</span></label>
+      <div class="relative">
+        <select id="address-region" name="region" required autocomplete="address-level1" class="{{ selectCls }}">
+          <option value="" selected>Please select a region, state or province.</option>
+          {% for r in account.regions %}<option class="text-ink">{{ r }}</option>{% endfor %}
+        </select>
+        {% icon "dropdown", "pointer-events-none absolute right-5 top-1/2 h-7 w-7 -translate-y-1/2 text-body" %}
+      </div>
+    </div>
+    {{ ui.field("City", "city", "text", true, "address-level2", "Enter city") }}
+    {{ ui.field("Zip/Postal Code", "postcode", "text", true, "postal-code", "Enter zip/postal code") }}
+    {{ acc.checkbox("Save as my default billing address", "", "default_billing") }}
+    {{ acc.checkbox("Save as my default shipping address", "", "default_shipping") }}
+    <div class="flex flex-col gap-3">
+      <button type="submit" class="btn-primary w-full">Save Address</button>
+      <a href="/customer/address/" class="btn-link w-full">Go back</a>
+    </div>
+  </form>
+</div>

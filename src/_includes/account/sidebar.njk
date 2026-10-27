@@ -1,0 +1,32 @@
+{#
+  Account sidebar ("account-sidebar" 27318:111605): 288px, #f1f5f8, 64px links with #dde7ee dividers,
+  current link in ink with a 2x32px orange bar. Below 1024px it collapses behind a toggle.
+#}
+{% set activeHref = accountNavActive or page.url %}
+{% set current = site.accountNav | find("href", activeHref) %}
+<nav aria-label="My Account" class="w-full shrink-0 lg:w-[288px]" x-data="{ open: false }" data-figma="27318:111605">
+  <button type="button" @click="open = !open" :aria-expanded="open" aria-controls="account-nav"
+          class="flex h-16 w-full items-center justify-between gap-3 rounded bg-secondary-100 px-5 text-base font-medium text-ink lg:hidden">
+    <span class="flex items-center gap-3">{% if current %}{% icon current.icon, "h-6 w-6 text-primary-500" %}{{ current.label }}{% else %}My Account{% endif %}</span>
+    <span x-show="!open">{% icon "dropdown", "h-7 w-7 text-primary-500" %}</span>
+    <span x-show="open" x-cloak>{% icon "dropdown-up", "h-7 w-7 text-primary-500" %}</span>
+  </button>
+  <ul id="account-nav" x-show="open" x-cloak class="mt-2 overflow-hidden rounded bg-secondary-100 lg:mt-0 lg:!block">
+    {% for n in site.accountNav %}
+    {% set isActive = n.href == activeHref %}
+    <li>
+      <a href="{{ n.href }}" {% if isActive %}aria-current="page"{% endif %}
+         class="relative flex h-16 items-center gap-3 border-b border-outline px-5 text-base font-medium {{ 'text-ink' if isActive else 'text-body hover:text-ink' }}">
+        {% if isActive %}<span class="absolute left-0 top-4 h-8 w-0.5 bg-accent" aria-hidden="true"></span>{% endif %}
+        {% icon n.icon, "h-6 w-6 text-primary-500" %}{{ n.label }}
+      </a>
+    </li>
+    {% endfor %}
+    <li>
+      <button type="button" @click="$store.auth.signOut(); window.location.href = url('/')"
+              class="flex h-16 w-full items-center gap-3 px-5 text-left text-base font-medium text-body hover:text-ink">
+        {% icon "door-exit", "h-6 w-6 text-primary-500" %}Sign Out
+      </button>
+    </li>
+  </ul>
+</nav>

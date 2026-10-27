@@ -1,0 +1,40 @@
+---
+layout: layouts/base.njk
+title: Create New Account
+permalink: /customer/account/create/
+---
+{% import "macros/ui.njk" as ui with context %}
+{% import "account/macros.njk" as acc with context %}
+{# Figma "Creating New Account" 14714:118278 #}
+<div class="container-page flex flex-col items-center gap-10 pb-20 pt-10" data-figma="14714:118279">
+  <h1 class="text-center text-h2 font-bold text-heading md:text-h1">Create New Account</h1>
+  <form x-data="accountAuthForm('Thank you for registering with Ambler Surgical.')" @submit.prevent="submit" novalidate
+        class="flex w-full max-w-[496px] flex-col gap-8 rounded bg-secondary-100 p-6 sm:p-10" data-figma="14714:118281">
+
+    <fieldset class="flex flex-col gap-6" data-figma="14714:118282">
+      <legend class="mb-6 text-h3 font-medium text-heading">Personal Information</legend>
+      <div class="flex flex-col gap-7">
+        {{ ui.field("First Name", "firstname", "text", false, "given-name", "Enter your first name") }}
+        {{ ui.field("Last Name", "lastname", "text", false, "family-name", "Enter your last name") }}
+        <div class="flex items-center gap-2">
+          {{ acc.checkbox("Allow remote shopping assistance", "", "assistance_allowed") }}
+          <button type="button" data-proto aria-label="About remote shopping assistance" class="rounded text-primary-500 hover:text-ink">{% icon "help-circle", "h-6 w-6" %}</button>
+        </div>
+      </div>
+    </fieldset>
+
+    <hr class="border-outline">
+
+    <fieldset class="flex flex-col gap-7" data-figma="14714:118294">
+      <legend class="mb-6 text-h3 font-medium text-heading">Sign-in Information</legend>
+      {{ ui.field("E-mail", "email", "email", false, "email", "Enter your email") }}
+      {{ acc.passwordField("Password", "create-password", "Enter your password", false, "new-password") }}
+      {{ acc.passwordField("Confirm Password", "create-password-confirm", "Re enter your password", false, "new-password") }}
+      {% call acc.checkbox("", "required", "terms") %}I have read and agree to the <a href="#" data-proto class="font-medium text-primary-500 underline hover:text-ink">Terms and Conditions</a> and <a href="#" data-proto class="font-medium text-primary-500 underline hover:text-ink">Privacy Policy</a>{% endcall %}
+      <div class="flex flex-col gap-3">
+        <button type="submit" class="btn-primary w-full">Create an Account</button>
+        <a href="/customer/account/login/" class="btn-link w-full">Already Customer? Log In</a>
+      </div>
+    </fieldset>
+  </form>
+</div>

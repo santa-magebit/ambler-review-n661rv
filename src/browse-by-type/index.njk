@@ -1,0 +1,47 @@
+---
+layout: layouts/base.njk
+title: Browse by Type
+permalink: /browse-by-type/
+---
+{#- Figma "PLP - Browse by Type" (34723:18102). -#}
+{% import "macros/ui.njk" as ui with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+
+{{ ui.breadcrumbs([{ label: "Browse by Type" }]) }}
+{{ plp_ui.hero({ eyebrow: "Explore and Browse Surgical", title: "Instruments by Type", image: "be970610", flip: true, wide: true }, "34723:18106") }}
+
+{# Popular Types #}
+<section class="bg-white" data-figma="34723:18115">
+  <div class="container-page py-10">
+    {{ plp_ui.titleRow("Popular Types") }}
+    <div class="mt-8">{{ plp_ui.cardGrid(plp.browseTypeIndex.popular, "34723:18125") }}</div>
+  </div>
+</section>
+
+{# All Instrument Types, A to Z #}
+<section class="bg-secondary-100" data-figma="34723:18155">
+  <div class="container-page pb-20 pt-10">
+    <h2 class="text-h3 font-bold text-heading md:text-h2">All Instrument Types</h2>
+    <nav aria-label="Jump to letter" class="mt-6 flex flex-wrap items-center gap-3" data-figma="34723:18158">
+      <span class="text-base text-body">Jump to:</span>
+      {% for l in plp.browseTypeIndex.letters %}
+      <a href="#letter-{{ l.letter | lower }}" class="flex h-12 min-w-[50px] items-center justify-center rounded border border-secondary-200 bg-white px-5 text-base text-ink hover:border-primary-500 hover:text-primary-500">{{ l.letter }}</a>
+      {% endfor %}
+    </nav>
+    <div class="mt-10 flex flex-col gap-10" data-figma="34723:18169">
+      {% for l in plp.browseTypeIndex.letters %}
+      <section id="letter-{{ l.letter | lower }}" class="scroll-mt-4" aria-labelledby="letter-{{ l.letter | lower }}-h">
+        <div class="flex items-center gap-6">
+          <h3 id="letter-{{ l.letter | lower }}-h" class="text-h2 font-bold text-heading">{{ l.letter }}</h3>
+          <span class="h-px flex-1 bg-card"></span>
+        </div>
+        <ul class="mt-10 grid gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          {% for t in l.items %}
+          <li class="min-w-0 text-base"><a href="{{ t.url }}" class="text-primary-500 hover:underline">{{ t.name }}</a>{% if t.count %}<span class="text-body">&nbsp; ({{ t.count }})</span>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>

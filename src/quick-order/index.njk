@@ -1,0 +1,37 @@
+---
+# Quick Order (Order by SKU), Figma "Quick Order" (34391:65496), "Quick Order - Items Added"
+# (34403:67202, 34513:74023) and "Quick Order - CSV Upload Summary" (34547:112188).
+# State: Alpine.data("quickOrder") in assets/js/pdp-cart.js.
+layout: layouts/base.njk
+title: Quick Order
+permalink: /quick-order/
+---
+{% import "macros/ui.njk" as ui with context %}
+{% import "pdp-cart/graphics.njk" as gfx %}
+{{ ui.breadcrumbs([{ label: "Quick Order" }]) }}
+
+<div x-data="quickOrder({{ pdpCart.quickOrder | json }})" class="container-page flex flex-col gap-6 py-10" data-figma="34391:65526">
+  <div class="flex max-w-[756px] flex-col gap-3" data-figma="34391:65527">
+    <h1 class="text-h2 font-bold text-heading md:text-h1">Quick Order</h1>
+    <p class="text-lg text-body">Add multiple products to your cart by entering SKUs and quantities, or upload a CSV file.</p>
+  </div>
+
+  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_366px]" data-figma="34391:65530">
+    {% include "pdp-cart/quick-order-form.njk" %}
+
+    {# Order Upload (34391:65556) #}
+    <section aria-labelledby="qo-upload-title" class="flex flex-col gap-6 rounded bg-secondary-100 p-6" data-figma="34391:65556">
+      <h2 id="qo-upload-title" class="flex items-center gap-2 text-h3 font-medium tracking-title text-heading">
+        Order Upload
+        <span class="text-heading" title="Your CSV file must include &quot;sku&quot; and &quot;qty&quot; columns.">{{ gfx.infoCircle("h-6 w-6") }}</span>
+      </h2>
+      <div class="flex flex-col gap-2">
+        <input type="file" x-ref="file" accept=".csv,text/csv" @change="fileChosen($event)" class="sr-only" tabindex="-1" aria-hidden="true">
+        <button type="button" @click="chooseFile()" aria-describedby="qo-csv-hint" class="btn-secondary w-full pl-[30px]" data-figma="34512:72741">{% icon "file-upload" %}Choose .csv file</button>
+        <p id="qo-csv-hint" class="text-sm text-body">Your CSV file must include &quot;sku&quot; and &quot;qty&quot; columns.</p>
+      </div>
+    </section>
+  </div>
+
+  {% include "pdp-cart/csv-summary.njk" %}
+</div>

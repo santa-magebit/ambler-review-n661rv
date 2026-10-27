@@ -1,0 +1,79 @@
+---
+layout: layouts/base.njk
+title: Home
+---
+{# Landing Page (Figma 34141:37897). #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% set oph = catalog.specialties | find("slug", "ophthalmology") %}
+
+{# Hero: eye photo, navy fade from the left, 593px text column. #}
+<section class="relative isolate overflow-hidden bg-primary-500" data-figma="34141:37899">
+  <img src="{{ '0cdfda6c' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-right">
+  <div aria-hidden="true" class="absolute inset-0 -z-10" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-primary-500/60 md:hidden"></div>
+  <div class="container-page flex min-h-[360px] items-center py-12 lg:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col items-start gap-7">
+      {{ c.heroTitle("The Smarter Source") }}
+      <p class="text-lg text-white">Ambler Surgical offers the largest selection of premium-quality surgical instruments with a fast, easy-to-use online catalog.</p>
+      {{ c.arrowButton("Browse Surgical Instruments", "/browse-by-specialty/") }}
+    </div>
+  </div>
+</section>
+
+{# Specialties: Ophthalmology with its four categories, then the other eight specialties in two columns. #}
+<section class="bg-white" data-figma="34141:37900">
+  <div class="container-page flex flex-col gap-10 py-10">
+    <h2 class="text-h2 font-bold text-heading lg:text-h1">Specialized Surgical Instruments for Every Field</h2>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-[588fr_450fr_450fr]">
+      <div class="flex min-w-0 flex-col gap-4 overflow-hidden rounded border border-body bg-white pb-5 md:col-span-2 lg:col-span-1 lg:row-span-4" data-figma="34141:37904">
+        <a href="{{ oph.url }}" class="group flex flex-col">{{ c.descriptionHead(oph.name, true) }}</a>
+        <p class="px-5 text-lg text-body">{{ oph.description }}</p>
+        <ul class="grid grid-cols-1 gap-3 px-5 sm:grid-cols-2" data-figma="34141:37913">
+          {% for cat in catalog.ophthalmologyCategories %}
+          <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard({ title: cat.name, image: cat.image, href: oph.url + cat.slug + "/", imgClass: contentPages.home.categoryImage[cat.slug] }, "sub") }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% for s in catalog.specialties %}{% if s.slug != "ophthalmology" %}
+      {{ c.descriptionCard(s.name, s.description, s.url) }}
+      {% endif %}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ c.trustBand("34141:38022") }}
+
+{# Repair Services band: navy offer card + four category cards. #}
+<section class="bg-white" aria-labelledby="home-repair" data-figma="34141:38027">
+  <div class="container-page grid gap-6 py-10 lg:grid-cols-[467fr_1045fr]">
+    <div class="flex min-w-0 flex-col items-start justify-center gap-5 rounded bg-primary-500 p-8 sm:p-10" data-figma="34141:38028">
+      <div class="flex flex-col gap-4">
+        <h2 id="home-repair" class="text-h2 font-bold text-white">Repair Services</h2>
+        <p class="text-lg text-[#d3dce5]">We offer expert repairs to help your surgical instruments last longer.</p>
+      </div>
+      {{ c.arrowButton("See All Services", "/repair-services/") }}
+    </div>
+    <ul class="grid min-w-0 grid-cols-2 gap-6 md:grid-cols-4" data-figma="34141:38033">
+      {% for card in contentPages.home.repairCards %}
+      <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard(card, "medium") }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{# Shop by Product Lines: the twelve featured logos. #}
+<section class="bg-secondary-100" data-figma="34141:38038">
+  <div class="container-page flex flex-col gap-10 py-10">
+    {{ ui.sectionHeading("Shop by Product Lines", "/product-lines/", "Shop All Product Lines") }}
+    <ul class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6" data-figma="34141:38042">
+      {% for l in contentPages.home.logos %}
+      <li class="min-w-0">
+        <a href="{{ l.url }}" class="flex h-20 items-center justify-center rounded border border-card bg-white px-4 transition-shadow hover:shadow-200">
+          <img src="{{ l.logo }}" alt="{{ l.name }}" width="{{ l.width }}" height="{{ l.height }}" loading="lazy" class="h-auto max-w-full">
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

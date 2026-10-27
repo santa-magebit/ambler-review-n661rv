@@ -1,0 +1,471 @@
+{#
+  Shared pieces of the product listing pages (Figma page "PLP").
+  Import with: {% import "plp/macros.njk" as plp_ui with context %}
+  Data and copy: src/_data/plp.js (global `plp`). Behaviour: src/assets/js/plp.js.
+#}
+{% import "macros/ui.njk" as ui with context %}
+
+{# Text with [label](/href) links (copy from plp.js). #}
+{% macro rich(text, linkClass="text-primary-500 underline hover:text-ink") %}{{ text | escape | replace(r/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="' + linkClass + '">$1</a>') | safe }}{% endmacro %}
+
+{#
+  Hero (PLP heroes, e.g. 34719:11294): 480px, photo + navy gradient, text column 593px.
+  h: { eyebrow?, title, text?, image (hash8), flip?, placement? ("right": photo on the right half), wide? (navy reaches further) }
+#}
+{% macro hero(h, figma) %}
+<section class="relative overflow-hidden bg-white" data-figma="{{ figma }}">
+  {% if h.placement == "right" %}
+  <img src="{{ h.image | img }}" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-right md:w-[58%]">
+  {% else %}
+  <img src="{{ h.image | img }}" alt="" class="absolute inset-0 h-full w-full object-cover {{ '-scale-x-100 object-[50%_88%]' if h.flip }}">
+  {% endif %}
+  <div class="absolute inset-0" style="background-image: {{ plp.gradients.heroWide if h.wide else plp.gradients.hero }}"></div>
+  <div class="absolute inset-0 bg-primary-500/70 md:hidden"></div>
+  <div class="container-page relative flex min-h-[320px] items-center py-12 md:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col gap-7">
+      <div class="flex flex-col gap-3">
+        {% if h.eyebrow %}<p class="text-lg font-medium text-white">{{ h.eyebrow }}</p>{% endif %}
+        <h1 class="self-start bg-bottom bg-no-repeat pb-2.5 text-h1 font-medium text-white md:text-hero" style="background-image: {{ plp.gradients.titleLine }}; background-size: 100% 2px">{{ h.title }}</h1>
+      </div>
+      {% if h.text %}<p class="text-lg text-white">{{ h.text }}</p>{% endif %}
+    </div>
+  </div>
+</section>
+{% endmacro %}
+
+{# Section title row: h2 (Bold 40/48 or 32/40) with an optional control on the right (caller). #}
+{% macro titleRow(title, size="lg") %}
+<div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+  <h2 class="font-bold text-heading {{ 'text-h2 md:text-h1' if size == 'lg' else 'text-h3 md:text-h2' }}">{{ title }}</h2>
+  {% if caller %}{{ caller() }}{% endif %}
+</div>
+{% endmacro %}
+
+{# Dropdown panel shared by Quick Select, Sort By and Show (Figma "Quick Select - opened" 34879:7082). #}
+{% set panelClass = "absolute right-0 top-full z-30 mt-1 max-h-[480px] w-full min-w-[240px] overflow-y-auto rounded border border-outline bg-white py-2 shadow-[0_8px_24px_0_rgba(13,48,84,0.12)]" %}
+{% set optionClass = "block w-full px-5 py-2.5 text-left text-base text-body hover:bg-secondary-100 hover:font-medium hover:text-[#0d3155] focus:bg-secondary-100 focus:outline-none" %}
+{% set controlClass = "flex h-[52px] w-full items-center justify-between gap-3 rounded border bg-white px-5 text-left text-lg font-medium" %}
+
+{#
+  Quick Select (34873:118749): label + 240px control that opens a list of links.
+  items: [{ label, href, filter? }]; filter ("group:value") filters the page's listing instead of navigating.
+  proto: the targets are not designed (adds data-proto).
+#}
+{% macro quickSelect(items, placeholder="All Categories", figma="34873:118749", proto=false) %}
+<div class="flex items-center gap-5" data-figma="{{ figma }}" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+  <span class="shrink-0 text-base text-body" id="qs-{{ figma | slugify }}">Quick Select:</span>
+  <div class="relative w-[240px] max-w-full">
+    <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="qs-{{ figma | slugify }} qs-{{ figma | slugify }}-v"
+            class="{{ controlClass }}" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
+      <span id="qs-{{ figma | slugify }}-v" class="truncate">{{ placeholder }}</span>
+      <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
+    </button>
+    <ul x-show="open" x-cloak x-transition.opacity class="{{ panelClass }}">
+      {% for i in items %}
+      <li><a href="{{ i.href }}" {% if proto %}data-proto{% endif %} {% if i.filter %}@click.prevent="open = false; $dispatch('plp-filter', '{{ i.filter }}')"{% endif %} class="{{ optionClass }}">{{ i.label }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endmacro %}
+
+{#
+  Category card for a type / product line (styleguide "Category card" 14714:57254, 34719:11312):
+  366x366, navy border, 56px strip (title 24/32 + "N products"), photo. Hover: navy strip,
+  and the description replaces the photo when Figma draws one.
+  c: { name, href, count?, image, fit ("cover"|"contain"), hover?: [paragraphs] }
+#}
+{% macro categoryCard(c, figma="34719:11312") %}
+<a href="{{ c.href }}" {% if c.proto %}data-proto{% endif %} class="group flex aspect-square min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white" data-figma="{{ figma }}">
+  <span class="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-transparent bg-[#f5f8fa] px-5 group-hover:bg-primary-500 group-focus-visible:bg-primary-500">
+    <span class="truncate text-h3 font-medium tracking-title text-primary-500 group-hover:text-white group-focus-visible:text-white">{{ c.name }}</span>
+    {% if c.count %}<span class="shrink-0 text-lg text-primary-500 group-hover:text-secondary-100 group-focus-visible:text-secondary-100">{{ c.count }} product{{ "s" if c.count != 1 }}</span>{% endif %}
+  </span>
+  <span class="relative block min-h-0 flex-1 overflow-hidden">
+    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'group-hover:invisible group-focus-visible:invisible' if c.hover }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
+    {% if c.hover %}
+    <span class="absolute inset-0 hidden flex-col gap-2 p-5 text-base text-primary-500 group-hover:flex group-focus-visible:flex">
+      {% for t in c.hover %}<span>{{ t }}</span>{% endfor %}
+    </span>
+    {% endif %}
+  </span>
+</a>
+{% endmacro %}
+
+{# 4-up grid of category cards (34719:11310). #}
+{% macro cardGrid(cards, figma="34719:11310") %}
+<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-figma="{{ figma }}">
+  {% for c in cards %}<li class="min-w-0">{{ categoryCard(c) }}</li>{% endfor %}
+</ul>
+{% endmacro %}
+
+{#
+  "Shop By Categories" card on the specialty page (34777:59000): strip with title + arrow, photo,
+  and a "Select a Category" menu at the bottom listing the category's instrument types.
+  c: { title, href, image, fit, menu: [{ label, href }] }
+#}
+{% macro navCard(c) %}
+<div class="group/card relative flex aspect-square min-w-0 flex-col rounded border border-primary-500 bg-white" data-figma="34777:59000" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+  <a href="{{ c.href }}" class="group flex h-14 shrink-0 items-center gap-3 rounded-t bg-[#f5f8fa] px-5 hover:bg-primary-500">
+    <span class="truncate text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ c.title }}</span>
+    {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
+  </a>
+  <a href="{{ c.href }}" tabindex="-1" aria-hidden="true" class="block min-h-0 flex-1 overflow-hidden">
+    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
+  </a>
+  {% if c.menu.length %}
+  <button type="button" @click="open = !open" :aria-expanded="open" class="flex h-[52px] shrink-0 items-center justify-between rounded-b bg-white px-5 text-lg text-primary-500 hover:bg-secondary-100">
+    Select a Category
+    <span x-show="!open">{% icon "dropdown", "h-6 w-6" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
+  </button>
+  <ul x-show="open" x-cloak x-transition.opacity class="absolute inset-x-0 top-full z-30 mt-1 max-h-[320px] overflow-y-auto rounded border border-outline bg-white py-2 shadow-[0_8px_24px_0_rgba(13,48,84,0.12)]">
+    {% for i in c.menu %}<li><a href="{{ i.href }}" class="{{ optionClass }}">{{ i.label }}</a></li>{% endfor %}
+  </ul>
+  {% else %}
+  <a href="{{ c.href }}" class="flex h-[52px] shrink-0 items-center justify-between rounded-b bg-white px-5 text-lg text-primary-500 hover:bg-secondary-100">Select a Category{% icon "dropdown", "h-6 w-6" %}</a>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{#
+  "Popular Products" (34777:59002): title + "Show all Products", a grid of `count` product cards.
+  "Show all Products" reveals the rest of the page's products in place.
+#}
+{% macro popularProducts(products, count, figma, top=false) %}
+<section class="bg-white" data-figma="{{ figma }}" x-data="{ all: false }">
+  <div class="container-page pb-10 {{ 'pt-10' if top }}">
+    {% call titleRow("Popular Products", "md") %}
+      {% if products.length > count %}<button type="button" x-show="!all" @click="all = true" class="btn-secondary">Show all Products</button>{% endif %}
+    {% endcall %}
+    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {% for p in products %}
+      <li class="min-w-0" {% if loop.index > count %}x-show="all" x-cloak{% endif %}>{{ ui.productCard(p) }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endmacro %}
+
+{#
+  Product listing (Product Type Page 34723:17020): filter panel ("filters - opened" 34793:65750),
+  "Products N results" toolbar with search within + sort, the product grid and pagination with "Show".
+  All product cards are rendered here; Alpine.data("plpListing") shows the current page's cards
+  (x-show) in the sorted order (CSS order). l: plp.js listing().
+#}
+{% macro listing(l, figma="34723:17181", cloak=false) %}
+<div x-data="plpListing({{ l.cfg | json }})" {% if cloak %}x-cloak{% endif %} @plp-filter.window="only($event.detail)" id="{{ l.id }}" class="scroll-mt-4">
+  {% if l.filters.length %}
+  {# Filter panel #}
+  <section class="bg-white py-10" data-figma="34793:65750" aria-label="Filters" x-show="found.length">
+    <div class="container-page">
+      <div class="rounded border border-card bg-white" data-figma="34793:65752">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-card px-4 py-3 md:px-6" data-figma="34793:65753">
+          <p class="flex h-9 items-center gap-2 text-lg font-bold text-heading">
+            Filters
+            <span x-show="applied.length" x-cloak x-text="applied.length" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink"></span>
+          </p>
+          <p x-show="!applied.length" class="text-base text-body">No filters applied yet</p>
+          <ul x-show="applied.length" x-cloak class="flex min-w-0 flex-1 flex-wrap items-center gap-2" aria-label="Active filters">
+            <template x-for="key in chips" :key="key">
+              <li class="flex h-9 items-center gap-2 rounded bg-[#eff7fd] py-1.5 pl-4 pr-3 text-base text-heading">
+                <span><span class="font-medium" x-text="groupLabel(key) + ':'"></span> <span x-text="valueLabel(key)"></span></span>
+                <button type="button" @click="remove(key)" :aria-label="'Remove filter ' + groupLabel(key) + ' ' + valueLabel(key)" class="flex h-6 w-6 items-center justify-center text-heading hover:text-accent">{% icon "close-x", "h-4 w-4" %}</button>
+              </li>
+            </template>
+            <li x-show="hiddenChips > 0">
+              <button type="button" @click="allChips = true" class="h-9 px-2 text-base text-heading hover:text-primary-500" x-text="'+' + hiddenChips + ' more'"></button>
+            </li>
+          </ul>
+          <button type="button" x-show="applied.length" x-cloak @click="clearAll()" class="ml-auto text-base text-primary-500 underline hover:text-ink">Clear all</button>
+        </div>
+        <div class="flex flex-col bg-secondary-100 md:flex-row" data-figma="34793:65769">
+          <ul class="flex shrink-0 flex-row overflow-x-auto bg-white py-2 shadow-[2px_0_10px_0_rgba(31,41,55,0.1)] md:w-[288px] md:flex-col" aria-label="Filter by">
+            {% for a in l.filters %}
+            <li class="shrink-0">
+              <button type="button" @click="active = '{{ a.key }}'" :aria-pressed="active === '{{ a.key }}'" aria-controls="{{ l.id }}-{{ a.key }}"
+                      class="flex h-8 w-full items-center justify-between gap-2 whitespace-nowrap border-l-[3px] pl-6 pr-5 text-lg font-medium"
+                      :class="active === '{{ a.key }}' ? 'border-accent bg-[#f5f7fa] text-accent' : 'border-transparent text-primary-500 hover:text-accent'">
+                <span class="flex items-center gap-2">{{ a.label }}<span x-show="attrCount('{{ a.key }}')" x-cloak x-text="attrCount('{{ a.key }}')" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold leading-5 text-ink"></span></span>
+                <span x-show="active === '{{ a.key }}'" class="hidden md:block">{% icon "chevron-right", "h-7 w-7" %}</span>
+              </button>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="flex min-w-0 flex-1 flex-col gap-6 px-4 py-4 md:pl-10 md:pr-8">
+            {% for a in l.filters %}
+            <div id="{{ l.id }}-{{ a.key }}" x-show="active === '{{ a.key }}'" {% if a.key != l.cfg.active %}x-cloak{% endif %} class="flex flex-wrap gap-x-10 gap-y-6">
+              {% for g in a.groups %}
+              <fieldset class="min-w-0">
+                <legend class="mb-1 text-lg font-bold text-primary-500">{{ g.label }}</legend>
+                <div class="flex flex-col {{ 'sm:grid sm:auto-cols-max sm:grid-flow-col sm:grid-rows-[repeat(6,auto)] sm:gap-x-10' if g.options.length > 6 }}">
+                {% for o in g.options %}
+                <label class="flex cursor-pointer items-center gap-2 py-1" x-show="countOf('{{ o.key }}') > 0 || pending.includes('{{ o.key }}')">
+                  <input type="checkbox" value="{{ o.key }}" x-model="pending" class="peer sr-only">
+                  <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-secondary-200 bg-white text-white peer-checked:border-primary-500 peer-checked:bg-primary-500 peer-focus-visible:ring-2 peer-focus-visible:ring-primary-200">{% icon "check-small", "h-5 w-5" %}</span>
+                  <span class="ml-1 text-base text-body peer-checked:text-ink">{{ o.value }}</span>
+                  <span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink" x-text="countOf('{{ o.key }}')">{{ o.count }}</span>
+                </label>
+                {% endfor %}
+                </div>
+              </fieldset>
+              {% endfor %}
+            </div>
+            {% endfor %}
+            <div class="mt-auto flex justify-end">
+              <button type="button" @click="apply()" :disabled="!pending.length && !applied.length" class="btn-primary">Apply Filters</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {# Products #}
+  <section class="bg-white py-10" data-figma="{{ figma }}" x-ref="top" aria-label="Products">
+    <div class="container-page">
+      <div class="flex flex-wrap items-center justify-between gap-x-10 gap-y-4" data-figma="34723:17182" x-show="found.length">
+        <h2 class="flex items-baseline gap-2 text-h2 font-bold text-heading md:text-h1">Products <span class="text-lg font-normal text-body" x-text="resultsLabel">{{ l.products.length }} result{{ "s" if l.products.length != 1 }}</span></h2>
+        <div class="flex w-full flex-wrap items-center gap-x-10 gap-y-4 md:w-auto">
+          <label class="relative block w-full md:w-[320px]">
+            <span class="sr-only">Search within {{ l.cfg.title }}</span>
+            <span class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-primary-500">{% icon "search" %}</span>
+            <input type="search" x-model.debounce.150ms="within" @input="page = 1" placeholder="Search within {{ l.cfg.title }}" class="input pl-[60px] font-medium placeholder:font-medium">
+          </label>
+          <div class="flex items-center gap-5" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+            <span class="shrink-0 text-base text-body" id="{{ l.id }}-sort">Sort By:</span>
+            <div class="relative min-w-[227px]">
+              <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="{{ l.id }}-sort {{ l.id }}-sort-v" class="{{ controlClass }}" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
+                <span id="{{ l.id }}-sort-v" class="whitespace-nowrap" x-text="sortLabel">Product name A-Z</span>
+                <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
+              </button>
+              <ul x-show="open" x-cloak x-transition.opacity class="{{ panelClass }}">
+                <template x-for="o in sorts" :key="o.value">
+                  <li><button type="button" @click="setSort(o.value); open = false" class="{{ optionClass }}" :class="sort === o.value && 'font-medium text-[#0d3155]'" x-text="o.label"></button></li>
+                </template>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-figma="34723:17196">
+        {% for p in l.products %}
+        <li class="min-w-0" x-show="isShown('{{ p.slug }}')" :style="{ order: rank('{{ p.slug }}') }" {% if loop.index > l.perPage %}style="display: none"{% endif %}>{{ ui.productCard(p) }}</li>
+        {% endfor %}
+      </ul>
+      <div x-show="!total" x-cloak class="mt-8 flex flex-col items-center gap-5 rounded border border-secondary-200 px-6 py-12 text-center">
+        <p class="text-lg text-heading">We couldn&rsquo;t find anything for your search</p>
+        <div x-show="found.length"><button type="button" @click="clearAll(); within = ''" class="btn-secondary">Clear all</button></div>
+        <div x-show="!found.length" class="flex flex-wrap justify-center gap-4">
+          <a href="/browse-by-specialty/" class="btn-primary">Browse by Specialty</a>
+          <a href="/browse-by-type/" class="btn-secondary">Browse by Type</a>
+        </div>
+      </div>
+
+      {# Pagination (34723:17222) #}
+      <div x-show="total" class="mt-8 grid items-center gap-4 lg:grid-cols-[1fr_auto_1fr]" data-figma="34723:17222">
+        <p class="text-base text-body" x-text="itemsLabel">Items 1-{{ l.perPage if l.products.length > l.perPage else l.products.length }} of {{ l.products.length }}</p>
+        <nav aria-label="Pagination" class="flex flex-wrap items-center gap-3">
+          <button type="button" @click="go(current - 1)" :disabled="current <= 1" aria-label="Previous page" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5] disabled:cursor-default disabled:opacity-40">{% icon "arrow-left" %}</button>
+          <template x-for="n in pageList" :key="n">
+            <button type="button" @click="go(n)" :aria-current="n === current ? 'page' : null" x-text="n"
+                    class="flex h-[52px] min-w-[52px] items-center justify-center rounded border px-3 text-lg font-medium"
+                    :class="n === current ? 'border-secondary-200 bg-secondary-200 text-secondary-300' : 'border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5]'"></button>
+          </template>
+          <button type="button" @click="go(current + 1)" :disabled="current >= pages" aria-label="Next page" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-[#f5f5f5] disabled:cursor-default disabled:opacity-40">{% icon "arrow-right" %}</button>
+        </nav>
+        <div class="flex items-center gap-5 lg:justify-self-end" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+          <span class="text-base text-body" id="{{ l.id }}-show">Show:</span>
+          <div class="relative w-[104px]">
+            <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="{{ l.id }}-show {{ l.id }}-show-v" class="{{ controlClass }}" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
+              <span id="{{ l.id }}-show-v" x-text="perPage">{{ l.perPage }}</span>
+              <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
+            </button>
+            <ul x-show="open" x-cloak x-transition.opacity class="absolute bottom-full right-0 z-30 mb-1 w-full rounded border border-outline bg-white py-2 shadow-[0_8px_24px_0_rgba(13,48,84,0.12)]">
+              <template x-for="n in perPageOptions" :key="n">
+                <li><button type="button" @click="setPerPage(n); open = false" class="{{ optionClass }}" :class="perPage === n && 'font-medium text-[#0d3155]'" x-text="n"></button></li>
+              </template>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endmacro %}
+
+{# "Free Lifetime Repair" banner (34777:59015). #}
+{% macro repairBanner() %}
+<section class="bg-white py-10" data-figma="34777:59015">
+  <div class="bg-primary-500">
+    <div class="container-page flex flex-col items-center gap-6 py-10 text-center md:h-[160px] md:flex-row md:gap-20 md:py-0 md:text-left">
+      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="-my-4 h-[140px] w-[140px] shrink-0 object-cover md:-my-[74px] md:h-[228px] md:w-[228px] md:-translate-y-2 md:scale-[1.19]">
+      <div class="flex flex-1 flex-col gap-4">
+        <h2 class="text-h3 font-medium text-white md:text-h2">{{ plp.repairBanner.title }}</h2>
+        <p class="text-lg text-[#d3dce5]">{{ plp.repairBanner.text }}</p>
+      </div>
+      <a href="{{ plp.repairBanner.href }}" class="btn bg-white pl-8 pr-[30px] text-primary-500 hover:bg-[#f5f5f5]">{{ plp.repairBanner.cta }}{% icon "arrow-narrow-right" %}</a>
+    </div>
+  </div>
+</section>
+{% endmacro %}
+
+{# "why us?" row (34777:59023). #}
+{% macro trustRow() %}
+<section class="bg-white" aria-label="Why Ambler Surgical" data-figma="34777:59023">
+  <ul class="container-page grid gap-6 py-10 sm:grid-cols-2 xl:grid-cols-4">
+    {% for t in plp.trust %}
+    <li class="flex min-w-0 items-center gap-4">
+      <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon t.icon %}</span>
+      <span class="min-w-0">
+        <span class="block text-lg font-medium text-ink">{{ t.title }}</span>
+        <span class="block text-base text-body">{{ t.text }}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endmacro %}
+
+{#
+  Info band (34777:59028, 34719:11393, 34888:121815): photo on the left, navy on the right,
+  white copy column (856/886px) with an optional orange second title line and orange-dash bullets.
+#}
+{% macro infoBand(b) %}
+<section class="relative overflow-hidden bg-primary-500" data-figma="{{ b.figma }}">
+  <img src="{{ b.image | img }}" alt="" loading="lazy" class="absolute inset-y-0 left-0 h-full w-full object-cover object-left md:w-[62%]">
+  <div class="absolute inset-0 hidden md:block" style="background-image: {{ plp.gradients.band }}"></div>
+  <div class="absolute inset-0 bg-primary-500/85 md:hidden"></div>
+  <div class="container-page relative flex justify-end py-10">
+    <div class="flex w-full max-w-[886px] flex-col gap-7 md:w-[56%]">
+      <h2 class="text-h3 font-bold text-white md:text-h2">{{ b.title }}{% if b.accent %}<span class="block text-accent">{{ b.accent }}</span>{% endif %}</h2>
+      <div class="flex flex-col gap-4">
+        {% for p in b.paragraphs %}<p class="text-lg text-white">{{ p }}</p>{% endfor %}
+      </div>
+      {% if b.bullets %}
+      <ul class="flex flex-col gap-2 pl-4">
+        {% for i in b.bullets %}<li class="flex gap-4 text-lg text-white"><span class="mt-[13px] h-0.5 w-2 shrink-0 rounded-sm bg-accent"></span>{{ i }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endmacro %}
+
+{# "Features - list, 2 columns" (34719:11433): title, intro, orange-dash bullets with a bold lead-in. #}
+{% macro features(f) %}
+<section class="bg-white" data-figma="{{ f.figma }}">
+  <div class="container-page pt-10">
+    <div class="flex max-w-[756px] flex-col gap-3">
+      <h2 class="text-h3 font-bold text-heading md:text-h2">{{ f.title }}</h2>
+      <p class="text-lg text-body">{{ f.intro }}</p>
+    </div>
+    <ul class="mt-4 flex max-w-[908px] flex-col gap-3 p-4">
+      {% for i in f.items %}
+      <li class="flex gap-3 text-lg text-body"><span class="mt-[13px] h-0.5 w-2 shrink-0 rounded-sm bg-accent"></span><span><strong class="font-medium text-heading">{{ i[0] }}</strong> &ndash; {{ rich(i[1]) }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endmacro %}
+
+{#
+  "Types of …" cards (34719:11450): 3-up cards with a title strip + arrow and a description.
+  cards: [{ title, text, href? , filter? }]; without href the card applies a listing filter or is a prototype gap.
+#}
+{% macro typesOf(t) %}
+<section class="bg-white" data-figma="{{ t.figma }}">
+  <div class="container-page py-10">
+    <div class="flex max-w-[756px] flex-col gap-3">
+      <h2 class="text-h3 font-bold text-heading md:text-h2">{{ t.title }}</h2>
+      <p class="text-lg text-body">{{ t.intro }}</p>
+    </div>
+    <ul class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {% for c in t.cards %}
+      <li class="min-w-0">
+        <a href="{{ c.href or '#products' }}" {% if c.filter %}@click.prevent="$dispatch('plp-filter', '{{ c.filter }}')"{% elif not c.href %}data-proto{% endif %}
+           class="group flex h-full flex-col gap-4 rounded border border-body bg-white pb-5">
+          <span class="flex h-14 items-center gap-3 rounded-t bg-secondary-100 px-5 group-hover:bg-primary-500">
+            <span class="text-h3 font-medium tracking-title text-primary-500 group-hover:text-white">{{ c.title }}</span>
+            {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
+          </span>
+          <span class="px-5 text-lg text-body">{{ c.text }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% if t.outro %}<p class="mt-8 max-w-[756px] text-lg text-body">{{ rich(t.outro) }}</p>{% endif %}
+  </div>
+</section>
+{% endmacro %}
+
+{#
+  "Shop by Product Lines" (34777:59035): title + "Shop All Product Lines", 2 rows of 6 logo tiles (239x80).
+  bg: "white" (specialty) or "tint" (#eff7fd, category page 34719:11345).
+#}
+{% macro brandsStrip(bg="white", figma="34777:59035") %}
+<section class="{{ 'bg-[#eff7fd]' if bg == 'tint' else 'bg-white' }}" data-figma="{{ figma }}">
+  <div class="container-page py-10">
+    {% call titleRow("Shop by Product Lines", "md") %}<a href="/product-lines/" class="btn-primary">Shop All Product Lines</a>{% endcall %}
+    <ul class="{{ 'mt-8' if bg == 'tint' else 'mt-10' }} grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
+      {% for b in plp.topLines %}
+      <li class="min-w-0">{{ logoTile(b) }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endmacro %}
+
+{# Product line tile (styleguide "Brands cards" 14714:57265): 80px, #3a526d border, logo or name. #}
+{% macro logoTile(b) %}
+<a href="{{ b.url }}" class="flex h-20 items-center justify-center rounded border border-card bg-white px-3 text-center hover:border-primary-500 hover:shadow-100">
+  {% if b.logo %}
+  <img src="{{ b.logo }}" alt="{{ b.name }}" loading="lazy" class="max-h-12 max-w-full object-contain" style="width: {{ plp.logoWidths[b.slug] or 160 }}px">
+  {% else %}
+  <span class="text-lg font-medium leading-6 text-primary-500">{{ b.name }}</span>
+  {% endif %}
+</a>
+{% endmacro %}
+
+{#
+  FAQ (34777:59083): accordion + "Can't find your answer?" box.
+  items: [{ q, a? }]; the third question is open as drawn. Questions without a drawn answer are prototype gaps.
+  layout: "wide" (971 + 525, gap 40) or "narrow" (886 + 590, gap 60).
+#}
+{% macro faq(items, figma, layout="wide", tint="#f5f8fa", pt="pt-10") %}
+<section style="background-color: {{ tint }}" data-figma="{{ figma }}">
+  <div class="container-page {{ pt }} pb-10">
+    <h2 class="text-h3 font-bold text-heading md:text-h2">Frequently Asked Questions</h2>
+    <div class="{{ 'mt-10 gap-10 lg:grid-cols-[minmax(0,971fr)_minmax(0,525fr)]' if layout == 'wide' else 'mt-8 gap-10 lg:grid-cols-[minmax(0,886fr)_minmax(0,590fr)] lg:gap-[60px]' }} grid items-start" x-data="{ open: 2 }">
+      <div>
+        {% for i in items %}
+        {% set n = loop.index0 %}
+        <div class="border-b border-secondary-200 py-4">
+          <h3>
+            <button type="button" {% if i.a %}@click="open = open === {{ n }} ? null : {{ n }}" :aria-expanded="open === {{ n }}" aria-controls="faq-{{ figma | slugify }}-{{ n }}"{% else %}data-proto{% endif %}
+                    class="flex w-full items-center justify-between gap-3 text-left text-lg font-medium" :class="open === {{ n }} ? 'text-accent' : 'text-ink hover:text-primary-500'">
+              {{ i.q }}
+              <span x-show="open !== {{ n }}" {% if n == 2 %}x-cloak{% endif %}>{% icon "dropdown", "h-6 w-6 text-ink" %}</span>
+              <span x-show="open === {{ n }}" {% if n != 2 %}x-cloak{% endif %}>{% icon "dropdown-up", "h-6 w-6 text-accent" %}</span>
+            </button>
+          </h3>
+          {% if i.a %}
+          <div id="faq-{{ figma | slugify }}-{{ n }}" x-show="open === {{ n }}" x-collapse {% if n != 2 %}x-cloak{% endif %}>
+            <div class="flex flex-col gap-3 pt-3">{% for p in i.a %}<p class="text-lg text-body">{{ p }}</p>{% endfor %}</div>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="flex flex-col gap-6 rounded bg-primary-500 p-7">
+        <div class="flex flex-col gap-4">
+          <h3 class="text-h3 font-bold text-white md:text-h2">Can&rsquo;t find your answer?</h3>
+          <p class="text-lg text-[#d3dce5]">Our instrument specialists respond within one business day.</p>
+        </div>
+        <a href="/contact/" class="btn-accent self-start pl-8 pr-[30px]">Contact Our Team{% icon "arrow-narrow-right" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endmacro %}

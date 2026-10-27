@@ -1,0 +1,33 @@
+---
+layout: layouts/base.njk
+title: Sterilization Products
+permalink: /sterilization-cleaning/
+---
+{# Not designed in Figma. Built in the Repair Services / category page language: breadcrumb, navy
+   title band, a grid of category cards (title strip of the styleguide "Category card", 14714:57254)
+   and the "why us?" band. Each card has id="<catalog.sterilization slug>" so the header menu links
+   /sterilization-cleaning/#<slug> land on it; the listings behind the cards are not part of the prototype. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+
+{{ ui.breadcrumbs([{ label: "Sterilization Products" }]) }}
+
+{{ c.titleBand("Sterilization Products") }}
+
+<section class="bg-white" aria-labelledby="sterilization-categories">
+  <div class="container-page py-10">
+    <h2 id="sterilization-categories" class="sr-only">Categories</h2>
+    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for s in catalog.sterilization %}
+      <li class="flex min-w-0">
+        <a href="#{{ s.slug }}" id="{{ s.slug }}" data-proto
+           class="group flex min-h-14 flex-1 scroll-mt-6 items-center justify-between gap-3 rounded border border-primary-500 bg-menu px-5 py-3 text-h4 font-medium tracking-title text-primary-500 transition-colors hover:bg-primary-500 hover:text-white target:ring-2 target:ring-accent target:ring-offset-2 sm:text-h3">
+          {{ s.name }}{% icon "arrow-narrow-right", "h-6 w-6" %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ c.trustBand("34141:38022") }}

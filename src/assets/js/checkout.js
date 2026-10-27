@@ -24,11 +24,9 @@ document.addEventListener("alpine:init", () => {
 
   Alpine.data("checkout", () => {
     const config = readConfig();
-    // Each Figma frame opens in its own default: guests see the expanded summary panels,
-    // "billing = shipping" and the card form (frame 34799:87723); signed-in customers the
-    // collapsed panels, the billing address block and Purchase Order (frame 34799:88544).
-    const guest = !Alpine.store("auth").loggedIn;
-
+    // Same defaults for guests and customers: summary panels closed, billing = shipping,
+    // first payment method. The Figma frames draw the open panels (34799:87723), the billing
+    // address block and Purchase Order (34799:88544) as examples of those states.
     return {
       price,
 
@@ -53,7 +51,7 @@ document.addEventListener("alpine:init", () => {
 
       /* Addresses */
       manual: { shipping: true, billing: false }, // guest: manual fields (true) or the address finder
-      billingSame: guest,
+      billingSame: true,
       addresses: config.savedAddresses.map((a) => ({ ...a, lines: [...a.lines] })),
       shippingAddress: config.savedAddresses[0]?.id,
       billingAddress: config.savedAddresses[0]?.id,
@@ -102,12 +100,12 @@ document.addEventListener("alpine:init", () => {
       },
 
       /* Order summary panels */
-      panels: { discount: guest, giftcard: guest, comment: guest },
+      panels: { discount: false, giftcard: false, comment: false },
 
       /* Shipping and payment */
       methods: config.shippingMethods,
       shipping: config.shippingMethods[0]?.id,
-      payment: guest ? "card" : "po", // as drawn: card for guests, Purchase Order for customers
+      payment: "card",
       terms: false,
 
       /* Order summary: the real cart plus, after a merge, the account cart lines */

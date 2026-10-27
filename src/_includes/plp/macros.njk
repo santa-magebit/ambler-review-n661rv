@@ -430,14 +430,14 @@
 
 {#
   FAQ (34777:59083): accordion + "Can't find your answer?" box.
-  items: [{ q, a? }]; the third question is open as drawn. Questions without a drawn answer are prototype gaps.
+  items: [{ q, a? }]; all questions start closed. Questions without a drawn answer are prototype gaps.
   layout: "wide" (971 + 525, gap 40) or "narrow" (886 + 590, gap 60).
 #}
 {% macro faq(items, figma, layout="wide", tint="#f5f8fa", pt="pt-10") %}
 <section style="background-color: {{ tint }}" data-figma="{{ figma }}">
   <div class="container-page {{ pt }} pb-10">
     <h2 class="text-h3 font-bold text-heading md:text-h2">Frequently Asked Questions</h2>
-    <div class="{{ 'mt-10 gap-10 lg:grid-cols-[minmax(0,971fr)_minmax(0,525fr)]' if layout == 'wide' else 'mt-8 gap-10 lg:grid-cols-[minmax(0,886fr)_minmax(0,590fr)] lg:gap-[60px]' }} grid items-start" x-data="{ open: 2 }">
+    <div class="{{ 'mt-10 gap-10 lg:grid-cols-[minmax(0,971fr)_minmax(0,525fr)]' if layout == 'wide' else 'mt-8 gap-10 lg:grid-cols-[minmax(0,886fr)_minmax(0,590fr)] lg:gap-[60px]' }} grid items-start" x-data="{ open: null }">
       <div>
         {% for i in items %}
         {% set n = loop.index0 %}
@@ -446,12 +446,12 @@
             <button type="button" {% if i.a %}@click="open = open === {{ n }} ? null : {{ n }}" :aria-expanded="open === {{ n }}" aria-controls="faq-{{ figma | slugify }}-{{ n }}"{% else %}data-proto{% endif %}
                     class="flex w-full items-center justify-between gap-3 text-left text-lg font-medium" :class="open === {{ n }} ? 'text-accent' : 'text-ink hover:text-primary-500'">
               {{ i.q }}
-              <span x-show="open !== {{ n }}" {% if n == 2 %}x-cloak{% endif %}>{% icon "dropdown", "h-6 w-6 text-ink" %}</span>
-              <span x-show="open === {{ n }}" {% if n != 2 %}x-cloak{% endif %}>{% icon "dropdown-up", "h-6 w-6 text-accent" %}</span>
+              <span x-show="open !== {{ n }}">{% icon "dropdown", "h-6 w-6 text-ink" %}</span>
+              <span x-show="open === {{ n }}" x-cloak>{% icon "dropdown-up", "h-6 w-6 text-accent" %}</span>
             </button>
           </h3>
           {% if i.a %}
-          <div id="faq-{{ figma | slugify }}-{{ n }}" x-show="open === {{ n }}" x-collapse {% if n != 2 %}x-cloak{% endif %}>
+          <div id="faq-{{ figma | slugify }}-{{ n }}" x-show="open === {{ n }}" x-collapse x-cloak>
             <div class="flex flex-col gap-3 pt-3">{% for p in i.a %}<p class="text-lg text-body">{{ p }}</p>{% endfor %}</div>
           </div>
           {% endif %}

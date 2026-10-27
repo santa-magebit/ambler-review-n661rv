@@ -39,13 +39,13 @@
           {% if item.menu %}
           <button type="button" @click="toggle('{{ item.menu }}')" @mouseenter="menu && (menu = '{{ item.menu }}')" :aria-expanded="menu === '{{ item.menu }}'"
                   class="flex items-center gap-1 text-lg font-medium"
-                  :class="menu === '{{ item.menu }}' || '{{ page.url }}'.startsWith('{{ item.href }}') ? 'text-accent' : 'text-primary-500 hover:text-accent'">
+                  :class="menu === '{{ item.menu }}' ? 'text-accent' : 'text-primary-500 hover:text-primary-700'">
             {{ item.label }}
             <span x-show="menu !== '{{ item.menu }}'">{% icon "dropdown" %}</span>
             <span x-show="menu === '{{ item.menu }}'" x-cloak>{% icon "dropdown-up" %}</span>
           </button>
           {% else %}
-          <a href="{{ item.href }}" class="text-lg font-medium {{ 'text-accent' if page.url.startsWith(item.href) else 'text-primary-500 hover:text-accent' }}">{{ item.label }}</a>
+          <a href="{{ item.href }}" class="text-lg font-medium text-primary-500 hover:text-primary-700">{{ item.label }}</a>
           {% endif %}
         </li>
         {% endfor %}
@@ -65,7 +65,7 @@
             <ul x-show="$store.auth.loggedIn" data-figma="34194:128204">
               {% for n in site.accountNav %}
               <li>
-                <a href="{{ n.href }}" class="flex h-[52px] items-center gap-3 border-b border-outline px-5 text-lg font-medium {{ 'bg-[#f5f5f5] text-primary-500' if page.url == n.href else 'text-body hover:bg-[#f5f5f5] hover:text-primary-500' }}">
+                <a href="{{ n.href }}" class="flex h-[52px] items-center gap-3 border-b border-outline px-5 text-lg font-medium text-body hover:bg-[#f5f5f5] hover:text-primary-500">
                   {% icon n.icon, "h-7 w-7 text-primary-500" %}{{ n.label }}
                 </a>
               </li>
@@ -89,10 +89,11 @@
           </div>
         </div>
 
-        {# Cart: opens the mini cart drawer #}
-        <button type="button" @click="menu = null; $store.cart.open = true" class="relative flex h-[52px] items-center gap-2 rounded bg-accent pl-[30px] pr-8 text-lg font-medium text-white hover:bg-accent-dark">
+        {# Cart: opens the mini cart drawer. Item count: styleguide "With Items" (14714:56856), a white
+           tab in the button's top-right corner (corners 0 / 3 / 0 / 4) in the button colour. #}
+        <button type="button" @click="menu = null; $store.cart.open = true" class="group relative flex h-[52px] items-center gap-2 rounded bg-accent pl-[30px] pr-8 text-lg font-medium text-white hover:bg-accent-dark">
           {% icon "shopping-cart" %}Cart
-          <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute -right-2 -top-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-primary-500 px-1.5 text-xs font-bold text-white ring-2 ring-white"></span>
+          <span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute right-0.5 top-0.5 flex h-5 min-w-[22px] items-center justify-center rounded-bl rounded-tr-[3px] bg-white p-0.5 text-xs font-bold text-accent group-hover:text-accent-dark"></span>
         </button>
       </div>
     </div>
@@ -104,7 +105,7 @@
           {% for s in catalog.specialties %}
           <li>
             <a href="{{ s.url }}" @mouseenter="active = '{{ s.slug }}'" @focus="active = '{{ s.slug }}'"
-               class="flex items-center gap-1 text-lg font-medium" :class="active === '{{ s.slug }}' ? 'text-accent' : 'text-primary-500 hover:text-accent'">
+               class="flex items-center gap-1 text-lg font-medium" :class="active === '{{ s.slug }}' ? 'text-accent' : 'text-primary-500 hover:text-primary-700'">
               {{ s.name }}<span x-show="active === '{{ s.slug }}'">{% icon "chevron-right" %}</span>
             </a>
           </li>

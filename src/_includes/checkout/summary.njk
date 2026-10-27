@@ -1,7 +1,7 @@
 {#
   Order Summary sidebar ("sidebar" 34799:87737): the cart lines from $store.cart, three
   collapsible panels (discount code, gift card, order comment), totals and two info boxes.
-  Guest frames draw the panels open, the signed-in frame closed (state in checkout.js).
+  All closed on load; the guest frames draw them open as an example (state in checkout.js).
 #}
 {% import "checkout/macros.njk" as co with context %}
 
@@ -11,9 +11,9 @@
           class="flex items-center justify-between gap-3 text-left text-base text-heading hover:text-primary-500">
     {{ title }}
     <span x-show="!panels.{{ key }}">{% icon "dropdown", "h-6 w-6" %}</span>
-    <span x-show="panels.{{ key }}">{% icon "dropdown-up", "h-6 w-6" %}</span>
+    <span x-show="panels.{{ key }}" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
   </button>
-  <div id="summary-{{ key }}" x-show="panels.{{ key }}" x-collapse>
+  <div id="summary-{{ key }}" x-show="panels.{{ key }}" x-collapse x-cloak>
     <div class="pb-3">{{ caller() }}</div>
   </div>
   <hr class="border-outline">

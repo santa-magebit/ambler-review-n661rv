@@ -14,7 +14,7 @@
   {% call co.checkbox("billingSame", "billing-same-guest") %}My billing and shipping address are the same{% endcall %}
 </section>
 
-<section x-show="!$store.auth.loggedIn && !billingSame" aria-labelledby="billing-address-title" class="flex flex-col gap-7" data-figma="34799:88071">
+<section x-show="!$store.auth.loggedIn && !billingSame" x-cloak aria-labelledby="billing-address-title" class="flex flex-col gap-7" data-figma="34799:88071">
   {{ co.heading("Billing Address", "billing-address-title") }}
   {{ co.addressFields("billing", "manual.billing") }}
 </section>
@@ -38,7 +38,7 @@
   {% call co.checkbox("billingSame", "billing-same-customer") %}My billing and shipping address are the same{% endcall %}
 </section>
 
-<section x-show="$store.auth.loggedIn && !billingSame" aria-labelledby="saved-billing-title" class="flex flex-col gap-7" data-figma="34799:88569">
+<section x-show="$store.auth.loggedIn && !billingSame" x-cloak aria-labelledby="saved-billing-title" class="flex flex-col gap-7" data-figma="34799:88569">
   {{ co.heading("Billing Address", "saved-billing-title") }}
   <div>
     <label for="billing-address-select" class="label">Select Address</label>

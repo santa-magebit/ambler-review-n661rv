@@ -42,7 +42,7 @@ export default {
           800: "#6b6b6b",
           900: "#525252",
         },
-        accent: { DEFAULT: "#f58220", dark: "#dd6f12" }, // orange CTAs (search, cart, hero)
+        accent: { DEFAULT: "#f58220", dark: "#b95f13" }, // orange CTAs (search, cart, hero)
         outline: "#dde7ee", // colors/elements/backgrounds/gray-outline
         card: "#3a526d", // product / brand card border
         menu: "#f5f8fa", // mega menu panel

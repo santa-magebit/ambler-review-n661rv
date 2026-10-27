@@ -183,7 +183,6 @@ function buildFilters(list) {
 function listing(list, { title: listTitle, perPage = 20, filters = true, id = "products", search = false } = {}) {
   const sorted = sortByName(list);
   const panel = filters ? buildFilters(sorted) : [];
-  const handle = panel.find((a) => a.key === "handle");
   return {
     id,
     products: sorted,
@@ -192,7 +191,7 @@ function listing(list, { title: listTitle, perPage = 20, filters = true, id = "p
     cfg: {
       title: listTitle,
       perPage,
-      active: (handle || panel[0] || {}).key || null,
+      active: (panel[0] || {}).key || null,
       attributes: panel.map((a) => ({ key: a.key, groups: a.groups.map((g) => g.key) })),
       search,
       groups: Object.fromEntries(panel.flatMap((a) => a.groups.map((g) => [g.key, g.label]))),

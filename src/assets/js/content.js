@@ -110,9 +110,9 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
-  /** FAQ accordion (Repair Services 34799:68632): one answer open at a time. */
-  Alpine.data("faq", (first = null) => ({
-    open: first,
+  /** FAQ accordion (Repair Services 34799:68632): one answer open at a time, all closed on load. */
+  Alpine.data("faq", () => ({
+    open: null,
     toggle(id) {
       this.open = this.open === id ? null : id;
     },

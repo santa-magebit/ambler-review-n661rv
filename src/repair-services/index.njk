@@ -73,7 +73,7 @@ permalink: /repair-services/
   <div class="container-page flex flex-col gap-8 py-10">
     <h2 class="text-h2 font-bold text-heading">Frequently Asked Questions</h2>
     <div class="grid items-start gap-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">
-      <div x-data="faq('materials')" class="min-w-0" data-figma="34799:68632">
+      <div x-data="faq" class="min-w-0" data-figma="34799:68632">
         {% for f in r.faq %}
         <div class="border-b border-secondary-200 py-4">
           {% if f.a %}
@@ -81,11 +81,11 @@ permalink: /repair-services/
             <button type="button" @click="toggle('{{ f.id }}')" :aria-expanded="open === '{{ f.id }}'" aria-controls="faq-{{ f.id }}"
                     class="flex w-full items-center gap-3 text-left text-lg font-medium" :class="open === '{{ f.id }}' ? 'text-accent' : 'text-ink hover:text-primary-500'">
               <span class="flex-1">{{ f.q }}</span>
-              <span x-show="open !== '{{ f.id }}'" x-cloak>{% icon "dropdown", "h-6 w-6" %}</span>
-              <span x-show="open === '{{ f.id }}'">{% icon "dropdown-up", "h-6 w-6" %}</span>
+              <span x-show="open !== '{{ f.id }}'">{% icon "dropdown", "h-6 w-6" %}</span>
+              <span x-show="open === '{{ f.id }}'" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
             </button>
           </h3>
-          <div id="faq-{{ f.id }}" x-show="open === '{{ f.id }}'" x-collapse>
+          <div id="faq-{{ f.id }}" x-show="open === '{{ f.id }}'" x-collapse x-cloak>
             <div class="flex flex-col gap-3 pt-3 text-lg text-body">
               {% for p in f.a %}<p>{{ p }}</p>{% endfor %}
             </div>

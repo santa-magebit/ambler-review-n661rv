@@ -6,7 +6,7 @@
 {% import "macros/ui.njk" as ui with context %}
 
 {# Text with [label](/href) links (copy from plp.js). #}
-{% macro rich(text, linkClass="text-primary-500 underline hover:text-ink") %}{{ text | escape | replace(r/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="' + linkClass + '">$1</a>') | safe }}{% endmacro %}
+{% macro rich(text, linkClass="link") %}{{ text | escape | replace(r/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="' + linkClass + '">$1</a>') | safe }}{% endmacro %}
 
 {#
   Hero (PLP heroes, e.g. 34719:11294): 480px, photo + navy gradient, text column 593px.
@@ -159,12 +159,12 @@
   <section class="bg-white py-10" data-figma="34793:65750" aria-label="Filters" x-show="found.length">
     <div class="container-page">
       <div class="rounded border border-card bg-white" data-figma="34793:65752">
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-card px-4 py-3 md:px-6" data-figma="34793:65753">
+        <div class="flex flex-wrap items-start gap-x-4 gap-y-2 border-b border-card px-4 py-3 md:px-6" data-figma="34793:65753">
           <p class="flex h-9 items-center gap-2 text-lg font-bold text-heading">
             Filters
             <span x-show="applied.length" x-cloak x-text="applied.length" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink"></span>
           </p>
-          <p x-show="!applied.length" class="text-base text-body">No filters applied yet</p>
+          <p x-show="!applied.length" class="flex h-9 items-center text-base text-body">No filters applied yet</p>
           <ul x-show="applied.length" x-cloak class="flex min-w-0 flex-1 flex-wrap items-center gap-2" aria-label="Active filters">
             <template x-for="key in chips" :key="key">
               <li class="flex h-9 items-center gap-2 rounded bg-[#eff7fd] py-1.5 pl-4 pr-3 text-base text-heading">
@@ -173,10 +173,10 @@
               </li>
             </template>
             <li x-show="hiddenChips > 0">
-              <button type="button" @click="allChips = true" class="h-9 px-2 text-base text-heading hover:text-primary-500" x-text="'+' + hiddenChips + ' more'"></button>
+              <button type="button" @click="allChips = true" class="link h-9 px-2 text-base" x-text="'+' + hiddenChips + ' more'"></button>
             </li>
           </ul>
-          <button type="button" x-show="applied.length" x-cloak @click="clearAll()" class="ml-auto text-base text-primary-500 underline hover:text-ink">Clear all</button>
+          <button type="button" x-show="applied.length" x-cloak @click="clearAll()" class="link ml-auto h-9 text-base">Clear all</button>
         </div>
         <div class="flex flex-col bg-secondary-100 md:flex-row" data-figma="34793:65769">
           <ul class="flex shrink-0 flex-row overflow-x-auto bg-white py-2 shadow-[2px_0_10px_0_rgba(31,41,55,0.1)] md:w-[288px] md:flex-col" aria-label="Filter by">
@@ -199,8 +199,8 @@
                 <legend class="mb-1 text-lg font-bold text-primary-500">{{ g.label }}</legend>
                 <div class="flex flex-col {{ 'sm:grid sm:auto-cols-max sm:grid-flow-col sm:grid-rows-[repeat(6,auto)] sm:gap-x-10' if g.options.length > 6 }}">
                 {% for o in g.options %}
-                <label class="flex cursor-pointer items-center gap-2 py-1" x-show="countOf('{{ o.key }}') > 0 || pending.includes('{{ o.key }}')">
-                  <input type="checkbox" value="{{ o.key }}" x-model="pending" class="peer sr-only">
+                <label class="flex cursor-pointer items-center gap-2 py-1" x-show="countOf('{{ o.key }}') > 0 || applied.includes('{{ o.key }}')">
+                  <input type="checkbox" value="{{ o.key }}" x-model="applied" class="peer sr-only">
                   <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-secondary-200 bg-white text-white peer-checked:border-primary-500 peer-checked:bg-primary-500 peer-focus-visible:ring-2 peer-focus-visible:ring-primary-200">{% icon "check-small", "h-5 w-5" %}</span>
                   <span class="ml-1 text-base text-body peer-checked:text-ink">{{ o.value }}</span>
                   <span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink" x-text="countOf('{{ o.key }}')">{{ o.count }}</span>
@@ -211,9 +211,6 @@
               {% endfor %}
             </div>
             {% endfor %}
-            <div class="mt-auto flex justify-end">
-              <button type="button" @click="apply()" :disabled="!pending.length && !applied.length" class="btn-primary">Apply Filters</button>
-            </div>
           </div>
         </div>
       </div>

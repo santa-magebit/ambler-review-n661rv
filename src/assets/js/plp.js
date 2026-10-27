@@ -32,7 +32,6 @@ document.addEventListener("alpine:init", () => {
     groupLabels: cfg.groups || {},
     active: cfg.active,
     applied: [],
-    pending: [],
     allChips: false,
     query: "",
     within: "",
@@ -50,9 +49,10 @@ document.addEventListener("alpine:init", () => {
       const keys = [...params].map(([k, v]) => `${k}:${v}`).filter((k) => known.has(k) && this.groupLabels[groupOf(k)]);
       if (keys.length) {
         this.applied = keys;
-        this.pending = [...keys];
         this.active = this.attrOf(keys[0]) || this.active;
       }
+      // Ticking a checkbox filters straight away (x-model="applied"): back to page 1.
+      this.$watch("applied", () => (this.page = 1));
     },
 
     // --- product sets ---------------------------------------------------
@@ -142,7 +142,7 @@ document.addEventListener("alpine:init", () => {
     /** Checked options under a left-hand attribute. */
     attrCount(attrKey) {
       const a = this.attrs.find((x) => x.key === attrKey);
-      return a ? this.pending.filter((k) => a.groups.includes(groupOf(k))).length : 0;
+      return a ? this.applied.filter((k) => a.groups.includes(groupOf(k))).length : 0;
     },
     get chips() {
       return this.allChips ? this.applied : this.applied.slice(0, 5);
@@ -150,27 +150,17 @@ document.addEventListener("alpine:init", () => {
     get hiddenChips() {
       return this.applied.length - this.chips.length;
     },
-    apply() {
-      this.applied = [...this.pending];
-      this.allChips = false;
-      this.page = 1;
-    },
     remove(key) {
       this.applied = this.applied.filter((k) => k !== key);
-      this.pending = this.pending.filter((k) => k !== key);
-      this.page = 1;
     },
     clearAll() {
       this.applied = [];
-      this.pending = [];
       this.allChips = false;
-      this.page = 1;
     },
     /** Show only one filter value (category cards, "Browse by Name", quick select). */
     only(key) {
       if (!this.items.some((i) => i.keys.includes(key))) return;
       this.applied = [key];
-      this.pending = [key];
       this.active = this.attrOf(key) || this.active;
       this.within = "";
       this.page = 1;

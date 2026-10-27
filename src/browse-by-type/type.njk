@@ -25,7 +25,7 @@ eleventyComputed:
     {% call plp_ui.titleRow("Browse by Type") %}{{ plp_ui.quickSelect(subItems, "All Types", "34887:119134", true) }}{% endcall %}
     <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-figma="34887:119137">
       {% for s in bt.subtypes %}
-      <li class="min-w-0">{{ plp_ui.categoryCard({ name: s.name, href: "#", image: s.image, fit: s.fit or "cover", style: s.style, proto: true }, "34887:119138") }}</li>
+      <li class="min-w-0">{{ plp_ui.categoryCard({ name: s.name, href: "#", image: s.image, fit: s.fit or "cover", style: s.style, hover: s.hover, proto: true }, "34887:119138") }}</li>
       {% endfor %}
     </ul>
   </div>

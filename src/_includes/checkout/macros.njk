@@ -82,7 +82,7 @@
       <input id="{{ ns }}-search" name="{{ ns }}[search]" autocomplete="off" placeholder="Enter your address" class="input pr-14 text-base">
       {% icon "search", "pointer-events-none absolute right-3.5 top-3.5 h-6 w-6 text-primary-500" %}
     </div>
-    <button type="button" @click="{{ manual }} = true" class="mt-2 text-base text-primary-500 underline underline-offset-2 hover:text-ink">Enter address manually</button>
+    <button type="button" @click="{{ manual }} = true" class="link mt-2 text-base">Enter address manually</button>
   </div>
 
   {# Manual entry #}
@@ -112,7 +112,7 @@
         <input name="{{ ns }}[postcode]" autocomplete="postal-code" placeholder="Zip/postal code" class="input">
       </label>
     </div>
-    <button type="button" @click="{{ manual }} = false" class="self-start text-base text-primary-500 underline underline-offset-2 hover:text-ink">Switch back to address finder</button>
+    <button type="button" @click="{{ manual }} = false" class="link self-start text-base">Switch back to address finder</button>
   </div>
 </div>
 {% endmacro %}

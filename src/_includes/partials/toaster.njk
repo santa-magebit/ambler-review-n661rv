@@ -3,7 +3,7 @@
   <div class="flex items-start gap-3 rounded bg-ink px-4 py-3 text-base text-white shadow-300">
     <p class="flex-1 pt-0.5">
       <span x-text="t && t.message"></span>
-      <template x-if="t && t.href"><a :href="url(t.href)" class="font-semibold underline underline-offset-2" x-text="t.linkLabel || 'Open'"></a></template>
+      <template x-if="t && t.href"><a :href="url(t.href)" class="link-inverse font-semibold" x-text="t.linkLabel || 'Open'"></a></template>
     </p>
     <button type="button" @click="t = null" aria-label="Dismiss" class="-mr-1 rounded p-1 hover:bg-white/10">{% icon "close-x", "h-5 w-5" %}</button>
   </div>

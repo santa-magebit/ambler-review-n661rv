@@ -45,7 +45,7 @@ permalink: /repair-services/
     <div class="grid gap-6 md:grid-cols-2 md:[&>*]:min-h-[176px]" data-figma="34799:68588">
       {% for w in r.whyChoose %}
       {% if w.link %}
-      {% call c.descriptionCard(w.title, w.text, "", w.figma) %} <a href="#" data-proto class="link underline">{{ w.link }}</a>.{% endcall %}
+      {% call c.descriptionCard(w.title, w.text, "", w.figma) %} <a href="#" data-proto class="link">{{ w.link }}</a>.{% endcall %}
       {% else %}
       {{ c.descriptionCard(w.title, w.text, "", w.figma) }}
       {% endif %}

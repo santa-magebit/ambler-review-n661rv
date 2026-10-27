@@ -13,7 +13,7 @@
 <div class="flex flex-col gap-1">
   <h2 class="text-h3 font-medium text-heading">{{ text }}</h2>
   {% if href %}
-  <a href="{{ href }}" class="flex w-fit items-center gap-1 text-base text-primary-500 hover:text-ink hover:underline">{{ linkLabel }}{% icon "arrow-right", "h-7 w-7" %}</a>
+  <a href="{{ href }}" class="link flex w-fit items-center gap-1 text-base">{{ linkLabel }}{% icon "arrow-right", "h-7 w-7" %}</a>
   {% endif %}
 </div>
 {% endmacro %}
@@ -128,7 +128,7 @@
     <tbody class="text-base text-body">
       {% for o in orders %}
       <tr class="even:bg-secondary-100">
-        <td class="h-[68px] rounded-l py-3 pl-6 pr-3"><a href="/sales/order/view/" class="hover:text-primary-500 hover:underline">{{ o.number }}</a></td>
+        <td class="h-[68px] rounded-l py-3 pl-6 pr-3"><a href="/sales/order/view/" class="link">{{ o.number }}</a></td>
         <td class="px-3 py-3">{{ o.date }}</td>
         <td class="px-3 py-3">{{ o.shipTo }}</td>
         <td class="px-3 py-3 font-bold text-ink">{{ o.total }}</td>

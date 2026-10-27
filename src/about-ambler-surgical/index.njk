@@ -38,9 +38,9 @@ permalink: /about-ambler-surgical/
     </ul>
     <div class="hidden shrink-0 items-center gap-8 min-[1400px]:flex" data-figma="34974:1166">
       <span aria-hidden="true" class="h-6 w-px bg-outline"></span>
-      <a href="#" data-proto class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-ink">Upcoming Meetings{% icon "arrow-narrow-right" %}</a>
-      <a href="#" data-proto class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-ink">Ambler Alliance{% icon "arrow-narrow-right" %}</a>
-      <a href="/search/" x-data="catalogSearch" @click.prevent="open()" class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-ink">Cross Reference{% icon "arrow-narrow-right" %}</a>
+      <a href="#" data-proto class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-primary-700">Upcoming Meetings{% icon "arrow-narrow-right" %}</a>
+      <a href="#" data-proto class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-primary-700">Ambler Alliance{% icon "arrow-narrow-right" %}</a>
+      <a href="/search/" x-data="catalogSearch" @click.prevent="open()" class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-primary-700">Cross Reference{% icon "arrow-narrow-right" %}</a>
     </div>
   </div>
 </nav>
@@ -77,7 +77,7 @@ permalink: /about-ambler-surgical/
         <p><strong class="font-bold">{{ a.whyLead.title }}</strong> {{ a.whyLead.text }}</p>
         <ul class="flex flex-col gap-3" data-figma="34974:1228">
           {% for w in a.why %}
-          {% call c.bullet() %}<strong class="font-bold">{{ w.title }}</strong> {{ w.text }}{% if w.link %} {% if w.link.proto %}<a href="#" data-proto class="underline underline-offset-2 hover:text-accent">{{ w.link.label }}</a>{% else %}<a href="{{ w.link.href }}" class="underline underline-offset-2 hover:text-accent">{{ w.link.label }}</a>{% endif %}{{ w.after }}{% endif %}{% endcall %}
+          {% call c.bullet() %}<strong class="font-bold">{{ w.title }}</strong> {{ w.text }}{% if w.link %} {% if w.link.proto %}<a href="#" data-proto class="link-inverse">{{ w.link.label }}</a>{% else %}<a href="{{ w.link.href }}" class="link-inverse">{{ w.link.label }}</a>{% endif %}{{ w.after }}{% endif %}{% endcall %}
           {% endfor %}
         </ul>
       </div>
@@ -100,7 +100,7 @@ permalink: /about-ambler-surgical/
           <div class="flex flex-col gap-1">
             <h3 class="text-h3 font-medium text-accent">{{ p.name }}</h3>
             <p class="text-h4 text-primary-500">{{ p.role }}</p>
-            <a href="mailto:{{ p.email }}" class="self-start break-all text-base text-primary-500 underline underline-offset-2 hover:text-ink">{{ p.email }}</a>
+            <a href="mailto:{{ p.email }}" class="link self-start break-all text-base">{{ p.email }}</a>
           </div>
           <p class="text-lg text-body">{{ p.bio }}</p>
         </div>

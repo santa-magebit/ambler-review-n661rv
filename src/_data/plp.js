@@ -60,13 +60,94 @@ const typePhotoStyle = {
   clamps: "transform: rotate(30deg) scale(1.5) translate(8%, 6%)",
 };
 
-/** Hover descriptions drawn on category cards (styleguide "Hover — shows description"). */
+/**
+ * Hover descriptions on category cards (styleguide "Hover — shows description"). Cannulas and the
+ * Duckworth & Kent speculum are drawn in Figma; the rest is condensed from the old amblersurgical.com
+ * category, product line and meta descriptions.
+ */
 const typeHoverText = {
+  blades: [
+    "Sharp, consistent stainless steel blades for clean incisions.",
+    "Available in #10, #11, #12, #15, #15C and #22 sizes to fit standard knife handles.",
+  ],
+  calipers: [
+    "Measure distances, angles and incision depths precisely in eye surgery.",
+    "Castroviejo calipers for corneal microsurgery and Braunstein fixed calipers for corneal and scleral measurements.",
+  ],
   cannulas: [
     "Precision-engineered for safe fluid delivery and drainage during minimally invasive surgical procedures.",
     "Designed with a flexible, biocompatible tip to reduce tissue trauma and ensure reliable catheter placement.",
   ],
+  choppers: [
+    "Divide and manipulate the lens nucleus during cataract and refractive surgery.",
+    "Includes Nagahara, Seibel, Nichamin and phaco choppers.",
+  ],
+  clamps: [
+    "Occlude vessels and hold tissue securely, with a ratchet lock that keeps the grip steady hands-free.",
+    "Patterns for general, cardiovascular and specialty surgery.",
+  ],
+  cutters: [
+    "Cut wire, pins and cable cleanly in orthopedic and hand surgery.",
+    "Includes wire, pin, bolt and K-wire cutters, cable cutters and a finger ring cutter.",
+  ],
+  dissectors: [
+    "Separate tissue planes gently and precisely.",
+    "Includes Olivecrona, MacDonald, Blumenthal, Lemmon and Pierse dissectors, plus R-Style spatula, micro and ball dissectors.",
+  ],
+  forceps: [
+    "Grasp, hold and manipulate tissue with precision and control.",
+    "Tissue, grasping, hemostatic and bipolar patterns, from Adson and DeBakey to Castroviejo and Utrata.",
+  ],
+  handpieces: [
+    "Deliver irrigation and aspiration during cataract surgery.",
+    "Irrigation, I/A and phaco handpieces, with professional phaco handpiece repair.",
+  ],
+  hooks: [
+    "Retract, rotate and position tissue and lenses with a fine, controlled tip.",
+    "Iris and lens hooks for cataract surgery, and skin and nerve hooks for plastic and general surgery.",
+  ],
+  "knife-handles": [
+    "Hold surgical blades securely for controlled, precise incisions.",
+    "Balanced, ergonomic handles that fit standard surgical blades.",
+  ],
+  knives: [
+    "Make clean, controlled incisions in ophthalmic and microsurgery.",
+    "Diamond, keratome, crescent and clear-cornea knives, with professional diamond knife resharpening.",
+  ],
+  markers: [
+    "Mark tissue accurately and keep alignment precise during eye surgery.",
+    "For corneal marking, toric alignment, retinal and refractive procedures.",
+  ],
+  "needle-holders": [
+    "Grip needles securely for precise suturing in delicate procedures.",
+    "Includes Castroviejo, Barraquer and Ambler's own needle holders.",
+  ],
+  pliers: [
+    "Bend, grip and twist wire and pins with a strong, secure hold.",
+    "Built for orthopedic, hand and plastic surgery.",
+  ],
+  scissors: [
+    "Make precise cuts in delicate tissue, from iris and tenotomy scissors in eye surgery to Mayo and Metzenbaum in general surgery.",
+    "Straight and curved, sharp and blunt tips, in stainless steel and lightweight titanium.",
+  ],
+  spatulas: [
+    "Separate, sweep and support delicate tissue without cutting.",
+    "Fine, polished blades for anterior segment and cataract surgery.",
+  ],
+  speculum: [
+    "Keep the eyelids open for clear access in cataract, LASIK and retinal surgery.",
+    "Barraquer, Lieberman and pediatric specula in stainless steel and titanium.",
+  ],
+  trays: [
+    "Organize and protect instruments through cleaning and autoclave cycles.",
+    "Silicone-fingered sterilization trays keep fine tips and cutting edges safe.",
+  ],
+  "wire-cutters": [
+    "Cut K-wires, pins and wire cleanly and safely.",
+    "Heavy-duty and fine patterns for orthopedic, hand and plastic surgery.",
+  ],
 };
+/** Brand page cards: drawn per brand in Figma, otherwise the type's description. */
 const brandTypeHoverText = {
   "duckworth-and-kent": {
     speculum: [
@@ -74,6 +155,41 @@ const brandTypeHoverText = {
       "Includes wire and solid-blade designs such as Koch-Cionni and Shepard lid specula.",
     ],
   },
+};
+/** Product Lines cards (old product line pages). */
+const lineHoverText = {
+  "ambler-surgical": [
+    "Our own brand of precision instruments, selected for superior materials, ergonomic design and consistent performance.",
+    "Free Lifetime Repair on most Ambler Brand ophthalmic instruments.",
+  ],
+  "duckworth-and-kent": [
+    "A world leader in reusable titanium ophthalmic instruments, with over 60 years of engineering knowledge.",
+    "Elegant, well-balanced, ergonomic handles with consistent, durable performance.",
+  ],
+  "ocular-instruments": [
+    "Creating solutions to save sight since 1966.",
+    "One of the world's largest suppliers of ophthalmic diagnostic, laser and surgical lenses, with more than 200 lenses and supporting products.",
+  ],
+  "volk-optical": [
+    "The premier designer and manufacturer of high-quality ophthalmic lenses.",
+    "Home of the double aspheric 20D, 78D and 90D lenses, the Super Series and Digital Series.",
+  ],
+  "mastel-precision": [
+    "Ophthalmic surgical instruments since 1981, specializing in ultra-thin, reduced-angle diamond knife edges.",
+    "Precise finishing for minimally invasive incisions.",
+  ],
+  epsilon: [
+    "A leading ophthalmic products manufacturer with a wide range of precision instruments.",
+    "Quality maintained at every level, from product design to after-sales support.",
+  ],
+  geuder: [
+    "Precision eye surgery products, made in Germany for over 65 years.",
+    "Surgeons in over 90 countries rely on more than 3,000 Geuder products.",
+  ],
+  "bovie-medical": [
+    "Cautery tips, handles, pencils and accessories for clean hemostasis and precise tissue work.",
+    "From fine-tip cautery and loop contouring to suction coagulation and ophthalmic burr debridement.",
+  ],
 };
 
 // Every type that gets a /browse-by-type/<type>/ page: the mega menu types, the
@@ -389,10 +505,40 @@ const ophthalmicForceps = {
 const forcepsType = {
   heroText: "Grasping, clamping and tissue-manipulation instruments across every specialty.",
   subtypes: [
-    { name: "Bipolar", image: "66e4e59f" },
-    { name: "Grasping", image: "9d8ed65f", fit: "contain", style: "transform: rotate(37deg) scale(1.45) translate(4%, 0)" },
-    { name: "Obstetrical", image: "a53e626f" },
-    { name: "Tissue", image: "7291b38f" },
+    {
+      name: "Bipolar",
+      image: "66e4e59f",
+      hover: [
+        "Confine current between the tips for precise coagulation with minimal collateral damage.",
+        "Adson, bayonet, fenestrated and Malis-type designs for neuro, ENT and microsurgery.",
+      ],
+    },
+    {
+      name: "Grasping",
+      image: "9d8ed65f",
+      fit: "contain",
+      style: "transform: rotate(37deg) scale(1.45) translate(4%, 0)",
+      hover: [
+        "Hold tissue securely yet gently, from a firm grip to sensitive organs.",
+        "Toothed Allis for tough fascia, atraumatic Babcock and bowel graspers for delicate structures.",
+      ],
+    },
+    {
+      name: "Obstetrical",
+      image: "a53e626f",
+      hover: [
+        "Smooth, atraumatic surfaces and ergonomic handles for confident control in forceps deliveries.",
+        "Includes Simpson, Piper and Kielland forceps.",
+      ],
+    },
+    {
+      name: "Tissue",
+      image: "7291b38f",
+      hover: [
+        "Complete control when handling tissue, for safe and effective surgery.",
+        "Allis, Babcock, Adson, Allis-Judd and Lockwood-Allis tissue forceps.",
+      ],
+    },
   ],
   band: {
     figma: "34888:121815",
@@ -626,7 +772,7 @@ const brandPages = lines.map((b) => {
         href: `/browse-by-type/${t.slug}/?manufacturer=${encodeURIComponent(b.name)}`,
         image: product.image,
         fit: "contain",
-        hover: hover[t.slug] || null,
+        hover: hover[t.slug] || typeHoverText[t.slug] || null,
       };
     }),
     quickSelect: types.map((t) => ({ label: t.name, href: `/browse-by-type/${t.slug}/?manufacturer=${encodeURIComponent(b.name)}` })),
@@ -639,7 +785,7 @@ const productLinePage = {
   ...productLinesPage,
   popular: productLinesPage.popular.map(([slug, image]) => {
     const b = lines.find((x) => x.slug === slug);
-    return { name: b.name, href: b.url, image: images[image], count: ownCount((p) => p.brand === slug), hover: null };
+    return { name: b.name, href: b.url, image: images[image], count: ownCount((p) => p.brand === slug), hover: lineHoverText[slug] || null };
   }),
   // "All Product Lines" in the drawn "Featured" order: four lines first, then A to Z.
   all: [...featuredLines.map((slug) => lines.find((b) => b.slug === slug)), ...sortByName(lines.filter((b) => !featuredLines.includes(b.slug)))].map(

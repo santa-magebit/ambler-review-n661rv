@@ -46,13 +46,13 @@
     <div class="flex min-w-0 flex-col gap-2">
       <p class="text-h4 font-medium tracking-title text-primary-500">{{ c.lifetimeRepair.title }}</p>
       <p class="text-lg text-ink">{{ c.lifetimeRepair.text }}</p>
-      <a href="/repair-services/" class="self-start text-lg font-medium text-primary-500 underline underline-offset-2 hover:text-ink">{{ c.lifetimeRepair.linkLabel }}</a>
+      <a href="/repair-services/" class="link self-start text-lg font-medium">{{ c.lifetimeRepair.linkLabel }}</a>
     </div>
   </div>
 
   {% call accordion(c.cleaning.title, "pdp-cleaning", "34660:60431") %}
     <p>{{ c.cleaning.text }}</p>
-    <a href="/sterilization-cleaning/" class="mt-2 inline-block font-medium text-primary-500 underline underline-offset-2 hover:text-ink">{{ c.cleaning.linkLabel }}</a>
+    <a href="/sterilization-cleaning/" class="link mt-2 inline-block font-medium">{{ c.cleaning.linkLabel }}</a>
   {% endcall %}
 
   {% call accordion("Additional Information", "pdp-info", "34660:60436") %}
@@ -60,14 +60,14 @@
     <dl>
       <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0">
         <dt class="text-body">Manufacturer:</dt>
-        <dd>{% if brand %}<a href="{{ brand.url }}" class="text-primary-500 hover:underline">{{ product.brandName }}</a>{% else %}<span class="text-primary-500">{{ product.brandName }}</span>{% endif %}</dd>
+        <dd>{% if brand %}<a href="{{ brand.url }}" class="link">{{ product.brandName }}</a>{% else %}<span class="text-primary-500">{{ product.brandName }}</span>{% endif %}</dd>
       </div>
       {% for row in c.attributesBeforeType %}
       <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0"><dt class="text-body">{{ row[0] }}</dt><dd class="text-primary-500">{{ row[1] }}</dd></div>
       {% endfor %}
       <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0">
         <dt class="text-body">Product Type:</dt>
-        <dd>{% if typeHref %}<a href="{{ typeHref }}" class="text-primary-500 hover:underline">{{ product.typeName }}</a>{% else %}{{ product.typeName }}{% endif %}</dd>
+        <dd>{% if typeHref %}<a href="{{ typeHref }}" class="link">{{ product.typeName }}</a>{% else %}{{ product.typeName }}{% endif %}</dd>
       </div>
       {% for row in c.attributesAfterType %}
       <div class="grid grid-cols-[140px_minmax(0,1fr)] gap-x-3 py-1 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-x-0"><dt class="text-body">{{ row[0] }}</dt><dd class="text-primary-500">{{ row[1] }}</dd></div>

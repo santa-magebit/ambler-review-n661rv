@@ -50,12 +50,30 @@
   document.addEventListener("alpine:init", () => {
     const Alpine = window.Alpine;
 
-    /** Customer Login (14714:118247) and Create New Account (14714:118278): sign in, go to the dashboard. */
-    Alpine.data("accountAuthForm", (message = "") => ({
+    /**
+     * Customer Login (14714:118247) and Create New Account (14714:118278): sign in, then go to ?return
+     * (a page that needs a signed-in customer, e.g. Quick Order) or the dashboard. With checkLogin the
+     * e-mail and password must match the test account.
+     */
+    Alpine.data("accountAuthForm", (message = "", checkLogin = false) => ({
+      error: false,
       submit() {
+        if (checkLogin) {
+          const form = this.$el;
+          this.error = !this.$store.auth.matches(form.elements.namedItem("email").value, form.elements.namedItem("login-password").value);
+          if (this.error) return;
+        }
         this.$store.auth.signIn();
         if (message) flash(message);
-        go("/customer/account/");
+        const back = new URLSearchParams(window.location.search).get("return") || "";
+        go(back.startsWith("/") && !back.startsWith("//") ? back : "/customer/account/");
+      },
+      /** "Use test account": fill the login form with the prototype account. */
+      fillTestAccount() {
+        const form = this.$el.closest("form");
+        form.elements.namedItem("email").value = window.TEST_ACCOUNT.email;
+        form.elements.namedItem("login-password").value = window.TEST_ACCOUNT.password;
+        this.error = false;
       },
     }));
 

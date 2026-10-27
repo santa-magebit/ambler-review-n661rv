@@ -14,6 +14,7 @@
   <script>
     window.BASE = "{{ base }}";
     window.CATALOG = {{ catalog.products | json | safe }};
+    window.TEST_ACCOUNT = {{ site.testAccount | json | safe }};
   </script>
   {# Store/component registration must run before Alpine starts. #}
   <script src="/assets/js/app.js"></script>

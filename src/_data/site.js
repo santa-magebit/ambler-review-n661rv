@@ -1,6 +1,8 @@
 // Store chrome content, from the Figma header and footer.
 export default {
   name: "Ambler Surgical",
+  /** Prototype test account (mock data, not a real login): the customer drawn in the Figma account and checkout frames. */
+  testAccount: { name: "Raymond Myers", email: "raymond.myers@gmail.com", password: "Ambler2026!" },
   contact: {
     phone: "1-888-407-0006",
     phoneHref: "tel:18884070006",

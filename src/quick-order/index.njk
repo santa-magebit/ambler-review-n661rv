@@ -9,6 +9,8 @@ permalink: /quick-order/
 {% import "macros/ui.njk" as ui with context %}
 {% import "pdp-cart/graphics.njk" as gfx %}
 {{ ui.breadcrumbs([{ label: "Quick Order" }]) }}
+{# Signed-in customers only: guests go to the login page and come back here after signing in. #}
+<div x-data x-init="$store.auth.loggedIn || location.replace(url('/customer/account/login/?return=/quick-order/'))"></div>
 
 <div x-data="quickOrder({{ pdpCart.quickOrder | json }})" class="container-page flex flex-col gap-6 py-10" data-figma="34391:65526">
   <div class="flex max-w-[756px] flex-col gap-3" data-figma="34391:65527">

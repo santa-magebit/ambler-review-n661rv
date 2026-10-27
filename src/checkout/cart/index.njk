@@ -19,7 +19,7 @@ permalink: /checkout/cart/
       </div>
       <div class="flex flex-wrap justify-center gap-3" data-figma="34331:36279">
         <a href="/browse-by-specialty/" class="btn-primary">Start Shopping</a>
-        <a href="/quick-order/" class="btn-secondary px-6 text-base" data-figma="34331:36270">{% icon "checkup-list", "h-6 w-6" %}Order by SKU</a>
+        <a href="/quick-order/" x-show="$store.auth.loggedIn" class="btn-secondary px-6 text-base" data-figma="34331:36270">{% icon "checkup-list", "h-6 w-6" %}Order by SKU</a>
       </div>
     </div>
   </div>

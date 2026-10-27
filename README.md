@@ -41,13 +41,20 @@ from a sub-folder, for example GitHub Pages.
 
 - `Alpine.store("cart")` keeps the cart in `localStorage`, so it survives page
   loads. Add to Cart opens the mini cart. The order success page empties it.
-- `Alpine.store("auth")` is a fake signed-in flag. Signing in or creating an
-  account sets it; the account menu and checkout switch to the signed-in
-  designs. Sign Out clears it.
+- `Alpine.store("auth")` is a fake sign-in. Visitors start **signed in** as the
+  prototype test account; Sign Out (My Account menu or sidebar) switches to the
+  guest designs and the choice is kept in `localStorage`.
+- **Test account** (mock data in `src/_data/site.js` → `testAccount`): sign in at
+  `/customer/account/login/` with `raymond.myers@gmail.com` / `Ambler2026!`, or
+  click "Use test account" on that page. Any other password shows Magento's
+  sign-in error. The checkout "account found" prompt uses the same password.
+- Quick Order is for signed-in customers only: the header link and the "Order by
+  SKU" buttons are hidden for guests, and `/quick-order/` sends guests to the
+  login page and back.
 - Add `?demo-cart` to any URL to start with the three products drawn in the
   Figma cart, for example `/checkout/cart/?demo-cart` or `/checkout/?demo-cart`.
-- At checkout, typing `raymond.myers@gmail.com` as a guest shows the
-  "account found, sign in" prompt (Figma SUR-359).
+- At checkout, typing `raymond.myers@gmail.com` as a guest (signed out) shows
+  the "account found, sign in" prompt (Figma SUR-359).
 - Forms submit nowhere. Payment fields are a visual mock only.
 - Anything marked `data-proto` shows a "not part of the prototype yet" notice.
 

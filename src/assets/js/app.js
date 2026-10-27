@@ -95,9 +95,18 @@
       cart.save();
     }
 
-    /** Fake sign-in flag. Sign in / create account set it; the header menu and checkout read it. */
+    /**
+     * Fake sign-in. Visitors start signed in as the test account (site.testAccount, window.TEST_ACCOUNT);
+     * Sign Out and Sign In switch it and localStorage keeps the choice. The header menu, checkout and
+     * Quick Order read it.
+     */
     Alpine.store("auth", {
-      loggedIn: read("ambler-proto-auth", false),
+      loggedIn: read("ambler-proto-auth", true),
+      /** Login form check: the test account's e-mail (any case) and password. */
+      matches(email, password) {
+        const account = window.TEST_ACCOUNT || {};
+        return String(email || "").trim().toLowerCase() === account.email && password === account.password;
+      },
       signIn() {
         this.loggedIn = true;
         write("ambler-proto-auth", true);

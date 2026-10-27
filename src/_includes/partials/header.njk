@@ -17,9 +17,9 @@
         <img src="/img/logo-header.png" alt="Ambler Surgical" class="h-9 w-auto lg:h-[52px]">
       </a>
       <div class="hidden flex-1 md:block">{% include "partials/search.njk" %}</div>
-      {# Quick Order link: drawn in the Quick Order frames' header (34391:65511), next to the phone. #}
+      {# Quick Order link: drawn in the Quick Order frames' header (34391:65511), next to the phone; signed-in customers only. #}
       <div class="ml-auto hidden items-center gap-8 xl:flex">
-        <a href="/quick-order/" class="flex items-center gap-3 text-h3 font-semibold text-white hover:underline" data-figma="34391:65511">
+        <a href="/quick-order/" x-show="$store.auth.loggedIn" class="flex items-center gap-3 text-h3 font-semibold text-white hover:underline" data-figma="34391:65511">
           {% icon "checkup-list", "h-7 w-7 text-accent" %}Quick Order
         </a>
         <a href="{{ site.contact.phoneHref }}" class="flex items-center gap-3 text-h3 font-semibold text-white">

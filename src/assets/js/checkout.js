@@ -34,6 +34,8 @@ document.addEventListener("alpine:init", () => {
       email: "",
       guestEmail: "", // e-mail the shopper chose "Continue as Guest" for
       showPassword: false,
+      password: "",
+      passwordError: false,
       get accountMatch() {
         const e = this.email.trim().toLowerCase();
         return !this.$store.auth.loggedIn && e !== "" && e === config.accountEmail && e !== this.guestEmail;
@@ -43,6 +45,8 @@ document.addEventListener("alpine:init", () => {
       },
       /** Sign in from the prompt: switch to the signed-in layout, then offer to merge carts once. */
       signIn() {
+        this.passwordError = !this.$store.auth.matches(this.email, this.password);
+        if (this.passwordError) return;
         this.$store.auth.signIn();
         this.showPassword = false;
         window.scrollTo({ top: 0 });

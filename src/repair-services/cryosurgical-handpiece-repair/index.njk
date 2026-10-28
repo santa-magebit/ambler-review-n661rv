@@ -9,8 +9,8 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
    - Hero: the shared content hero with the frame's photo and fade, the title, the frame's intro (drawn under the
      hero in Figma) and, as in the frame, the orange "Download Repair Form" button, the page's one download of the
      form (with the download icon rather than Figma's arrow). No Request a Repair strip under the prices.
-   - "Typical Repair Charges": the frame's three level cards with the micro price tables' look (navy header, 1px
-     #dde7ee border, 4px corners). Under them the warranty line as a notice bar.
+   - "Typical Repair Charges": the frame's three levels as one band whose column headers darken with the level.
+     Under them the warranty line as a notice bar.
    - No Free Lifetime Repair band: cryosurgical handpieces are excluded from the programme.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
    - "Disclaimers": a callout where the frame has them, the brands line as its title.
@@ -42,21 +42,27 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
 {% endcall %}
 
 {# Typical Repair Charges ("Charges" 35098:39328, the intro moved into the hero): 36px between the title and the
-   cards, as above the micro price tables. Cards: navy header with the level and its price range (Bold 24/32 white,
-   centred as drawn; phones 20/28), Regular 18/28 navy text with Figma's 32px sides (phones 16/24, 20px), three in a
-   row from xl, stacked below. The notes follow with the cards' gap. #}
+   levels, as above the micro price tables; the warranty note follows with a 24px gap. #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39328">
   <div class="container-page flex flex-col gap-6 py-10 md:gap-9 md:py-[50px]">
     <h2 id="charges-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1" data-figma="35098:39329">Typical Repair Charges</h2>
     <div class="flex flex-col gap-4 md:gap-6">
-      <ul class="grid gap-4 md:gap-6 xl:grid-cols-3" data-figma="35098:39330">
+      {# The levels in one band, each heading its column with a strip that darkens with the level (#dee7ed with navy
+         text, #4e6284 and #004776 with white text): the level as a Medium line, the price range in Bold 24/32 (phones
+         20/28), the text in body grey on white below, 32px sides (phones 20px). Outline border and rules between the
+         columns; side by side from xl, stacked below. Picked from options on 2026-10-28. #}
+      <ol class="grid overflow-hidden rounded border border-outline xl:grid-cols-3" data-figma="35098:39330">
         {% for lv in cr.levels %}
-        <li class="flex min-w-0 flex-col" data-figma="{{ lv.figma }}">
-          <h3 class="rounded-t bg-primary-500 px-4 py-3 text-center text-h4 font-bold text-white md:py-4 md:text-h3">{{ lv.name }}: {{ lv.price }}</h3>
-          <p class="flex-1 rounded-b border border-t-0 border-outline px-5 py-6 text-base text-primary-500 md:px-8 md:text-lg">{{ lv.text }}</p>
+        {% set strip = ["bg-secondary-200 text-primary-500", "bg-secondary-400 text-white", "bg-primary-500 text-white"][loop.index0] %}
+        <li class="flex min-w-0 flex-col {{ 'xl:border-l xl:border-outline' if not loop.first }}" data-figma="{{ lv.figma }}">
+          <h3 class="flex flex-col gap-1 px-5 py-4 md:px-8 md:py-5 {{ strip }}">
+            <span class="text-base font-medium md:text-lg">{{ lv.name }}</span>
+            <span class="text-h4 font-bold md:text-h3">{{ lv.price }}</span>
+          </h3>
+          <p class="flex-1 bg-white px-5 py-6 text-base text-body md:px-8 md:text-lg">{{ lv.text }}</p>
         </li>
         {% endfor %}
-      </ul>
+      </ol>
       {# Warranty note (35098:39346), the warranty line only as in Figma, as a notice bar so it reads as a condition:
          the outline border with a 4px orange left edge on #f5f8fa, an orange info icon, Medium navy text (Figma's
          orange text is too light on white). Picked from three options on 2026-10-28. #}

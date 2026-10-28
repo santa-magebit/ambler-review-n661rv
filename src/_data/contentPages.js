@@ -440,13 +440,6 @@ const micro = {
       ],
     },
   ],
-  /** Request steps under the prices (c.repairSteps), in the words of this page's FAQ answer "How do I send my
-      instruments in for repair?" and the Free Lifetime Repair steps. */
-  steps: [
-    { icon: "download", title: "Download the form", text: "Fill out the Micro Instrument Repair Form." },
-    { icon: "box", title: "Pack your instruments", text: "Include the form in the box with your sterilized instruments." },
-    { icon: "truck-delivery", title: "Ship them to us", text: "Ship the package to our Exton, PA facility, and we will contact you." },
-  ],
   /** "SEO Text" (35098:39176), in the shape of the PLP features list (plp_ui.features). */
   seo: {
     figma: "35098:39176",

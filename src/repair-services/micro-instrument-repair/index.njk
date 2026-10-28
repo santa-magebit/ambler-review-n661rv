@@ -10,8 +10,8 @@ permalink: /repair-services/micro-instrument-repair/
    - "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and #f5f8fa), as
      real tables. Every cell border is the same light outline, including the line before the price column that Figma
      draws navy, and the tables get the 4px corners.
-   - "Request a Repair" under the prices (not in the frame): the Free Lifetime Repair steps section (c.repairSteps)
-     with this page's FAQ answer as the three steps, so the repair form is offered again once the prices are read.
+   - "Request a Repair" under the prices (not in the frame): the strip of Figma's "Request a Free Repair"
+     (35122:1338, its header row without the steps), so the repair form is offered again once the prices are read.
    - Free Lifetime Repair band: the PLP banner (34777:59015), the same seal, copy and button.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
    - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
@@ -39,7 +39,9 @@ permalink: /repair-services/micro-instrument-repair/
 {% endcall %}
 
 {# Typical Repair Charges ("Content" 35098:39067, the intro moved into the hero): 36px between the title and the tables.
-   The request steps follow 60px under the last table (36px gap + 24px).
+   The request strip follows 60px under the last table (36px gap + 24px): #f1f5f8, 24/32 padding, the 32px navy tool
+   icon, Bold 18/28 title over a 16/24 line, the primary download button on the right. Phones: icon and text in a row,
+   the button full width under them.
    Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall with their 1px bottom line,
    Bold prices in a 300px column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39067">
@@ -64,7 +66,16 @@ permalink: /repair-services/micro-instrument-repair/
       </tbody>
     </table>
     {% endfor %}
-    {{ c.repairSteps({ id: "request-repair", cls: "mt-4 md:mt-6", title: "Request a Repair", text: "No RMA number needed.", steps: m.steps }) }}
+    <section id="request-repair" aria-labelledby="request-title" class="mt-4 flex flex-col gap-4 rounded bg-secondary-100 px-5 py-6 md:mt-6 md:flex-row md:items-center md:gap-6 md:px-8" data-figma="35122:1338">
+      <div class="flex min-w-0 flex-1 items-center gap-4 md:gap-6" data-figma="35176:927">
+        {% icon "tool", "h-8 w-8 text-primary-500" %}
+        <div class="flex min-w-0 flex-col gap-1">
+          <h2 id="request-title" class="text-lg font-bold text-heading">Request a Repair</h2>
+          <p class="text-base text-body">No RMA number needed.</p>
+        </div>
+      </div>
+      <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
+    </section>
   </div>
 </section>
 

@@ -388,8 +388,10 @@ const lifetime = {
  * leaves out are word for word from amblersurgical.com/repair-services/micro-instrument-repair.
  */
 const micro = {
+  // The frame's intro trimmed for the hero (77 to 63 words, 6 lines in the 593px column): the same services, keywords
+  // and claims, fewer fillers.
   intro:
-    "Restore your delicate microsurgical instruments to original manufacturer specifications with Ambler Surgical. Our lab-based technicians use high-quality tools to align forceps, sharpen scissors, and retip needle holders with a level of precision that mobile vans cannot match. Whether you need rust removal, parts replacement, or microscopic tip alignment, we extend the life of your inventory for a fraction of the replacement cost. See our flat-rate pricing and fill in the repair form below to get started.",
+    "Restore your delicate microsurgical instruments to original manufacturer specifications with Ambler Surgical. Our lab-based technicians align forceps, sharpen scissors, and retip needle holders with a precision that mobile vans cannot match. From rust removal and parts replacement to microscopic tip alignment, we extend instrument life for a fraction of the replacement cost. See our flat-rate pricing and fill in the repair form below.",
   /** Typical Repair Charges (Box 1-4, 35098:39070 / 39098 / 39111 / 39134): [repair, price in USD]. */
   charges: [
     {

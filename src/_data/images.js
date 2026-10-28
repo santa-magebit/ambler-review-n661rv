@@ -12,6 +12,7 @@ export default {
   "0f5459fa": "/img/0f5459fa.png", // image 195x32
   "0fd85d1e": "/img/0fd85d1e.png", // Fiegert 1 147x40
   "11463f33": "/img/11463f33.png", // image 195x32
+  "1582796d": "/img/1582796d.jpg", // MaxAC 20D Lens 1000x963 (Sterilization Products "Ultrasonic Cleaners" card, the 1672px Figma fill as JPEG)
   "1907881e": "/img/1907881e.png", // mobile-header 366x258
   "1e1f2c9e": "/img/1e1f2c9e.jpg", // mobile-header 366x310
   "209da060": "/img/209da060.jpg", // mobile-header 366x200
@@ -21,6 +22,7 @@ export default {
   "2578dcdb": "/img/2578dcdb.jpg", // Eye Image 1960x490
   "272be983": "/img/272be983.png", // image 195x32
   "2c1b3551": "/img/2c1b3551.jpg", // mobile-header 366x200
+  "2c25871a": "/img/2c25871a.jpg", // MaxAC 20D Lens 1200x635 (Sterilization Products "Instrument Guards" card, the 4096px Figma fill as JPEG)
   "2d1f2ca4": "/img/2d1f2ca4.jpg", // mobile-header 366x310
   "2df98bc7": "/img/2df98bc7.png", // mobile-header 366x310
   "31a47e5d": "/img/31a47e5d.png", // mobile-header 496x286
@@ -36,6 +38,7 @@ export default {
   "4029d43e": "/img/4029d43e.jpg", // mobile-header 366x200
   "408eb6d1": "/img/408eb6d1.jpg", // mobile-header 366x310
   "41a72661": "/img/41a72661.jpg", // img 108x108
+  "446ebfcc": "/img/446ebfcc.jpg", // Diamond knife plastic sterilization tray 93-200, amblersurgical.com product photo 1400x1040
   "473743f3": "/img/473743f3.jpg", // mobile-header 366x200
   "47ab7959": "/img/47ab7959.jpg", // mobile-header 366x200
   "4e0a54ee": "/img/4e0a54ee.jpg", // image 3 37x24
@@ -43,14 +46,17 @@ export default {
   "513dc3d7": "/img/513dc3d7.jpg", // mobile-header 366x310
   "5266a0eb": "/img/5266a0eb.png", // mobile-header 366x310
   "55dde4bd": "/img/55dde4bd.jpg", // mobile-header 974x522
+  "568ab6e3": "/img/568ab6e3.jpg", // Hero Image Oph 1125x375 (Sterilization Products hero, 35098:39470)
   "5701dcf9": "/img/5701dcf9.jpg", // Hero 1920x528
   "583abbc0": "/img/583abbc0.jpg", // mobile-header 366x200
   "5d62af3b": "/img/5d62af3b.png", // mobile-header 366x310
+  "622363e5": "/img/622363e5.jpg", // Toothbrush-style cleaning brush 243001BBG, amblersurgical.com product photo 1400x562 (also the "Cleaning Brushes" card)
   "630c4e4c": "/img/630c4e4c.jpg", // mobile-header 366x200
   "6350c6a1": "/img/6350c6a1.jpg", // duckworth__kent_ltd_logo 1 67x48
   "637dbdfb": "/img/637dbdfb.jpg", // mobile-header 366x310
   "64181590": "/img/64181590.jpg", // mobile-header 366x200
   "66e4e59f": "/img/66e4e59f.png", // mobile-header 369x313
+  "6790e919": "/img/6790e919.jpg", // Instrument guards 092001BBG, amblersurgical.com product photo 1400x640
   "698c2272": "/img/698c2272.jpg", // mobile-header 366x200
   "6aae2b57": "/img/6aae2b57.jpg", // Hero 1920x344
   "6bda460e": "/img/6bda460e.jpg", // image 2 37x24
@@ -88,8 +94,10 @@ export default {
   "aac4f963": "/img/aac4f963.jpg", // Oph Forceps Header Graphic 1920x480
   "aadc3c4a": "/img/aadc3c4a.jpg", // img 108x108
   "aae7aac2": "/img/aae7aac2.jpg", // geuder_wbw_2022 1 141x42
+  "ac11dc60": "/img/ac11dc60.jpg", // image 8 1728x910 (Sterilization Products SEO band, 35098:39676, as JPEG)
   "ae00e760": "/img/ae00e760.jpg", // mobile-header 366x200
   "af014b52": "/img/af014b52.jpg", // Brand Image 134x38
+  "af4f19f0": "/img/af4f19f0.jpg", // Instrument guards 093007BBG, amblersurgical.com product photo 1400x736
   "b36bba42": "/img/b36bba42.png", // ambler.logo 2 165x42
   "b6d1bd41": "/img/b6d1bd41.jpg", // Ocular MaxAC 20D lens OI-20A, amblersurgical.com product photo 600x400 (Product Lines hover)
   "b7a3c44f": "/img/b7a3c44f.png", // mobile-header 366x310
@@ -103,6 +111,7 @@ export default {
   "c4c410a7": "/img/c4c410a7.png", // mobile-header 366x310
   "c565e376": "/img/c565e376.png", // mobile-header 496x286
   "c7706cf1": "/img/c7706cf1.jpg", // mobile-header 366x310
+  "c79a0d00": "/img/c79a0d00.jpg", // Bransonic perforated tray 100-410-160, amblersurgical.com product photo 1400x945
   "c905e951": "/img/c905e951.png", // Ambler Alliance logo no Tag_V1 1 56x56
   "ca7442a9": "/img/ca7442a9.jpg", // mobile-header 366x310
   "cbbed58c": "/img/cbbed58c.jpg", // mobile-header 366x200
@@ -112,6 +121,7 @@ export default {
   "d08f4688": "/img/d08f4688.jpg", // img 108x108
   "d1f02355": "/img/d1f02355.jpg", // mobile-header 366x200
   "d61fe469": "/img/d61fe469.png", // mobile-header 496x286
+  "d6ea96a7": "/img/d6ea96a7.jpg", // Identification roll tape 151004EEA, amblersurgical.com product photo 1400x1067
   "d76b9f33": "/img/d76b9f33.png", // mobile-header 496x286
   "db601ef3": "/img/db601ef3.png", // mobile-header 496x286
   "dba36ba3": "/img/dba36ba3.jpg", // Epsilon Castroviejo tying forceps ECF-02, amblersurgical.com product photo 1400x365 (Product Lines hover)
@@ -124,5 +134,6 @@ export default {
   "ec2b7392": "/img/ec2b7392.jpg", // Brand Image 175x44
   "f188b990": "/img/f188b990.jpg", // Eye Image 2064x492 (Free Lifetime Repair hero)
   "fb1d6319": "/img/fb1d6319.jpg", // Eye Image 1600x800
+  "fc756c22": "/img/fc756c22.jpg", // Mini plastic instrument sterilization tray 93-230, amblersurgical.com product photo 1206x1400
   "fc765b3e": "/img/fc765b3e.png", // Rumex_LOGO_97804edd-f911-4b3a-87fb-4434e 162x38
 };

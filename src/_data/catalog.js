@@ -193,11 +193,15 @@ const productLines = [
 });
 
 // Sterilization and repair lists come from the live amblersurgical.com menu.
+// href: the category's page, not part of the prototype (links to it carry data-proto).
 const sterilization = [
   "Basins", "Bowls", "Buckets", "Cautery Tip Cleaners", "Cleaning Brushes", "Cups", "Diamond Knives",
   "Disinfectant Solutions", "Graduated Measures", "I.D. Roll Tape", "Instrument Guards", "Instrument Stringers",
   "Jars", "Trays", "Ultrasonic Cleaners",
-].map((name) => ({ name, slug: slugify(name) }));
+].map((name) => {
+  const slug = slugify(name);
+  return { name, slug, href: `/sterilization-cleaning/${slug}/` };
+});
 
 // href: the service's own page; the others link to their card on /repair-services/#<slug>.
 const repairPages = {
@@ -213,6 +217,9 @@ const repairServices = [
 
 // ---------------------------------------------------------------------------
 // Products: [itemNumber, name, description, price, imageHash8, typeSlug, productLineSlug?, extra?]
+
+/** Sterilization products: outside the Ophthalmology listings; their pages sit under Sterilization Products. */
+const sterile = { listed: false, specialties: [], section: "sterilization" };
 
 const rows = [
   // Ambler Surgical, from PLP "Product Type Page" and the product card in the styleguide.
@@ -253,6 +260,16 @@ const rows = [
   [undefined, "Castroviejo Needle Holder", "Curved jaws with lock", 145, "cc6f6b46", "needle-holders", "ambler-surgical", { badge: null }],
   [undefined, "Westcott Tenotomy Scissors", "Curved blades, blunt tips", 89.5, "7623cce9", "scissors", "ambler-surgical", { badge: null, oldPrice: 105 }],
   [undefined, "Derf Needle Holder", "Smooth jaws with lock", 112, "aadc3c4a", "needle-holders", "ambler-surgical", { badge: null }],
+  // Sterilization Products "Popular Products" (with 93-272 above), from amblersurgical.com/sterilization-cleaning
+  // (2026-10-28): name and description as the product page splits its title, manufacturer, price and photo.
+  // Not in the Ophthalmology listings.
+  ["092001BBG", "Instrument guards", "Size 1, clear, 1.6mm x 19.0mm, non-vented, latex-free, single use, non-sterile, pack of 100", 31, "6790e919", "instrument-guards", "aspen-surgical", sterile],
+  ["093007BBG", "Instrument guards", "Size 7, tinted orange, 2.0mm x 9.0mm x 25.0mm, non-vented, latex-free, single use, non-sterile, pack of 100", 27, "af4f19f0", "instrument-guards", "aspen-surgical", sterile],
+  ["243001BBG", "Toothbrush-style instrument cleaning brush", "7 1/4'' length, 13.0mm Nylon head diameter, 1.5'' bristle length, latex-free, pack of 2", 19, "622363e5", "cleaning-brushes", "aspen-surgical", sterile],
+  ["93-200", "Diamond knife plastic sterilization tray", "2 1/2'' W x 6'' L x 3/4'' H, base, lid, and 2 bars with 1 slot", 33, "446ebfcc", "trays", "pst-trays", sterile],
+  ["93-230", "Mini plastic instrument sterilization tray", "1 1/2'' W x 2 3/4'' L x 3/4'' H, base, lid, and silicone finger mat", 17, "fc756c22", "trays", "pst-trays", sterile],
+  ["100-410-160", "Bransonic® perforated tray", "For use with M1800, M1800H, CPX1800 and CPX1800H models", 178, "c79a0d00", "ultrasonic-cleaners", "branson-ultrasonic", sterile],
+  ["151004EEA", "Identification roll tape", "1/4'' x 300'', solid red color, approved for autoclave and gas sterilization, 1 roll per box", 28, "d6ea96a7", "i-d-roll-tape", "aspen-surgical", sterile],
 ];
 
 /**
@@ -278,9 +295,12 @@ const products = rows.map(([sku, name, description, price, image, type, brand = 
     brandName: productLines.find((b) => b.slug === brand)?.name ?? brand,
     specialties: ["ophthalmology"],
     type,
-    typeName: instrumentTypes.find((t) => t.slug === type)?.name ?? type.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+    typeName:
+      [...instrumentTypes, ...sterilization].find((t) => t.slug === type)?.name ??
+      type.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
     badge: notPopular.has(sku) ? null : "Popular",
-    // The rows with `badge: null` are products Figma draws outside the listings (search, cart, account).
+    // The rows with `badge: null` are products Figma draws outside the listings (search, cart, account);
+    // the sterilization rows set `listed: false` themselves.
     listed: extra.badge !== null,
     variant: null,
     ...extra,

@@ -512,8 +512,6 @@ const pages = {
   forceps: `Grasping, clamping and tissue-manipulation instruments across every specialty. ${types.forceps[0]}`,
   contact:
     "Questions about an instrument, a cross-reference, an order or a repair? Call, email or send us a message and an Ambler Surgical instrument specialist will help you find exactly what you need.",
-  sterilization:
-    "From bowls and basins to sterilization trays and ultrasonic cleaners, Ambler Surgical is the smarter source for sterilization and cleaning products. Cross-reference any catalog number or browse by category.",
 };
 
 /** Hero copy for a type, on Browse by Type or (with a specialty) under a specialty. */

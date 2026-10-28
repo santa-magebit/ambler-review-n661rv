@@ -23,6 +23,11 @@
   h4 {
     @apply text-heading;
   }
+  /* Conditions of Sale search matches (termsSearch in content.js): a light orange marker. */
+  ::highlight(terms-search) {
+    background-color: #fddcbf;
+    color: #003152;
+  }
 }
 
 @layer components {

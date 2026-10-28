@@ -25,6 +25,9 @@ import images from "./images.js";
  *   #0e5593 at 90% at 45.7% and clear #1c63b1 at 75.1%, but solid at least to the end of the 593px text column
  *   (625px, or 50% - 175px once the container is centred) and fading over 300px or more; past 1600px it is clear
  *   at 50% + 402px, where it is at 1600. The middle stop keeps Figma's place between the ends (32%).
+ * termsFade: Conditions of Sale hero (35098:39775), measured from the photo's left edge P (57.5% of the 1600px frame,
+ *   50% + 120px once the container is centred, never left of the 625px text column): solid navy to P + 61px, then
+ *   eased (like microFade) to Figma's 10% #1c63b1 at P + 593px, or at the screen's edge when that comes first.
  */
 /** Navy from solid at `from` to clear at `to` (CSS lengths along `deg`), eased in and out over 11 stops. */
 function easedFade(from, to, deg = 90) {
@@ -41,6 +44,17 @@ function cryoFade(from, to) {
   return `linear-gradient(90deg, #004776 ${from}, rgba(14, 85, 147, 0.9) calc(${from} + (${to} - ${from}) * 0.32), rgba(28, 99, 177, 0) ${to})`;
 }
 
+/** termsFade (see above): navy at `from`, eased to 10% #1c63b1 at `to`, over 11 stops. */
+function termsFade(from, to) {
+  const stops = Array.from({ length: 11 }, (_, i) => {
+    const t = i / 10;
+    const e = t * t * (3 - 2 * t);
+    const mix = (a, b) => Math.round(a + (b - a) * e);
+    return `rgba(${mix(0, 28)}, ${mix(71, 99)}, ${mix(118, 177)}, ${Math.round((1 - 0.9 * e) * 1000) / 1000}) calc(${from} + (${to} - ${from}) * ${t})`;
+  });
+  return `linear-gradient(90deg, ${stops.join(", ")})`;
+}
+
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
   heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 100%)",
@@ -49,6 +63,7 @@ const gradients = {
   valueFade: easedFade("max(50%, 950px)", "max(88%, 1450px)", 270),
   microFade: easedFade("max(38.9%, 625px, 50% - 175px)", "max(min(94.5%, 50% + 854px), 925px)"),
   cryoFade: cryoFade("max(31.9%, 625px, 50% - 175px)", "max(min(75.1%, 50% + 402px), 925px)"),
+  termsFade: termsFade("max(686px, 50% + 181px)", "max(686px + 240px, min(50% + 713px, 100%))"),
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
 };

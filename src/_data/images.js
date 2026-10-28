@@ -24,6 +24,7 @@ export default {
   "2d1f2ca4": "/img/2d1f2ca4.jpg", // mobile-header 366x310
   "2df98bc7": "/img/2df98bc7.png", // mobile-header 366x310
   "31a47e5d": "/img/31a47e5d.png", // mobile-header 496x286
+  "344359dd": "/img/344359dd.jpg", // image 23 2272x1279 (Conditions of Sale hero, the 4096px Figma fill as JPEG)
   "35ef7b05": "/img/35ef7b05.jpg", // mobile-header 366x258
   "393cbe8d": "/img/393cbe8d.png", // mobile-header 366x310 (Free Lifetime Repair needle holder)
   "39414cc1": "/img/39414cc1.jpg", // Bovie Aaron Ophthalmic Burr II 3491E, amblersurgical.com product photo 1400x328 (Product Lines hover)

@@ -1,0 +1,228 @@
+---
+layout: layouts/base.njk
+title: Terms and Conditions of Sale
+permalink: /conditions-of-sale/
+---
+{# Conditions of Sale (Figma 35098:39725, the client's 1600px frame on the WIP page); the URL is the live site's.
+   No redesigned or phone frame exists, so the page uses the redesign's components and type scale, as the repair
+   pages do. The frame draws sections 1, 2 and 4.7; the rest of the text is the live page's (src/_data/conditionsOfSale.js).
+   - Hero: the shared content hero with the frame's photo, fade, title and intro, and the live page's effective date.
+   - Section bar ("Contents Sub Menu" 35098:39780): the frame's #f5f8fa bar and seven links, sticky under the header
+     like the About sub-nav. The link of the section in view is orange (the frame's orange "Warranty" is that state).
+     Phones scroll the links sideways.
+   - "Search Terms & Conditions" (35098:39790) works: it keeps only the subsections that mention the words and marks
+     them (termsSearch in content.js).
+   - Sections: the frame's title with a rule to its right, white and #f5f8fa in turn (as Section 1 and 2), and
+     "Back to Top" at the end of each. The text keeps the 756px reading width; from xl the room to its right holds
+     the section's subsection index, sticky under the bar (the frame's hidden rows 35098:39900 to 40038 list the
+     same subsections, with the live page's shorter titles).
+   - Tables (4.5, and 4.7 with all 45 product lines) look like the repair price tables; the 4.7 table keeps the
+     frame's search field, which filters its product lines.
+   - "Questions About These Terms?": the live page's closing contact box, as a tinted callout. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% set t = conditionsOfSale %}
+{# The section bar is 57px tall on phones and 69px from md (with its border); sections start under it and
+   subsections 24px lower. #}
+{% set sectionOffset = "scroll-mt-[57px] md:scroll-mt-[69px]" %}
+{% set itemOffset = "scroll-mt-[81px] md:scroll-mt-[93px]" %}
+
+{# Search field (Figma "input" 149:1156 with the orange 52px search button): white, 1px outline border, 16/24 text.
+   model: the Alpine property it edits; submit: Alpine expression on Enter / the button. #}
+{% macro searchField(placeholder, label, model, submit) %}
+<form role="search" @submit.prevent="{{ submit }}" class="flex h-[52px] w-full md:w-[366px]">
+  <label class="relative flex min-w-0 flex-1">
+    <span class="sr-only">{{ label }}</span>
+    <input type="text" inputmode="search" enterkeyhint="search" autocomplete="off" x-model.debounce.150ms="{{ model }}" @keydown.escape="{{ model }} = ''"
+           placeholder="{{ placeholder }}" :class="{{ model }} && '!pr-10'"
+           class="h-full w-full min-w-0 rounded-l border border-r-0 border-outline bg-white pl-5 pr-3 text-base text-ink outline-none placeholder:text-card focus:border-primary-500">
+    <button type="button" x-show="{{ model }}" x-cloak @click="{{ model }} = ''" aria-label="Clear search" class="absolute right-3 top-1/2 -translate-y-1/2 text-ink hover:text-primary-500">{% icon "close", "h-5 w-5" %}</button>
+  </label>
+  <button type="submit" aria-label="Search" class="flex w-[52px] shrink-0 items-center justify-center rounded-r bg-accent text-white hover:bg-accent-dark">{% icon "search", "h-6 w-6" %}</button>
+</form>
+{% endmacro %}
+
+{# Table in the repair price tables' look (Micro Instrument Repair): navy header (SemiBold, white), rows white and
+   #f5f8fa in turn with the 1px outline lines, 4px corners, "Not Returnable" in Bold. The first column takes the rest
+   of the width. Phones: 14/20 text, 104px value columns. tb.filter: rows rendered by Alpine (tableFilter) under
+   the frame's search field; the empty row says when no product line matches. #}
+{% macro table(tb) %}
+{% set head = "bg-primary-500 px-3 py-3 text-sm font-semibold text-white md:px-4 md:py-4 md:text-lg" %}
+{% set cell = "border-b border-l border-outline px-3 pb-[11px] pt-3 md:px-4 md:py-3" %}
+<table class="w-full table-fixed border-separate border-spacing-0 text-left">
+  <colgroup><col>{% for h in tb.head %}{% if not loop.first %}<col class="w-[104px] md:w-[200px]">{% endif %}{% endfor %}</colgroup>
+  <thead>
+    <tr>
+      {% for h in tb.head %}
+      <th scope="col" class="{{ head }} {{ 'rounded-tl' if loop.first }} {{ 'rounded-tr' if loop.last else 'border-r border-white/30' }}">{{ h }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody class="text-sm text-primary-500 md:text-lg">
+    {% if tb.filter %}
+    <template x-for="(row, i) in shown" :key="row[0]">
+      <tr>
+        <th scope="row" x-text="row[0]" class="{{ cell }} font-normal" :class="{ 'bg-menu': i % 2, 'bg-white': !(i % 2), 'rounded-bl': i === shown.length - 1 }"></th>
+        <template x-for="(v, j) in row.slice(1)" :key="j">
+          <td x-text="v" class="{{ cell }}" :class="{ 'bg-menu': i % 2, 'bg-white': !(i % 2), 'font-bold': v === 'Not Returnable', 'border-r': j === row.length - 2, 'rounded-br': j === row.length - 2 && i === shown.length - 1 }"></td>
+        </template>
+      </tr>
+    </template>
+    <tr x-show="!shown.length" x-cloak>
+      <td colspan="{{ tb.head | length }}" class="{{ cell }} rounded-b border-r bg-white text-body">No product line matches “<span x-text="q.trim()"></span>”.</td>
+    </tr>
+    {% else %}
+    {% for row in tb.rows %}
+    {% set tint = "bg-menu" if loop.index % 2 == 0 else "bg-white" %}
+    {% set lastRow = loop.last %}
+    <tr>
+      {% for v in row %}
+      {% if loop.first %}
+      <th scope="row" class="{{ cell }} {{ tint }} {{ 'rounded-bl' if lastRow }} font-normal">{{ v }}</th>
+      {% else %}
+      <td class="{{ cell }} {{ tint }} {{ 'border-r' if loop.last }} {{ 'rounded-br' if lastRow and loop.last }} {{ 'font-bold' if v == 'Not Returnable' }}">{{ v }}</td>
+      {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% endmacro %}
+
+{# One block of a subsection (see src/_data/conditionsOfSale.js). Bullets are the redesign's orange dashes
+   (About 34974:1180) instead of the frame's dots; the notice box is the frame's "Disclaimer" (35098:39802) with the
+   outline border of the tinted callouts, white on the #f5f8fa sections. #}
+{% macro block(b, tinted) %}
+{% if b.h %}
+<h4 class="mt-2 text-lg font-bold text-heading md:text-h4">{{ b.h }}</h4>
+{% elif b.note %}
+<p class="rounded border border-outline {{ 'bg-white' if tinted else 'bg-menu' }} px-5 py-4 md:px-6" data-figma="35098:39802">{{ b.note }}</p>
+{% elif b.list %}
+<ul class="flex flex-col gap-1">
+  {% for li in b.list %}
+  <li class="flex gap-3"><span aria-hidden="true" class="mt-[11px] h-0.5 w-2 shrink-0 rounded-[1px] bg-accent md:mt-[13px]"></span><span class="min-w-0">{{ li | safe }}</span></li>
+  {% endfor %}
+</ul>
+{% elif b.ordered %}
+<ol class="flex list-decimal flex-col gap-1 pl-6 marker:font-medium">
+  {% for li in b.ordered %}<li class="pl-1">{{ li | safe }}</li>{% endfor %}
+</ol>
+{% elif b.table and b.table.filter %}
+<div x-data="tableFilter({{ b.table.rows | json }})" class="flex flex-col gap-4 md:gap-6" data-figma="35098:39840">
+  <div class="flex justify-end" data-figma="35098:39836">{{ searchField("Search product lines", "Search the product lines in the table", "q", "") }}</div>
+  {{ table(b.table) }}
+</div>
+{% elif b.table %}
+{{ table(b.table) }}
+{% elif b.footnote %}
+<p class="flex gap-2 text-sm text-body md:text-base"><span class="w-5 shrink-0 font-bold text-primary-500">{{ b.footnote }}</span><span>{{ b.p | safe }}</span></p>
+{% else %}
+<p>{{ b.p | safe }}</p>
+{% endif %}
+{% endmacro %}
+
+{{ ui.breadcrumbs([{ label: "Terms and Conditions" }]) }}
+
+{# Hero: the hand signing a document on the right under the frame's fade (termsFade). From lg the photo is 1136x640
+   (Figma's 144% x 129% fill of its 682x429 box, cropped from the top-left as there) starting where the frame has it
+   (57.5% at 1600, 50% + 120px beside the centred content, never over the 625px text column) and reaching the right
+   edge on wide screens. Phones and tablets have no room beside the long intro: the photo covers the hero with the hand
+   on the right, under the phone fade and a 60% navy tint that keeps the white text readable over the paper. #}
+{% call c.hero({
+  title: t.title, text: t.intro, figma: "35098:39773", image: "344359dd",
+  fade: contentPages.gradients.termsFade, fadeAt: "lg",
+  photo: "inset-0 h-full w-full object-cover object-[55%_center] lg:inset-auto lg:left-[max(625px,calc(50%_+_120px))] lg:top-0 lg:h-[max(640px,100%)] lg:w-[max(1136px,calc(50%_-_120px))] lg:max-w-none lg:object-left-top",
+  scrim: "bg-primary-500/60 lg:hidden"
+}) %}
+  <p class="text-sm text-white md:text-base"><span class="font-medium">Effective Date:</span> {{ t.effective }}</p>
+{% endcall %}
+
+{# Section bar: SemiBold 18/28 #3a526d links (16/24 on phones), orange for the section in view and on hover, spread
+   across the container from xl as in the frame. #}
+<nav x-data="aboutSubnav" aria-label="Sections" class="sticky top-[var(--header-h,0px)] z-30 border-b border-outline bg-menu" data-figma="35098:39780">
+  <div class="container-page">
+    <ul x-ref="tabs" class="-mx-5 flex gap-6 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:gap-8 md:px-0 xl:justify-between xl:gap-4 [&::-webkit-scrollbar]:hidden" data-figma="35098:39781">
+      {% for s in t.sections %}
+      <li class="shrink-0">
+        <a href="#{{ s.id }}" data-section="{{ s.id }}" @click="go('{{ s.id }}')"
+           :aria-current="active === '{{ s.id }}' ? 'location' : null"
+           :class="active === '{{ s.id }}' ? 'text-accent' : 'text-card hover:text-accent'"
+           class="block whitespace-nowrap py-4 text-base font-semibold transition-colors md:py-5 md:text-lg">{{ s.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+
+{# Search: right-aligned as in the frame (full width on phones, under it the result line). #}
+<div x-data="termsSearch" class="container-page flex flex-col-reverse gap-3 pt-8 md:flex-row md:items-center md:justify-between md:gap-6 md:pt-[50px]" data-figma="35098:39790">
+  <p aria-live="polite" class="text-base text-body md:text-lg">
+    <span x-show="needle" x-cloak>
+      <span x-text="hits ? (hits === 1 ? '1 subsection mentions' : hits + ' subsections mention') + ' “' + q.trim() + '”.' : 'No subsection mentions “' + q.trim() + '”.'"></span>
+      <button type="button" @click="clear()" class="link ml-2">Clear search</button>
+    </span>
+  </p>
+  {{ searchField("Search Terms & Conditions", "Search the terms and conditions", "q", "go()") }}
+</div>
+
+{% for s in t.sections %}
+{% set tinted = loop.index0 % 2 == 1 %}
+<section id="{{ s.id }}" data-term-section aria-labelledby="{{ s.id }}-title" class="{{ sectionOffset }} {{ 'bg-menu' if tinted else 'bg-white' }}" {% if s.figma %}data-figma="{{ s.figma }}"{% endif %}>
+  <div class="container-page flex flex-col gap-6 py-8 md:gap-[30px] md:py-[50px]">
+    {# Section Label: Medium 42/48 in the frame (here the repair pages' 24 / 32 / 40px title), 1px #3a526d rule. #}
+    <div class="flex items-center gap-5 md:gap-9">
+      <h2 id="{{ s.id }}-title" class="min-w-0 text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1">{{ s.title }}</h2>
+      <span aria-hidden="true" class="h-px min-w-8 flex-1 bg-card"></span>
+    </div>
+    <div class="grid gap-8 xl:grid-cols-[minmax(0,756px)_300px] xl:justify-between">
+      <div class="flex min-w-0 max-w-[756px] flex-col gap-8 md:gap-10">
+        {% for it in s.items %}
+        {# Subsection: the frame's "1.1  Title" (Regular 36/48) as a Medium 20/28 (24/32 from md) heading with the number
+           hanging; text Regular 16/24 (18/28 from md) in the frame's navy, paragraphs 12px apart. #}
+        <article id="{{ it.id }}" data-term aria-labelledby="{{ it.id }}-title" class="{{ itemOffset }} flex flex-col gap-3 md:gap-4" {% if it.figma %}data-figma="{{ it.figma }}"{% endif %}>
+          <h3 id="{{ it.id }}-title" class="flex gap-3 text-h4 font-medium tracking-title text-heading md:text-h3"><span class="shrink-0">{{ it.num }}</span><span class="min-w-0">{{ it.title }}</span></h3>
+          <div class="flex flex-col gap-3 text-base text-primary-500 md:text-lg">
+            {% for b in it.blocks %}{{ block(b, tinted) }}{% endfor %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      <nav aria-label="{{ s.title }} subsections" class="sticky top-[calc(var(--header-h,0px)_+_93px)] hidden self-start xl:block">
+        <p class="text-base font-medium text-ink">In this section</p>
+        <ul class="mt-3 flex flex-col border-l border-outline">
+          {% for it in s.items %}
+          <li data-term-link="{{ it.id }}">
+            <a href="#{{ it.id }}" class="-ml-px flex gap-2 border-l-2 border-transparent py-1.5 pl-4 text-base text-primary-500 transition-colors hover:border-accent hover:text-accent"><span class="w-8 shrink-0 font-semibold">{{ it.num }}</span><span class="min-w-0">{{ it.short or it.title }}</span></a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    <div class="flex justify-end" data-figma="35098:39814">
+      <a href="#top" class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-primary-700 md:text-lg">Back to Top{% icon "dropdown-up", "h-6 w-6" %}</a>
+    </div>
+  </div>
+</section>
+{% endfor %}
+
+{# Questions About These Terms? (the live page's closing box): the request strip's #eff7fd callout with the outline
+   border, text on the left and the address and phone numbers on the right from md. #}
+{% set ct = t.contact %}
+<section class="bg-white" aria-labelledby="terms-contact-title">
+  <div class="container-page pb-10 md:pb-[50px]">
+    <div class="flex flex-col gap-5 rounded border border-outline bg-[#eff7fd] px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-10 md:px-12 md:py-10">
+      <div class="flex max-w-[593px] flex-col gap-2">
+        <h2 id="terms-contact-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ ct.title }}</h2>
+        <p class="text-base text-body md:text-lg">{{ ct.text }}</p>
+      </div>
+      <address class="flex shrink-0 flex-col gap-1 text-base not-italic text-ink md:text-lg">
+        <span class="font-bold">{{ ct.company }}</span>
+        <span>{{ ct.address | join("<br>") | safe }}</span>
+        {% for ph in ct.phones %}
+        <span class="{{ 'mt-2' if loop.first }}">{{ ph.label }}: <a href="{{ ph.href }}" class="link font-medium">{{ ph.number }}</a></span>
+        {% endfor %}
+      </address>
+    </div>
+  </div>
+</section>

@@ -7,11 +7,13 @@ document.addEventListener("alpine:init", () => {
   const Alpine = window.Alpine;
 
   /**
-   * About sticky sub-navigation (Figma 34974:1154, scrolled state 34971:56681).
+   * About sticky sub-navigation (Figma 34974:1154, scrolled state 34971:56681),
+   * also the Conditions of Sale section bar (35098:39780).
    * Tabs are anchor links ([data-section] = section id); the tab of the section
    * under the bar gets the orange underline. The bar pins under the sticky site
    * header (top: var(--header-h)); sections use scroll-mt-[69px] for the bar and
-   * the page's scroll-padding-top covers the header.
+   * the page's scroll-padding-top covers the header. Sections hidden by a search
+   * (termsSearch) are skipped.
    */
   Alpine.data("aboutSubnav", () => ({
     active: null,
@@ -36,15 +38,15 @@ document.addEventListener("alpine:init", () => {
       this.frame = 0;
       if (this.target) return;
       const line = this.$el.getBoundingClientRect().bottom + 24;
-      let current = this.ids[0];
+      let current = this.ids.find((id) => document.getElementById(id)?.offsetParent) || this.ids[0];
       for (const id of this.ids) {
         const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= line) current = id;
+        if (el && el.offsetParent && el.getBoundingClientRect().top <= line) current = id;
       }
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       if (atBottom) {
         const last = document.getElementById(this.ids[this.ids.length - 1]);
-        if (last && last.getBoundingClientRect().top < window.innerHeight) current = this.ids[this.ids.length - 1];
+        if (last && last.offsetParent && last.getBoundingClientRect().top < window.innerHeight) current = this.ids[this.ids.length - 1];
       }
       this.active = current;
     },
@@ -113,6 +115,100 @@ document.addEventListener("alpine:init", () => {
     open: null,
     toggle(id) {
       this.open = this.open === id ? null : id;
+    },
+  }));
+
+  /**
+   * Conditions of Sale search ("Search Terms & Conditions", Figma 35098:39790). Two letters or more show only the
+   * subsections ([data-term]) that contain the words, hide sections ([data-term-section]) and index links
+   * ([data-term-link]) left without one, dim the section bar's tabs of hidden sections and mark the matches with the
+   * CSS Custom Highlight API (::highlight(terms-search) in app.css; browsers without it only filter). Enter scrolls to
+   * the next matching subsection. A section bar tab of a hidden section clears the search before jumping there.
+   */
+  Alpine.data("termsSearch", () => ({
+    q: "",
+    hits: 0,
+    next: 0,
+    init() {
+      this.terms = [...document.querySelectorAll("[data-term]")];
+      this.sections = [...document.querySelectorAll("[data-term-section]")];
+      this.links = [...document.querySelectorAll("[data-term-link]")];
+      this.tabs = [...document.querySelectorAll("[data-section]")];
+      this.tabs.forEach((tab) =>
+        tab.addEventListener("click", () => {
+          if (document.getElementById(tab.dataset.section)?.style.display === "none") this.clear();
+        }),
+      );
+      this.$watch("q", () => this.run());
+    },
+    get needle() {
+      const n = this.q.trim().replace(/\s+/g, " ").toLowerCase();
+      return n.length > 1 ? n : "";
+    },
+    run() {
+      const n = this.needle;
+      const ranges = [];
+      this.hits = 0;
+      this.next = 0;
+      for (const t of this.terms) {
+        const hit = !n || t.textContent.replace(/\s+/g, " ").toLowerCase().includes(n);
+        t.style.display = hit ? "" : "none";
+        if (!hit) continue;
+        if (n) {
+          this.hits++;
+          ranges.push(...this.rangesIn(t, n));
+        }
+      }
+      for (const s of this.sections) {
+        const empty = !s.querySelector("[data-term]:not([style*='none'])");
+        s.style.display = empty ? "none" : "";
+        this.tabs.find((tab) => tab.dataset.section === s.id)?.classList.toggle("opacity-40", empty);
+      }
+      for (const l of this.links) {
+        l.style.display = document.getElementById(l.dataset.termLink).style.display;
+      }
+      if (window.CSS && CSS.highlights) {
+        if (ranges.length) CSS.highlights.set("terms-search", new Highlight(...ranges));
+        else CSS.highlights.delete("terms-search");
+      }
+      // The section bar (aboutSubnav) re-reads which section is in view.
+      window.dispatchEvent(new Event("resize"));
+    },
+    /** Ranges of `n` in the element's text nodes (matches inside one text node; enough for words and phrases). */
+    rangesIn(el, n) {
+      const out = [];
+      const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let node = walk.nextNode(); node; node = walk.nextNode()) {
+        const text = node.data.replace(/\s/g, " ").toLowerCase();
+        for (let i = text.indexOf(n); i !== -1; i = text.indexOf(n, i + n.length)) {
+          const r = new Range();
+          r.setStart(node, i);
+          r.setEnd(node, i + n.length);
+          out.push(r);
+        }
+      }
+      return out;
+    },
+    /** Enter / the search button: scroll to the next matching subsection, from the top again after the last. */
+    go() {
+      const shown = this.terms.filter((t) => t.style.display !== "none");
+      if (!this.needle || !shown.length) return;
+      shown[this.next % shown.length].scrollIntoView({ behavior: "smooth", block: "start" });
+      this.next++;
+    },
+    clear() {
+      this.q = "";
+      this.run();
+    },
+  }));
+
+  /** Table rows filtered by their first cell (Conditions of Sale manufacturer table, "Search product lines" 35098:39836). */
+  Alpine.data("tableFilter", (rows) => ({
+    q: "",
+    rows,
+    get shown() {
+      const n = this.q.trim().toLowerCase();
+      return n ? this.rows.filter((r) => r[0].toLowerCase().includes(n)) : this.rows;
     },
   }));
 

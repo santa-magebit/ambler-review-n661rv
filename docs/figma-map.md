@@ -44,6 +44,7 @@ come from the "Styleguide and Spacing" page (`14714:56317`) and live in
 | `/free-lifetime-repair/` | (section Free Lifetime Repair - Adjusted) | Free Lifetime Repair - Web (client version, copy source: `35098:38806`) | `35122:1207` |
 | `/repair-services/micro-instrument-repair/` | WIP | Repair - Micro Instrument (client's 1600px frame, built with the redesign's components; FAQ answers from the live page) | `35098:38988` |
 | `/repair-services/cryosurgical-handpiece-repair/` | WIP | Repair - Cryosurgical Handpiece (client's 1600px frame, built like Micro Instrument; FAQ answers from the live page) | `35098:39248` |
+| `/conditions-of-sale/` | WIP | Conditions of Sale (client's 1600px frame drawing sections 1, 2 and 4.7; the full text and anchors are the live page's) | `35098:39725` |
 
 Not designed in Figma, built in the same style: `/browse-by-specialty/`,
 `/sterilization-cleaning/`, `/search/`, `/contact/`, `/checkout/onepage/success/`.

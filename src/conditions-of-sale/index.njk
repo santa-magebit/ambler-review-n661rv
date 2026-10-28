@@ -12,8 +12,8 @@ permalink: /conditions-of-sale/
      Phones scroll the links sideways.
    - "Search Terms & Conditions" (35098:39790) works: it keeps only the subsections that mention the words and marks
      them (termsSearch in content.js).
-   - Sections: the frame's title with a rule to its right, white and #f5f8fa in turn (as Section 1 and 2), and
-     "Back to Top" at the end of each. The text keeps the 756px reading width; from xl the room to its right holds
+   - Sections: the frame's title with a rule to its right, white and #f5f8fa in turn (as Section 1 and 2). The frame's
+     "Back to Top" under each section is one sticky button instead. The text keeps the 756px reading width; from xl the room to its right holds
      the section's subsection index, sticky under the bar (the frame's hidden rows 35098:39900 to 40038 list the
      same subsections, with the live page's shorter titles).
    - Tables (4.5, and 4.7 with all 45 product lines) look like the repair price tables; the 4.7 table keeps the
@@ -166,6 +166,9 @@ permalink: /conditions-of-sale/
   {{ searchField("Search Terms & Conditions", "Search the terms and conditions", "q", "go()") }}
 </div>
 
+{# The sections share one Back to Top button (the frame's "Back to Top" 35098:39814), sticky at the bottom right of the
+   screen once a screen's height has been scrolled; after the last section it settles above the contact box. #}
+<div class="relative" x-data="{ shown: false }" x-init="shown = scrollY > innerHeight" @scroll.window.throttle.100ms="shown = scrollY > innerHeight">
 {% for s in t.sections %}
 {% set tinted = loop.index0 % 2 == 1 %}
 <section id="{{ s.id }}" data-term-section aria-labelledby="{{ s.id }}-title" class="{{ sectionOffset }} {{ 'bg-menu' if tinted else 'bg-white' }}" {% if s.figma %}data-figma="{{ s.figma }}"{% endif %}>
@@ -199,18 +202,23 @@ permalink: /conditions-of-sale/
         </ul>
       </nav>
     </div>
-    <div class="flex justify-end" data-figma="35098:39814">
-      <a href="#top" class="flex items-center gap-2 text-base font-medium text-primary-500 hover:text-primary-700 md:text-lg">Back to Top{% icon "dropdown-up", "h-6 w-6" %}</a>
-    </div>
   </div>
 </section>
 {% endfor %}
+{# White 52px button with the shadow of lifted cards; icon only on phones, where it sits over the text. #}
+<div class="container-page pointer-events-none sticky bottom-5 z-20 flex justify-end md:bottom-8" data-figma="35098:39814">
+  <a href="#top" x-show="shown" x-cloak x-transition.opacity aria-label="Back to Top"
+     class="btn-secondary pointer-events-auto w-[52px] px-0 shadow-200 md:w-auto md:px-6">
+    <span class="hidden md:inline">Back to Top</span>{% icon "dropdown-up", "h-6 w-6" %}
+  </a>
+</div>
+</div>
 
 {# Questions About These Terms? (the live page's closing box): the request strip's #eff7fd callout with the outline
    border, text on the left and the address and phone numbers on the right from md. #}
 {% set ct = t.contact %}
 <section class="bg-white" aria-labelledby="terms-contact-title">
-  <div class="container-page pb-10 md:pb-[50px]">
+  <div class="container-page pb-10 pt-6 md:pb-[50px] md:pt-8">
     <div class="flex flex-col gap-5 rounded border border-outline bg-[#eff7fd] px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-10 md:px-12 md:py-10">
       <div class="flex max-w-[593px] flex-col gap-2">
         <h2 id="terms-contact-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ ct.title }}</h2>

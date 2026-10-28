@@ -5,11 +5,12 @@ permalink: /repair-services/micro-instrument-repair/
 ---
 {# Repair - Micro Instrument (Figma 35098:38988, the client's 1600px frame on the WIP page); the URL is the live
    site's. No redesigned or phone frame exists, so the sections use the redesign's components and type scale:
-   - Hero: the shared content hero with the frame's photo and fade, the title and the "Download Repair Form" button.
-   - Intro and "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and
-     #f5f8fa), as real tables. Every cell border is the same light outline, including the line before the price
-     column that Figma draws navy. The intro asks to "fill in the repair form below", so
-     the download button repeats under the prices, with "No RMA number needed." from the FAQ answer.
+   - Hero: the shared content hero with the frame's photo and fade, the title, the frame's intro (drawn under the
+     hero in Figma) and the "Download Repair Form" button.
+   - "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and #f5f8fa), as
+     real tables. Every cell border is the same light outline, including the line before the price column that Figma
+     draws navy, and the tables get the 4px corners. The download button repeats under the prices, with "No RMA
+     number needed." from the FAQ answer.
    - Free Lifetime Repair band: the PLP banner (34777:59015), the same seal, copy and button.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
    - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
@@ -24,10 +25,11 @@ permalink: /repair-services/micro-instrument-repair/
 {# Hero: the instruments photo (a cut-out on white) on the right under the frame's navy fade (microFade). Figma's photo
    is 124% of the hero's height, 3px from the top and 1.6% past the right edge; on narrower screens it slides further
    out so it never starts left of the 593px text column; past 1920px it keeps its 1920 place beside the centred content
-   (right edge at 50% + 991px), with white beyond it. Phones: navy behind the photo, which sits on the right under
+   (right edge at 50% + 991px), with white beyond it. The intro is longer than on the other heroes, so the hero grows
+   past its 480px (the photo still reaches the bottom from lg; below lg it ends on white). Phones: navy behind the photo, which sits on the right under
    a 60% navy tint so the white title stays readable over the light instruments. #}
 {% call c.hero({
-  title: "Micro / Ophthalmic Instrument Repair", figma: "35098:39055", image: "d61fe469",
+  title: "Micro / Ophthalmic Instrument Repair", text: m.intro, figma: "35098:39055", image: "d61fe469",
   bg: "bg-primary-500 md:bg-white", fade: contentPages.gradients.microFade,
   photo: "right-[-20%] top-0 h-full w-auto max-w-none md:right-[min(-1.6%,calc(100%_-_1183px))] md:top-[3px] md:h-[446px] md:w-[558px] lg:right-[max(min(-1.6%,calc(100%_-_1372px)),calc(50%_-_991px))] lg:h-[597px] lg:w-[747px]",
   scrim: "bg-primary-500/60 md:hidden"
@@ -35,27 +37,26 @@ permalink: /repair-services/micro-instrument-repair/
   {{ c.arrowButton("Download Repair Form", "#", "data-proto", "w-full md:w-auto") }}
 {% endcall %}
 
-{# Intro and Typical Repair Charges ("Content" 35098:39067): 36px between the intro, the title and the tables. The intro
-   keeps the 756px reading width of the PLP intros rather than Figma's full width.
-   Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall, Bold prices in a 300px
-   column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
+{# Typical Repair Charges ("Content" 35098:39067, the intro moved into the hero): 36px between the title and the tables.
+   Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall with their 1px bottom line,
+   Bold prices in a 300px column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39067">
   <div class="container-page flex flex-col gap-6 py-10 md:gap-9 md:py-[50px]">
-    <p class="max-w-[756px] text-base text-body md:text-lg" data-figma="35098:39068">{{ m.intro }}</p>
     <h2 id="charges-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1" data-figma="35098:39069">Typical Repair Charges</h2>
     {% for box in m.charges %}
-    <table class="w-full table-fixed border-collapse text-left" data-figma="{{ box.figma }}">
+    <table class="w-full table-fixed border-separate border-spacing-0 text-left" data-figma="{{ box.figma }}">
       <colgroup><col><col class="w-28 md:w-[300px]"></colgroup>
       <thead>
         <tr>
-          <th colspan="2" scope="colgroup" class="bg-primary-500 px-4 py-3 text-h4 font-normal text-white md:py-4 md:text-h3"><span class="font-bold">{{ box.name }}</span> - {{ box.work }}</th>
+          <th colspan="2" scope="colgroup" class="rounded-t bg-primary-500 px-4 py-3 text-h4 font-normal text-white md:py-4 md:text-h3"><span class="font-bold">{{ box.name }}</span> - {{ box.work }}</th>
         </tr>
       </thead>
       <tbody class="text-base text-primary-500 md:text-lg">
         {% for row in box.rows %}
-        <tr class="even:bg-menu">
-          <th scope="row" class="border-b border-l border-outline px-4 py-3 font-normal md:py-[18px]">{{ row[0] | escape | replace("/", "/<wbr>") | safe }}</th>
-          <td class="border-b border-l border-r border-outline px-4 py-3 font-bold md:py-[18px]">{{ row[1] | money }}</td>
+        {% set tint = "bg-menu" if loop.index % 2 == 0 else "bg-white" %}
+        <tr>
+          <th scope="row" class="{{ tint }} {{ 'rounded-bl' if loop.last }} border-b border-l border-outline px-4 pb-[11px] pt-3 font-normal md:pb-[17px] md:pt-[18px]">{{ row[0] | escape | replace("/", "/<wbr>") | safe }}</th>
+          <td class="{{ tint }} {{ 'rounded-br' if loop.last }} border-b border-l border-r border-outline px-4 pb-[11px] pt-3 font-bold md:pb-[17px] md:pt-[18px]">{{ row[1] | money }}</td>
         </tr>
         {% endfor %}
       </tbody>

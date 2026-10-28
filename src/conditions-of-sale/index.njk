@@ -16,6 +16,8 @@ permalink: /conditions-of-sale/
      "Back to Top" under each section is one sticky button instead. The text keeps the 756px reading width; from xl the room to its right holds
      the section's subsection index, sticky under the bar (the frame's hidden rows 35098:39900 to 40038 list the
      same subsections, with the live page's shorter titles).
+   - Spacing inside the sections is the styleguide's "CMS Spacings" (14713:56769) rather than the frame's gaps:
+     headings, paragraphs, lists and tables keep their margins, which collapse into each other as on a CMS page.
    - Tables (4.5, and 4.7 with all 45 product lines) look like the repair price tables; the 4.7 table keeps the
      frame's search field (the same PLP field), which filters its product lines.
    - "Questions About These Terms?": the live page's closing contact box, as a tinted callout. #}
@@ -41,12 +43,13 @@ permalink: /conditions-of-sale/
 {% endmacro %}
 
 {# Table in the repair price tables' look (Micro Instrument Repair): navy header (SemiBold, white), rows white and
-   #f5f8fa in turn with the 1px outline lines, 4px corners, "Not Returnable" in Bold. The first column takes the rest
-   of the width. Phones: 14/20 text, 104px value columns. tb.filter: rows rendered by Alpine (tableFilter) under
-   the search field; the empty row says when no product line matches. #}
+   #f5f8fa in turn with the 1px outline lines, 4px corners, "Not Returnable" in Bold. Spacing from the styleguide's
+   CMS table (CMS Spacings 14713:56834): 24px cell sides, a 60px header and 48px rows of 16/24 text. The first column
+   takes the rest of the width. Phones: 14/20 text, 12px sides, 104px value columns. tb.filter: rows rendered by
+   Alpine (tableFilter) under the search field; the empty row says when no product line matches. #}
 {% macro table(tb) %}
-{% set head = "bg-primary-500 px-3 py-3 text-sm font-semibold text-white md:px-4 md:py-4 md:text-lg" %}
-{% set cell = "border-b border-l border-outline px-3 pb-[11px] pt-3 md:px-4 md:py-3" %}
+{% set head = "bg-primary-500 px-3 py-3 text-sm font-semibold text-white md:px-6 md:py-[18px] md:text-base" %}
+{% set cell = "border-b border-l border-outline px-3 pb-[11px] pt-3 md:px-6" %}
 <table class="w-full table-fixed border-separate border-spacing-0 text-left">
   <colgroup><col>{% for h in tb.head %}{% if not loop.first %}<col class="w-[104px] md:w-[200px]">{% endif %}{% endfor %}</colgroup>
   <thead>
@@ -56,7 +59,7 @@ permalink: /conditions-of-sale/
       {% endfor %}
     </tr>
   </thead>
-  <tbody class="text-sm text-primary-500 md:text-lg">
+  <tbody class="text-sm text-primary-500 md:text-base">
     {% if tb.filter %}
     <template x-for="(row, i) in shown" :key="row[0]">
       <tr>
@@ -88,35 +91,38 @@ permalink: /conditions-of-sale/
 </table>
 {% endmacro %}
 
-{# One block of a subsection (see src/_data/conditionsOfSale.js). Bullets are the redesign's orange dashes
-   (About 34974:1180) instead of the frame's dots; the notice box is the frame's "Disclaimer" (35098:39802) with the
-   outline border of the tinted callouts, white on the #f5f8fa sections. #}
+{# One block of a subsection (see src/_data/conditionsOfSale.js), spaced by the styleguide's CMS Spacings
+   (14713:56769) as margins that collapse into each other like on a CMS page: H4 20px above and 8px below (styleguide
+   H4, Medium 20/28; mobile H4 18/28), paragraphs 16px below, lists, tables and the notice box 16px above and below.
+   Lists are indented 20px with 8px between items, a 16px marker column and 12px to the text; bullets are the
+   styleguide's orange dashes. The notice box is the frame's "Disclaimer" (35098:39802) with the outline border of
+   the tinted callouts, white on the #f5f8fa sections. #}
 {% macro block(b, tinted) %}
 {% if b.h %}
-<h4 class="mt-2 text-lg font-bold text-heading md:text-h4">{{ b.h }}</h4>
+<h4 class="mb-2 mt-5 text-lg font-medium text-heading md:text-h4">{{ b.h }}</h4>
 {% elif b.note %}
-<p class="rounded border border-outline {{ 'bg-white' if tinted else 'bg-menu' }} px-5 py-4 md:px-6" data-figma="35098:39802">{{ b.note }}</p>
+<p class="my-4 rounded border border-outline {{ 'bg-white' if tinted else 'bg-menu' }} px-5 py-4 md:px-6" data-figma="35098:39802">{{ b.note }}</p>
 {% elif b.list %}
-<ul class="flex flex-col gap-1">
+<ul class="my-4 flex flex-col gap-2 pl-5">
   {% for li in b.list %}
-  <li class="flex gap-3"><span aria-hidden="true" class="mt-[11px] h-0.5 w-2 shrink-0 rounded-[1px] bg-accent md:mt-[13px]"></span><span class="min-w-0">{{ li | safe }}</span></li>
+  <li class="flex gap-3"><span aria-hidden="true" class="flex h-6 w-4 shrink-0 items-center justify-center md:h-7"><span class="h-0.5 w-2 rounded-[1px] bg-accent"></span></span><span class="min-w-0">{{ li | safe }}</span></li>
   {% endfor %}
 </ul>
 {% elif b.ordered %}
-<ol class="flex list-decimal flex-col gap-1 pl-6 marker:font-medium">
-  {% for li in b.ordered %}<li class="pl-1">{{ li | safe }}</li>{% endfor %}
+<ol role="list" class="my-4 flex flex-col gap-2 pl-5">
+  {% for li in b.ordered %}<li class="flex gap-3"><span class="w-4 shrink-0">{{ loop.index }}.</span><span class="min-w-0">{{ li | safe }}</span></li>{% endfor %}
 </ol>
 {% elif b.table and b.table.filter %}
-<div x-data="tableFilter({{ b.table.rows | json }})" class="flex flex-col gap-4 md:gap-6" data-figma="35098:39840">
+<div x-data="tableFilter({{ b.table.rows | json }})" class="my-4 flex flex-col gap-4" data-figma="35098:39840">
   <div class="flex justify-end" data-figma="35098:39836">{{ searchField("Search product lines", "Search the product lines in the table", "q", "") }}</div>
   {{ table(b.table) }}
 </div>
 {% elif b.table %}
-{{ table(b.table) }}
+<div class="my-4">{{ table(b.table) }}</div>
 {% elif b.footnote %}
-<p class="flex gap-2 text-sm text-body md:text-base"><span class="w-5 shrink-0 font-bold text-primary-500">{{ b.footnote }}</span><span>{{ b.p | safe }}</span></p>
+<p class="mb-4 flex gap-2 text-sm text-body md:text-base"><span class="w-5 shrink-0 font-bold text-primary-500">{{ b.footnote }}</span><span>{{ b.p | safe }}</span></p>
 {% else %}
-<p>{{ b.p | safe }}</p>
+<p class="mb-4">{{ b.p | safe }}</p>
 {% endif %}
 {% endmacro %}
 
@@ -153,8 +159,9 @@ permalink: /conditions-of-sale/
   </div>
 </nav>
 
-{# Search: right-aligned as in the frame (full width on phones, under it the result line). #}
-<div x-data="termsSearch" class="container-page flex flex-col-reverse gap-3 pt-8 md:flex-row md:items-center md:justify-between md:gap-6 md:pt-[50px]" data-figma="35098:39790">
+{# Search: right-aligned as in the frame (full width on phones, under it the result line), 40px under the bar like the
+   sections' padding (32px on phones). #}
+<div x-data="termsSearch" class="container-page flex flex-col-reverse gap-3 pt-8 md:flex-row md:items-center md:justify-between md:gap-6 md:pt-10" data-figma="35098:39790">
   <p aria-live="polite" class="text-base text-body md:text-lg">
     <span x-show="needle" x-cloak>
       <span x-text="hits ? (hits === 1 ? '1 subsection mentions' : hits + ' subsections mention') + ' “' + q.trim() + '”.' : 'No subsection mentions “' + q.trim() + '”.'"></span>
@@ -170,31 +177,34 @@ permalink: /conditions-of-sale/
 {% for s in t.sections %}
 {% set tinted = loop.index0 % 2 == 1 %}
 <section id="{{ s.id }}" data-term-section aria-labelledby="{{ s.id }}-title" class="{{ sectionOffset }} {{ 'bg-menu' if tinted else 'bg-white' }}" {% if s.figma %}data-figma="{{ s.figma }}"{% endif %}>
-  <div class="container-page flex flex-col gap-6 py-8 md:gap-[30px] md:py-[50px]">
-    {# Section Label: Medium 42/48 in the frame (here the repair pages' 24 / 32 / 40px title), 1px #3a526d rule. #}
+  {# 40px padding (32px on phones) around the content, the redesign's section padding: 24px (16px) at the bottom
+     plus the last block's 16px margin. #}
+  <div class="container-page pb-4 pt-8 md:pb-6 md:pt-10">
+    {# Section Label: the frame's Medium 42/48 title as the styleguide H2 (Bold 32/40; mobile H2 Medium 24/32), 1px
+       #3a526d rule. Its 16px bottom margin collapses into the first H3's 24px (CMS Spacings), so the first
+       subsection brings the gap. #}
     <div class="flex items-center gap-5 md:gap-9">
-      <h2 id="{{ s.id }}-title" class="min-w-0 text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1">{{ s.title }}</h2>
+      <h2 id="{{ s.id }}-title" class="min-w-0 text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ s.title }}</h2>
       <span aria-hidden="true" class="h-px min-w-8 flex-1 bg-card"></span>
     </div>
-    <div class="grid gap-8 xl:grid-cols-[minmax(0,756px)_300px] xl:justify-between">
-      <div class="flex min-w-0 max-w-[756px] flex-col gap-8 md:gap-10">
+    <div class="grid xl:grid-cols-[minmax(0,756px)_300px] xl:justify-between">
+      <div class="min-w-0 max-w-[756px] text-base text-primary-500 md:text-lg">
         {% for it in s.items %}
-        {# Subsection: the frame's "1.1  Title" (Regular 36/48) as a Medium 20/28 (24/32 from md) heading with the number
-           hanging; text Regular 16/24 (18/28 from md) in the frame's navy, paragraphs 12px apart. #}
-        <article id="{{ it.id }}" data-term aria-labelledby="{{ it.id }}-title" class="{{ itemOffset }} flex flex-col gap-3 md:gap-4" {% if it.figma %}data-figma="{{ it.figma }}"{% endif %}>
-          <h3 id="{{ it.id }}-title" class="flex gap-3 text-h4 font-medium tracking-title text-heading md:text-h3"><span class="shrink-0">{{ it.num }}</span><span class="min-w-0">{{ it.title }}</span></h3>
-          <div class="flex flex-col gap-3 text-base text-primary-500 md:text-lg">
-            {% for b in it.blocks %}{{ block(b, tinted) }}{% endfor %}
-          </div>
+        {# Subsection: the frame's "1.1  Title" (Regular 36/48) as the styleguide H3 (Medium 24/32; mobile 20/28) with
+           the number hanging, 24px above and 12px below; text Regular 16/24 (18/28 from md) in the frame's navy. #}
+        <article id="{{ it.id }}" data-term aria-labelledby="{{ it.id }}-title" class="{{ itemOffset }}" {% if it.figma %}data-figma="{{ it.figma }}"{% endif %}>
+          <h3 id="{{ it.id }}-title" class="mb-3 mt-6 flex gap-3 text-h4 font-medium tracking-title text-heading md:text-h3"><span class="shrink-0">{{ it.num }}</span><span class="min-w-0">{{ it.title }}</span></h3>
+          {% for b in it.blocks %}{{ block(b, tinted) }}{% endfor %}
         </article>
         {% endfor %}
       </div>
-      <nav aria-label="{{ s.title }} subsections" class="sticky top-[calc(var(--header-h,0px)_+_93px)] hidden self-start xl:block">
+      {# Subsection index, level with the first H3; links 8px apart like the styleguide's list items. #}
+      <nav aria-label="{{ s.title }} subsections" class="sticky top-[calc(var(--header-h,0px)_+_93px)] mt-6 hidden self-start xl:block">
         <p class="text-base font-medium text-ink">In this section</p>
         <ul class="mt-3 flex flex-col border-l border-outline">
           {% for it in s.items %}
           <li data-term-link="{{ it.id }}">
-            <a href="#{{ it.id }}" class="-ml-px flex gap-2 border-l-2 border-transparent py-1.5 pl-4 text-base text-primary-500 transition-colors hover:border-accent hover:text-accent"><span class="w-8 shrink-0 font-semibold">{{ it.num }}</span><span class="min-w-0">{{ it.short or it.title }}</span></a>
+            <a href="#{{ it.id }}" class="-ml-px flex gap-2 border-l-2 border-transparent py-1 pl-4 text-base text-primary-500 transition-colors hover:border-accent hover:text-accent"><span class="w-8 shrink-0 font-semibold">{{ it.num }}</span><span class="min-w-0">{{ it.short or it.title }}</span></a>
           </li>
           {% endfor %}
         </ul>
@@ -203,8 +213,9 @@ permalink: /conditions-of-sale/
   </div>
 </section>
 {% endfor %}
-{# White 52px button with the shadow of lifted cards; icon only on phones, where it sits over the text. #}
-<div class="container-page pointer-events-none sticky bottom-5 z-20 flex justify-end md:bottom-8" data-figma="35098:39814">
+{# White 52px button with the shadow of lifted cards; icon only on phones, where it sits over the text. At the end it
+   rests 16px under the last text (pulled up into the section's bottom padding) and 16px above the contact box. #}
+<div class="container-page pointer-events-none sticky bottom-5 z-20 -mt-4 flex justify-end md:bottom-8 md:-mt-6" data-figma="35098:39814">
   <a href="#top" x-show="shown" x-cloak x-transition.opacity aria-label="Back to Top"
      class="btn-secondary pointer-events-auto w-[52px] px-0 shadow-200 md:w-auto md:px-6">
     <span class="hidden md:inline">Back to Top</span>{% icon "dropdown-up", "h-6 w-6" %}
@@ -216,7 +227,7 @@ permalink: /conditions-of-sale/
    border, text on the left and the address and phone numbers on the right from md. #}
 {% set ct = t.contact %}
 <section class="bg-white" aria-labelledby="terms-contact-title">
-  <div class="container-page pb-10 pt-6 md:pb-[50px] md:pt-8">
+  <div class="container-page pb-10 pt-4">
     <div class="flex flex-col gap-5 rounded border border-outline bg-[#eff7fd] px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-10 md:px-12 md:py-10">
       <div class="flex max-w-[593px] flex-col gap-2">
         <h2 id="terms-contact-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ ct.title }}</h2>

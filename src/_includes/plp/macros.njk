@@ -388,19 +388,21 @@
 {% endmacro %}
 
 {#
-  "Free Lifetime Repair" banner (34777:59015). Phones (34777:58812): title and the seal (130x126,
-  rising 26px above the navy) side by side, text and a full-width button below.
+  "Free Lifetime Repair" banner (34777:59015). Phones (34777:58840): "Free" over "Lifetime Repair" (Medium 24/32, -2%)
+  beside the seal (130x126, rising 26px above the navy) in a 100px row, text 16px under it and a full-width button
+  24px under that. Tablets keep the phone layout with the web text sizes and a button sized to its label, as the web
+  row (seal, text, button) needs the width from lg.
 #}
 {% macro repairBanner() %}
 <section class="bg-white pt-8 md:py-10" data-figma="34777:59015">
   <div class="bg-primary-500">
-    <div class="container-page grid grid-cols-[minmax(0,1fr)_130px] items-end gap-x-4 gap-y-4 pb-8 md:flex md:h-[160px] md:flex-row md:items-center md:gap-20 md:py-0 md:text-left">
-      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="col-start-2 row-start-1 -mt-[26px] h-[126px] w-[130px] shrink-0 object-cover md:-my-[74px] md:h-[228px] md:w-[228px] md:-translate-y-2 md:scale-[1.19]">
-      <div class="contents md:flex md:flex-1 md:flex-col md:gap-4">
-        <h2 class="col-start-1 row-start-1 self-end text-h3 font-medium text-white md:self-auto md:text-h2">{{ plp.repairBanner.title }}</h2>
+    <div class="container-page grid grid-cols-[minmax(0,1fr)_130px] items-end gap-x-4 gap-y-4 pb-8 lg:flex lg:h-[160px] lg:flex-row lg:items-center lg:gap-20 lg:py-0 lg:text-left">
+      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="col-start-2 row-start-1 -mt-[26px] h-[126px] w-[130px] shrink-0 object-cover lg:-my-[74px] lg:h-[228px] lg:w-[228px] lg:-translate-y-2 lg:scale-[1.19]">
+      <div class="contents lg:flex lg:flex-1 lg:flex-col lg:gap-4">
+        <h2 class="col-start-1 row-start-1 self-end text-h3 font-medium tracking-title text-white md:text-h2 lg:self-auto lg:tracking-normal">{{ plp.repairBanner.title | replace(" ", '<br class="lg:hidden"> ', 1) | safe }}</h2>
         <p class="col-span-2 text-base text-[#d3dce5] md:text-lg">{{ plp.repairBanner.text }}</p>
       </div>
-      <a href="{{ plp.repairBanner.href }}" class="btn col-span-2 mt-2 bg-white pl-8 pr-[30px] text-primary-500 hover:bg-[#f5f5f5] md:mt-0">{{ plp.repairBanner.cta }}{% icon "arrow-narrow-right" %}</a>
+      <a href="{{ plp.repairBanner.href }}" class="btn col-span-2 mt-2 bg-white pl-8 pr-[30px] text-primary-500 hover:bg-[#f5f5f5] md:justify-self-start lg:mt-0">{{ plp.repairBanner.cta }}{% icon "arrow-narrow-right" %}</a>
     </div>
   </div>
 </section>

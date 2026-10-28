@@ -336,7 +336,7 @@
             <div class="relative w-full md:w-auto md:min-w-[227px]">
               <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="{{ l.id }}-sort {{ l.id }}-sort-v" class="{{ mControlClass }}" :class="{{ mControlState }}">
                 <span class="md:hidden" aria-hidden="true">Sort By</span>
-                <span id="{{ l.id }}-sort-v" class="hidden whitespace-nowrap md:inline" x-text="sortLabel">Product name A-Z</span>
+                <span id="{{ l.id }}-sort-v" class="hidden whitespace-nowrap md:inline" x-text="sortLabel">Popular</span>
                 <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
               </button>
               <ul x-show="open" x-cloak x-transition.opacity class="{{ panelClass }}">

@@ -255,6 +255,13 @@ const rows = [
   [undefined, "Derf Needle Holder", "Smooth jaws with lock", 112, "aadc3c4a", "needle-holders", "ambler-surgical", { badge: null }],
 ];
 
+/**
+ * Products amblersurgical.com shows without the "Popular" label (the Duckworth & Kent line page, sorted by
+ * popularity, 2026-10-28). Every Ambler Surgical item on its own line page is labelled, so the Ambler rows stay
+ * Popular. A product without the label keeps the card's label slot empty, as on the live site.
+ */
+const notPopular = new Set(["2-100E", "9-692", "1-110", "1-111", "1-111B"]);
+
 const products = rows.map(([sku, name, description, price, image, type, brand = "ambler-surgical", extra = {}]) => {
   const slug = slugify(sku ? `${name} ${sku}` : name);
   return {
@@ -272,14 +279,16 @@ const products = rows.map(([sku, name, description, price, image, type, brand = 
     specialties: ["ophthalmology"],
     type,
     typeName: instrumentTypes.find((t) => t.slug === type)?.name ?? type.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-    badge: "Popular",
+    badge: notPopular.has(sku) ? null : "Popular",
+    // The rows with `badge: null` are products Figma draws outside the listings (search, cart, account).
+    listed: extra.badge !== null,
     variant: null,
     ...extra,
   };
 });
 
 /** The 28 products drawn as ITEM# cards on the Figma listing pages. */
-const listingProducts = products.filter((p) => p.badge === "Popular");
+const listingProducts = products.filter((p) => p.listed);
 
 export default {
   specialties,

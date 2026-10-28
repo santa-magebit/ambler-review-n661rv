@@ -305,7 +305,8 @@ function buildFilters(list) {
  * cfg goes to Alpine.data("plpListing"); items carry each product's facet keys.
  */
 function listing(list, { title: listTitle, perPage = 20, filters = true, id = "products", search = false } = {}) {
-  const sorted = sortByName(list);
+  // The listings' default sort (plp.js "popular"), like amblersurgical.com: Popular products first, then by name.
+  const sorted = [...sortByName(list)].sort((a, b) => (b.badge ? 1 : 0) - (a.badge ? 1 : 0));
   const panel = filters ? buildFilters(sorted) : [];
   return {
     id,

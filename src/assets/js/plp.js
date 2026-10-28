@@ -14,7 +14,9 @@
 document.addEventListener("alpine:init", () => {
   const Alpine = window.Alpine;
 
+  // "Popular" first and the default, as on amblersurgical.com: products labelled Popular, then by name.
   const SORTS = [
+    { value: "popular", label: "Popular" },
     { value: "name-asc", label: "Product name A-Z" },
     { value: "name-desc", label: "Product name Z-A" },
     { value: "price-asc", label: "Price low to high" },
@@ -37,7 +39,7 @@ document.addEventListener("alpine:init", () => {
     fit: Infinity,
     query: "",
     within: "",
-    sort: "name-asc",
+    sort: "popular",
     sorts: SORTS,
     page: 1,
     perPage: cfg.perPage,
@@ -93,6 +95,7 @@ document.addEventListener("alpine:init", () => {
     },
     get sorted() {
       const list = [...this.filtered];
+      if (this.sort === "popular") list.sort((a, b) => (b.p.badge ? 1 : 0) - (a.p.badge ? 1 : 0) || byName(a, b));
       if (this.sort === "name-asc") list.sort(byName);
       if (this.sort === "name-desc") list.sort((a, b) => byName(b, a));
       if (this.sort === "price-asc") list.sort((a, b) => a.p.price - b.p.price || byName(a, b));

@@ -275,8 +275,8 @@ const repair = {
 // Free Lifetime Repair
 
 /**
- * Free Lifetime Repair - Adjusted (Figma 35122:1207). Copy from the frame; the steps, the testimonial and the FAQ
- * answers Figma leaves empty come from amblersurgical.com/free-lifetime-repair and its repair FAQ.
+ * Free Lifetime Repair - Adjusted (Figma 35122:1207). Copy from the frame and the client's version (35098:38806); the
+ * steps and the FAQ answers Figma leaves empty come from amblersurgical.com/free-lifetime-repair and /repair-services.
  */
 const lifetime = {
   // The hero adds the "*" as a link to the restrictions.
@@ -295,29 +295,22 @@ const lifetime = {
   /** What's Included cards (35122:1317), photo by Figma image hash. The flat needle holder and hook photos get the
       category cards' 45° turn (plp.diagonal); the forceps, drawn at 50°, is eased to 45°. */
   included: [
-    { figma: "35122:1318", title: "FREE Scissor Sharpening", image: images["1907881e"] },
-    { figma: "35122:1323", title: "FREE Forceps Alignment", image: images["478dcae3"], style: "transform: rotate(-5deg)" },
-    { figma: "35122:1328", title: "FREE Needle Holder Re-Setting", image: images["393cbe8d"], style: plp.diagonal },
-    { figma: "35122:1333", title: "FREE Hook Straightening", image: images["a9a5e53d"], style: plp.diagonal },
+    { figma: "35122:1318", title: "Scissor Sharpening", image: images["1907881e"] },
+    { figma: "35122:1323", title: "Forceps Alignment", image: images["478dcae3"], style: "transform: rotate(-5deg)" },
+    { figma: "35122:1328", title: "Needle Holder Re-Setting", image: images["393cbe8d"], style: plp.diagonal },
+    { figma: "35122:1333", title: "Hook Straightening", image: images["a9a5e53d"], style: plp.diagonal },
   ],
-  /** "Request a Free Repair" (35122:1338) as three steps, from the old site's "How do I send my instruments in for repair?". */
+  /** "Request a Free Repair" (35122:1338) as three steps, in the words of amblersurgical.com/repair-services. */
   steps: [
-    { title: "Download the form", text: "Fill in the repair form for the instruments you are sending." },
-    { title: "Pack your instruments", text: "Put the form in the box with your sterilized instruments. No RMA number needed." },
-    { title: "Ship them to us", text: "Send the box to our repair service center and we will contact you." },
+    { icon: "download", title: "Download the form", text: "Complete the repair form for your instruments." },
+    { icon: "box", title: "Pack your instruments", text: "Include the form in the box with your sterilized instruments." },
+    { icon: "truck-delivery", title: "Ship them to us", text: "Ship the box to our Exton, PA facility. We will notify you once your shipment arrives." },
   ],
   /** "SEO Section" band (35122:1354). */
   value: {
     title: "Quality Instruments.",
     accent: "Long-Term Value.",
     text: "Choosing Ambler means more than purchasing quality ophthalmic instruments. Our Free Lifetime Repair Program helps keep your instruments performing as intended while reducing long-term maintenance expenses.",
-  },
-  /** The testimonial on amblersurgical.com/free-lifetime-repair. */
-  testimonial: {
-    quote:
-      "UAB Callahan Eye Hospital is one of the busiest ophthalmic surgical hospitals in the country. We send instruments for repair on a weekly basis. Most of them were purchased from Ambler Surgical, and those repairs are FREE. Many instrument companies say that they stand by their instruments. Ambler Surgical is actually doing it, every day.",
-    name: "Cherry Maloney, RN MBA",
-    role: "Director Central Sterile/OR Educator, UAB Callahan Eye Hospital",
   },
   /** FAQ (35122:1384). Figma answers the third question; the others restate the program terms below. */
   faq: [
@@ -332,7 +325,7 @@ const lifetime = {
     {
       id: "request",
       q: "How do I request a free repair?",
-      a: ["No RMA number needed. Download the repair form, fill it out and put it in the box with your sterilized instruments. Ship the box to our repair service center and we will contact you."],
+      a: ["No RMA number needed. Download the repair form, fill it out and put it in the box with your sterilized instruments. Ship the box to our Exton, PA facility and we will notify you once your shipment arrives."],
     },
     {
       id: "cost",

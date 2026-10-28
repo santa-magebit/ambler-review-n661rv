@@ -41,7 +41,7 @@ come from the "Styleguide and Spacing" page (`14714:56317`) and live in
 | `/vault/cards/listaction/` | My Account | Stored Payment Methods | `34266:54872` |
 | `/privacy-settings/` | My Account | Privacy Settings | `34385:27016` |
 | `/about-ambler-surgical/` | CMS Pages | CMS - About Ambler Surgical - 1920px | `34974:1141` |
-| `/free-lifetime-repair/` | (section Free Lifetime Repair - Adjusted) | Free Lifetime Repair - Web | `35122:1207` |
+| `/free-lifetime-repair/` | (section Free Lifetime Repair - Adjusted) | Free Lifetime Repair - Web (client version, copy source: `35098:38806`) | `35122:1207` |
 
 Not designed in Figma, built in the same style: `/browse-by-specialty/`,
 `/sterilization-cleaning/`, `/search/`, `/contact/`, `/checkout/onepage/success/`.

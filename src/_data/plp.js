@@ -67,6 +67,10 @@ const mobileDiagonal = "translate(24%, 14%) rotate(20deg) scale(1.5)";
 /** …and in the shorter 350x116 "Shop By Categories" cards (34777:58812), centred. */
 const mobileNavDiagonal = "rotate(18deg) scale(1.7)";
 const typePhotoMobile = { speculum: "translate(-3%, 12%) scale(1.3)", handpieces: "rotate(15deg) scale(1.2)" };
+/** Types whose photos stay upright on category cards: not long instruments. */
+const uprightTypes = new Set(["trays", "fixation-rings"]);
+/** Card turn for a type's photo (a type photo or a product's own photo): the diagonal for long instruments. */
+const turnFor = (slug) => (uprightTypes.has(slug) ? {} : { style: typePhotoStyle[slug] || diagonal, mobileTransform: typePhotoMobile[slug] || mobileDiagonal });
 
 /**
  * Hover descriptions on category cards (styleguide "Hover — shows description"). Cannulas and the
@@ -607,6 +611,7 @@ const ownCount = (pred) => listingProducts.filter(pred).length;
 function typeCard(t, href, count, extra = {}) {
   const photo = typePhotos[t.slug];
   const product = listingProducts.find((p) => p.type === t.slug);
+  const turn = photo || product ? turnFor(t.slug) : {};
   return {
     name: t.name,
     slug: t.slug,
@@ -615,8 +620,8 @@ function typeCard(t, href, count, extra = {}) {
     image: photo ? images[photo] : product ? product.image : images["1907881e"],
     fit: photo || product ? "contain" : "cover",
     position: photo || product ? null : "top",
-    style: photo ? typePhotoStyle[t.slug] || diagonal : null,
-    mobileTransform: photo ? typePhotoMobile[t.slug] || mobileDiagonal : null,
+    style: turn.style || null,
+    mobileTransform: turn.mobileTransform || null,
     hover: typeHoverText[t.slug] || null,
     ...extra,
   };
@@ -783,6 +788,7 @@ const brandPages = lines.map((b) => {
         href: `/browse-by-type/${t.slug}/?manufacturer=${encodeURIComponent(b.name)}`,
         image: product.image,
         fit: "contain",
+        ...turnFor(t.slug),
         hover: hover[t.slug] || typeHoverText[t.slug] || null,
       };
     }),
@@ -822,6 +828,7 @@ const browseTypeIndex = {
 const search = listing(products, { title: "results", id: "search-results", search: true });
 
 export default {
+  diagonal,
   gradients,
   logoWidths,
   trust,

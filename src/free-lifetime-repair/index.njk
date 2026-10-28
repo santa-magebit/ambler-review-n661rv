@@ -66,7 +66,8 @@ permalink: /free-lifetime-repair/
     </section>
 
     {# What's Included: the styleguide category card (14714:57254) without the arrow and hover, as nothing opens.
-       Two columns until xl; titles wrap rather than cut off, Medium 20/28 until the cards are wide enough for 24/32. #}
+       Two columns until xl; titles wrap rather than cut off, Medium 20/28 until the cards are wide enough for 24/32.
+       Flat photos get the category cards' diagonal turn (card.style), clipped to the photo box. #}
     <section aria-labelledby="included-title" class="flex flex-col gap-4" data-figma="35122:1315">
       <h2 id="included-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">What's Included?</h2>
       <p class="text-base text-body md:text-lg">On qualifying Ambler brand instruments, including manipulators and hooks.</p>
@@ -74,8 +75,8 @@ permalink: /free-lifetime-repair/
         {% for card in l.included %}
         <li class="flex min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white" data-figma="{{ card.figma }}">
           <h3 class="flex min-h-[47px] items-center bg-menu px-[11px] py-2 text-sm font-bold leading-[18px] text-primary-500 md:min-h-14 md:px-5 md:py-3 md:text-h4 md:font-medium md:tracking-title min-[1800px]:text-h3">{{ card.title }}</h3>
-          <span class="relative block aspect-[364/308] bg-white">
-            <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-contain {{ card.imgClass }}">
+          <span class="relative block aspect-[364/308] overflow-hidden bg-white">
+            <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-contain" {% if card.style %}style="{{ card.style }}"{% endif %}>
           </span>
         </li>
         {% endfor %}

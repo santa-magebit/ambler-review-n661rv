@@ -57,7 +57,8 @@ const logoSize = {
 const home = {
   /** Figma crops of the Ophthalmology category photos (34141:37913): Disposables is drawn flipped. */
   categoryImage: { instruments: "object-top", disposables: "-scale-y-100" },
-  /** Repair band cards (34141:38033). Diamond Knives and Surgical Lenses open their repair service; imgClass = Figma crop. */
+  /** Repair band cards (34141:38033). Diamond Knives and Surgical Lenses open their repair service; imgClass = Figma crop.
+      The lens holder is turned to the diagonal like the other long instruments on category cards. */
   repairCards: [
     { title: "Instruments", image: images["1907881e"], href: "/repair-services/", figma: "34141:38034", imgClass: "object-top" },
     { title: "Specialty", image: images["a76c7e54"], href: "/repair-services/", figma: "34141:38035", imgClass: "!object-contain px-5" },
@@ -67,7 +68,7 @@ const home = {
       image: images["3e4a0b96"],
       href: "/repair-services/#surgical-diagnostic-lenses",
       figma: "34141:38037",
-      imgClass: "[transform:scale(1.25,-1.25)]",
+      imgClass: "[transform:rotate(30deg)_scale(1.6,-1.6)_translate(6%,0)]",
     },
   ],
   logos: catalog.productLines
@@ -218,13 +219,14 @@ const about = {
 
 /**
  * Figma card title and image per catalog repair service (34799:68570, 34799:68574), in Figma order.
- * imgClass approximates the Figma crop of each photo (scaled or turned inside the frame).
+ * imgClass approximates the Figma crop of each photo (scaled or turned inside the frame); the cryosurgical handpieces,
+ * drawn flat, are turned to the diagonal like the other long instruments on category cards.
  */
 const repairCards = [
   ["micro-instrument", "Micro Instruments", "d61fe469", "34799:68571", ""],
   ["diamond-knife", "Diamond Knife Rehoning Service", "c565e376", "34799:68572", ""],
   ["phaco-handpiece", "Phaco Handpiece", "d76b9f33", "34799:68573", "[transform:scale(1.12)_rotate(-8deg)]"],
-  ["cryosurgical-handpiece", "Cryosurgical Handpiece", "db601ef3", "34799:68575", ""],
+  ["cryosurgical-handpiece", "Cryosurgical Handpiece", "db601ef3", "34799:68575", "!object-contain [transform:rotate(38deg)_scale(1.15)_translate(4%,0)]"],
   ["general-instrument", "General Surgical Instrument", "31a47e5d", "34799:68576", "!object-contain rotate-[24deg]"],
   ["surgical-diagnostic-lenses", "Surgical/Diagnostic Lens", "cef4ff5f", "34799:68577", "!object-contain scale-[1.22]"],
 ].map(([slug, title, image, figma, imgClass]) => {
@@ -290,13 +292,13 @@ const lifetime = {
     { figma: "35126:1386", title: "Purchased after July 1, 2007", text: "From AmblerSurgical.com" },
     { figma: "35126:1393", title: "Up to 50 free repairs", text: "Per customer, per fiscal year" },
   ],
-  /** What's Included cards (35122:1317), photo by Figma image hash. imgClass: the needle holder photo has a faint grey band
-      round the instrument that the Figma render brightens away. */
+  /** What's Included cards (35122:1317), photo by Figma image hash. The flat needle holder and hook photos get the
+      category cards' diagonal turn (plp.diagonal), like the scissors and forceps drawn that way. */
   included: [
     { figma: "35122:1318", title: "FREE Scissor Sharpening", image: images["1907881e"] },
     { figma: "35122:1323", title: "FREE Forceps Alignment", image: images["478dcae3"] },
-    { figma: "35122:1328", title: "FREE Needle Holder Re-Setting", image: images["393cbe8d"], imgClass: "brightness-105" },
-    { figma: "35122:1333", title: "FREE Hook Straightening", image: images["a9a5e53d"] },
+    { figma: "35122:1328", title: "FREE Needle Holder Re-Setting", image: images["393cbe8d"], style: plp.diagonal },
+    { figma: "35122:1333", title: "FREE Hook Straightening", image: images["a9a5e53d"], style: plp.diagonal },
   ],
   /** "Request a Free Repair" (35122:1338) as three steps, from the old site's "How do I send my instruments in for repair?". */
   steps: [

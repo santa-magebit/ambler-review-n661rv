@@ -216,6 +216,39 @@
 </section>
 {% endmacro %}
 
+{# Repair request steps (Free Lifetime Repair "Request a Free Repair" 35122:1338, also on Micro Instrument Repair):
+   the Figma band (#f1f5f8, title, download button) grown into a section: the eligibility card's padding and heading,
+   three step cards with the trust band's 52px navy icons, the download button in the first step. Steps in three
+   columns from xl; from lg to xl each step is a row (icon, text, button), as three columns leave the button no room
+   there; below lg they stack like on phones, as a row left the first step's text too narrow beside the button.
+   r: { id, title, text, steps: [{ icon, title, text }], cls? (extra section classes, e.g. scroll margin),
+        figma?: { section, head, button } } #}
+{% macro repairSteps(r) %}
+<section id="{{ r.id }}" aria-labelledby="{{ r.id }}-title" class="{{ r.cls }} flex flex-col gap-6 rounded bg-secondary-100 px-5 py-6 md:gap-8 md:px-12 md:py-10" {% if r.figma %}data-figma="{{ r.figma.section }}"{% endif %}>
+  <div class="flex flex-col gap-4" {% if r.figma %}data-figma="{{ r.figma.head }}"{% endif %}>
+    <h2 id="{{ r.id }}-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">{{ r.title }}</h2>
+    <p class="text-base text-body md:text-lg">{{ r.text }}</p>
+  </div>
+  <ol class="grid gap-2 md:gap-4 xl:grid-cols-3 xl:gap-6">
+    {% for s in r.steps %}
+    <li class="flex min-w-0 flex-col items-start gap-4 rounded bg-white p-5 md:p-6 lg:flex-row lg:items-center lg:gap-6 xl:flex-col xl:items-start xl:gap-4">
+      <div class="flex shrink-0 items-center gap-4">
+        <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon s.icon, "h-7 w-7" %}</span>
+        <span class="text-base font-medium text-primary-500">Step {{ loop.index }}</span>
+      </div>
+      <div class="flex min-w-0 flex-1 flex-col gap-1">
+        <h3 class="text-lg font-bold text-heading md:text-h4">{{ s.title }}</h3>
+        <p class="text-base text-body">{{ s.text }}</p>
+      </div>
+      {% if loop.first %}
+      <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" {% if r.figma %}data-figma="{{ r.figma.button }}"{% endif %}>Download Repair Form{% icon "download" %}</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endmacro %}
+
 {# Orange button with the arrow (Landing Page hero 34141:37899 "btn": 12/30/12/32 padding). cls: extra classes, e.g. full width on phones. #}
 {% macro arrowButton(label, href, attrs="", cls="") %}
 <a href="{{ href }}" class="btn-accent whitespace-nowrap pr-[30px] {{ cls }}" {{ attrs | safe }}>{{ label }}{% icon "arrow-narrow-right" %}</a>

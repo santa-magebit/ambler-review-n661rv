@@ -9,9 +9,9 @@ permalink: /free-lifetime-repair/
    - Hero: the hidden "btn" (35122:1303) is shown as "Request a Free Repair", jumping to the steps; the "*" after the
      intro links to the fine print.
    - "What's Included" cards are information, not links: no arrow and no hover, so they don't promise a page.
-   - "Request a Free Repair" (35122:1338) is the page's main section rather than a slim band: the three steps from
-     amblersurgical.com/repair-services ("No RMA number needed") as cards with icons, and one download button in the
-     first step instead of a button and an inline link to the same form.
+   - "Request a Free Repair" (35122:1338) is the page's main section rather than a slim band (c.repairSteps): the
+     three steps from amblersurgical.com/repair-services ("No RMA number needed") as cards with icons, and one
+     download button in the first step instead of a button and an inline link to the same form.
    - The value band (35122:1354) gets a "Shop Ambler Instruments" button.
    - "See all restrictions & exclusions" and the FAQ link jump to the fine print at the end.
    - The FAQ loads closed (Figma's open third answer is an example state); every question has an answer.
@@ -92,33 +92,11 @@ permalink: /free-lifetime-repair/
       </ul>
     </section>
 
-    {# Request a Free Repair: the Figma band (#f1f5f8, title, download button) grown into a section, as the hero button
-       leads here: the eligibility card's padding and heading, three step cards with the trust band's 52px navy icons,
-       the download button in the first step. Steps in three columns from xl; from
-       md to xl each step is a row (icon, text, button), as three columns leave the button no room there. #}
-    <section id="request-repair" aria-labelledby="request-title" class="{{ anchor }} flex flex-col gap-6 rounded bg-secondary-100 px-5 py-6 md:gap-8 md:px-12 md:py-10" data-figma="35122:1338">
-      <div class="flex flex-col gap-4" data-figma="35122:1341">
-        <h2 id="request-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">Request a Free Repair</h2>
-        <p class="text-base text-body md:text-lg">No RMA number needed. You only pay the shipping.</p>
-      </div>
-      <ol class="grid gap-2 md:gap-4 xl:grid-cols-3 xl:gap-6">
-        {% for s in l.steps %}
-        <li class="flex min-w-0 flex-col items-start gap-4 rounded bg-white p-5 md:flex-row md:items-center md:gap-6 md:p-6 xl:flex-col xl:items-start xl:gap-4">
-          <div class="flex shrink-0 items-center gap-4">
-            <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon s.icon, "h-7 w-7" %}</span>
-            <span class="text-base font-medium text-primary-500">Step {{ loop.index }}</span>
-          </div>
-          <div class="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 class="text-lg font-bold text-heading md:text-h4">{{ s.title }}</h3>
-            <p class="text-base text-body">{{ s.text }}</p>
-          </div>
-          {% if loop.first %}
-          <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ol>
-    </section>
+    {# Request a Free Repair (35122:1338), grown into the shared steps section, as the hero button leads here. #}
+    {{ c.repairSteps({
+      id: "request-repair", cls: anchor, title: "Request a Free Repair", text: "No RMA number needed. You only pay the shipping.",
+      steps: l.steps, figma: { section: "35122:1338", head: "35122:1341", button: "35122:1344" }
+    }) }}
 
   </div>
 </div>

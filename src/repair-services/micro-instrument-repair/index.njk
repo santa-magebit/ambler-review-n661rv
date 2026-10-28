@@ -9,8 +9,9 @@ permalink: /repair-services/micro-instrument-repair/
      hero in Figma) and the "Download Repair Form" button.
    - "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and #f5f8fa), as
      real tables. Every cell border is the same light outline, including the line before the price column that Figma
-     draws navy, and the tables get the 4px corners. The download button repeats under the prices, with "No RMA
-     number needed." from the FAQ answer.
+     draws navy, and the tables get the 4px corners.
+   - "Request a Repair" under the prices (not in the frame): the Free Lifetime Repair steps section (c.repairSteps)
+     with this page's FAQ answer as the three steps, so the repair form is offered again once the prices are read.
    - Free Lifetime Repair band: the PLP banner (34777:59015), the same seal, copy and button.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
    - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
@@ -38,6 +39,7 @@ permalink: /repair-services/micro-instrument-repair/
 {% endcall %}
 
 {# Typical Repair Charges ("Content" 35098:39067, the intro moved into the hero): 36px between the title and the tables.
+   The request steps follow 60px under the last table (36px gap + 24px).
    Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall with their 1px bottom line,
    Bold prices in a 300px column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39067">
@@ -62,10 +64,7 @@ permalink: /repair-services/micro-instrument-repair/
       </tbody>
     </table>
     {% endfor %}
-    <div class="flex flex-col items-start gap-3 md:flex-row md:items-center md:gap-6">
-      <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto">Download Repair Form{% icon "download" %}</a>
-      <p class="text-base text-body md:text-lg">No RMA number needed.</p>
-    </div>
+    {{ c.repairSteps({ id: "request-repair", cls: "mt-4 md:mt-6", title: "Request a Repair", text: "No RMA number needed.", steps: m.steps }) }}
   </div>
 </section>
 

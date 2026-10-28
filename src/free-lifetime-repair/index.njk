@@ -5,14 +5,11 @@ permalink: /free-lifetime-repair/
 ---
 {# Free Lifetime Repair - Adjusted (Figma 35122:1207); the URL is the live site's. No phone frame exists, so phones
    follow the Repair Services and About phone frames. Changes to the frame, for a page whose job is to get a repair
-   requested (and to sell Ambler instruments to everyone else):
-   - Hero: the hidden "btn" (35122:1303) is shown as "Request a Free Repair", jumping to the steps; the "*" after the
-     intro links to the fine print.
+   requested:
+   - Hero: the "*" after the intro links to the fine print (the frame's hidden "btn" 35122:1303 stays hidden).
    - "What's Included" cards are information, not links: no arrow and no hover, so they don't promise a page.
-   - "Request a Free Repair" (35122:1338) is the page's main section rather than a slim band: the three steps from
-     amblersurgical.com/repair-services ("No RMA number needed") as cards with icons, and one download button in the
-     first step instead of a button and an inline link to the same form.
-   - The value band (35122:1354) gets a "Shop Ambler Instruments" button.
+   - "Request a Free Repair" (35122:1338) adds the three steps from amblersurgical.com/repair-services ("No RMA number
+     needed") under the band, and has one download button instead of a button and an inline link to the same form.
    - "See all restrictions & exclusions" and the FAQ link jump to the fine print at the end.
    - The FAQ loads closed (Figma's open third answer is an example state); every question has an answer.
    No copy is added beyond what helps the visitor act: the rest is the client's (35098:38806) or the old site's. #}
@@ -30,38 +27,41 @@ permalink: /free-lifetime-repair/
    -430px at 1024), so the surgeon stays clear of the 593px text column. Phones and tablets have no room beside the
    text: the photo covers the hero with the surgeon on the right, under a 60% navy tint that keeps the white text
    readable over his light gown. #}
-{% call c.hero({
+{{ c.hero({
   title: "Free Lifetime Repair", eyebrow: "Repair Services", text: l.intro, figma: "35122:1294", image: "f188b990",
   fade: contentPages.gradients.aboutFade, footnote: { href: "#restrictions", label: "Restrictions and exclusions apply" },
   photo: "inset-0 h-full w-full -scale-x-100 object-cover object-[30%_center] lg:inset-auto lg:right-[min(-7.5%,calc(31.9%_-_756px))] lg:top-0 lg:h-auto lg:w-[max(2064px,107.5%)] lg:max-w-none",
   scrim: "bg-primary-500/60 lg:hidden"
-}) %}
-  {{ c.arrowButton("Request a Free Repair", "#request-repair", "", "w-full md:w-auto") }}
-{% endcall %}
+}) }}
+
+{# Who qualifies, right under the hero: a full-width #f1f5f8 band of styleguide trust badges (34747:15477: 52px navy
+   icon, title, text), like the "why us?" band under the Home hero; three columns from xl. #}
+<section class="bg-secondary-100" aria-label="Who qualifies" data-figma="35126:1378">
+  <ul class="container-page grid gap-5 py-6 md:gap-6 md:py-8 xl:grid-cols-3">
+    {% for e in l.eligibility %}
+    <li class="flex min-w-0 items-center gap-4" data-figma="{{ e.figma }}">
+      <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon e.icon, "h-7 w-7" %}</span>
+      <span class="flex min-w-0 flex-col gap-0.5">
+        <span class="text-lg font-medium text-ink">{{ e.title }}</span>
+        <span class="text-base text-body">{{ e.text }}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
 
 <div class="bg-white" data-figma="35122:1309">
   <div class="container-page flex flex-col gap-10 py-10 md:gap-[60px] md:py-[60px]">
 
-    {# Eligibility: the seal beside the promise and three checks. The checks sit in three columns from lg; the seal
-       moves beside the text from xl, where the three columns still fit. #}
-    <section id="eligibility" aria-labelledby="eligibility-title" class="{{ anchor }} flex flex-col items-start gap-4 rounded bg-[#eff7fd] px-5 py-6 md:gap-6 md:px-12 md:py-10 xl:flex-row xl:items-center xl:gap-12" data-figma="35122:1310">
-      <span class="relative block h-[126px] w-[120px] shrink-0 overflow-hidden md:h-[168px] md:w-40 xl:h-[210px] xl:w-[200px]">
+    {# Confidence block, as the client's frame (35098:38871): on white, no box, the seal (248x260 at 1600) beside the
+       title and text from md, the restrictions link under the text. #}
+    <section id="eligibility" aria-labelledby="eligibility-title" class="{{ anchor }} flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-8 xl:gap-11" data-figma="35098:38871">
+      <span class="relative block h-[126px] w-[120px] shrink-0 overflow-hidden md:h-[168px] md:w-40 xl:h-[260px] xl:w-[248px]">
         <img src="{{ 'a3c1af5e' | img }}" alt="Free Lifetime Repair seal" class="absolute left-[-7.41%] top-[-3.98%] h-[107.96%] w-[112.96%] max-w-none">
       </span>
-      <div class="flex min-w-0 flex-1 flex-col items-start gap-4" data-figma="35122:1312">
+      <div class="flex min-w-0 flex-1 flex-col items-start gap-4 md:gap-6">
         <h2 id="eligibility-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">{{ l.confidence.title }}</h2>
-        <p class="max-w-[960px] text-base text-body md:text-lg">{{ l.confidence.text }}</p>
-        <ul class="grid w-full gap-2 md:gap-4 lg:grid-cols-3" aria-label="Who qualifies" data-figma="35126:1378">
-          {% for e in l.eligibility %}
-          <li class="flex min-w-0 items-start gap-3 rounded bg-white p-4" data-figma="{{ e.figma }}">
-            {% icon "circle-check", "h-6 w-6 text-primary-500" %}
-            <span class="flex min-w-0 flex-col gap-0.5">
-              <span class="text-base font-bold text-heading">{{ e.title }}</span>
-              <span class="text-sm text-body">{{ e.text }}</span>
-            </span>
-          </li>
-          {% endfor %}
-        </ul>
+        <p class="text-base text-body md:text-lg">{{ l.confidence.text }}</p>
         <a href="#restrictions" class="link text-base">See all restrictions &amp; exclusions</a>
       </div>
     </section>
@@ -69,7 +69,7 @@ permalink: /free-lifetime-repair/
     {# What's Included: the styleguide category card (14714:57254) without the arrow and hover, as nothing opens.
        Two columns until xl; titles wrap rather than cut off, Medium 20/28 until the cards are wide enough for 24/32.
        Flat photos get the category cards' diagonal turn (card.style), clipped to the photo box.
-       "FREE" is not in the title but on a small gold seal in the photo's empty top-right corner, the shape and colours
+       "FREE" is not in the title but on a small gold seal in the photo's empty bottom-left corner, the shape and colours
        of the Free Lifetime Repair stamp, tilted like a sticker (screen readers get it as the title's first word). #}
     <section aria-labelledby="included-title" class="flex flex-col gap-4" data-figma="35122:1315">
       <h2 id="included-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">What's Included?</h2>
@@ -81,10 +81,10 @@ permalink: /free-lifetime-repair/
           <h3 class="flex min-h-[47px] items-center bg-menu px-[11px] py-2 text-sm font-bold leading-[18px] text-primary-500 md:min-h-14 md:px-5 md:py-3 md:text-h4 md:font-medium md:tracking-title min-[1800px]:text-h3"><span class="sr-only">Free </span>{{ card.title }}</h3>
           <span class="relative block aspect-[364/308] overflow-hidden bg-white">
             <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-contain" {% if card.style %}style="{{ card.style }}"{% endif %}>
-            <svg aria-hidden="true" viewBox="0 0 100 100" class="absolute right-1 top-1 h-11 w-11 -rotate-12 drop-shadow md:right-4 md:top-4 md:h-[72px] md:w-[72px]">
+            <svg aria-hidden="true" viewBox="0 0 100 100" class="absolute bottom-1 left-1 h-11 w-11 -rotate-12 drop-shadow md:bottom-3 md:left-3 md:h-[72px] md:w-[72px]">
               <polygon points="50.0,0.0 56.9,6.5 65.5,2.4 70.0,10.8 79.4,9.5 81.1,18.9 90.5,20.6 89.2,30.0 97.6,34.5 93.5,43.1 100.0,50.0 93.5,56.9 97.6,65.5 89.2,70.0 90.5,79.4 81.1,81.1 79.4,90.5 70.0,89.2 65.5,97.6 56.9,93.5 50.0,100.0 43.1,93.5 34.5,97.6 30.0,89.2 20.6,90.5 18.9,81.1 9.5,79.4 10.8,70.0 2.4,65.5 6.5,56.9 0.0,50.0 6.5,43.1 2.4,34.5 10.8,30.0 9.5,20.6 18.9,18.9 20.6,9.5 30.0,10.8 34.5,2.4 43.1,6.5" fill="url(#free-seal-fill)" stroke="#f3b25a" stroke-width="2" stroke-linejoin="round"/>
-              <circle cx="50" cy="50" r="33" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="0.1 5" stroke-linecap="round"/>
-              <text x="50" y="57" text-anchor="middle" font-family="Roboto, sans-serif" font-size="21" font-weight="700" fill="#4d4d4d">FREE</text>
+              <circle cx="50" cy="50" r="38.5" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="0.1 5" stroke-linecap="round"/>
+              <text x="50" y="59" text-anchor="middle" font-family="Roboto, sans-serif" font-size="26" font-weight="700" fill="#4d4d4d">FREE</text>
             </svg>
           </span>
         </li>
@@ -92,40 +92,39 @@ permalink: /free-lifetime-repair/
       </ul>
     </section>
 
-    {# Request a Free Repair: the Figma band (#f1f5f8, title, download button) grown into a section, as the hero button
-       leads here: the eligibility card's padding and heading, three step cards with the trust band's 52px navy icons,
-       the download button in the first step. Steps in three columns from xl; from
-       lg to xl each step is a row (icon, text, button), as three columns leave the button no room there; below lg
-       they stack like on phones, as a row left the first step's text too narrow beside the button. #}
-    <section id="request-repair" aria-labelledby="request-title" class="{{ anchor }} flex flex-col gap-6 rounded bg-secondary-100 px-5 py-6 md:gap-8 md:px-12 md:py-10" data-figma="35122:1338">
-      <div class="flex flex-col gap-4" data-figma="35122:1341">
-        <h2 id="request-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">Request a Free Repair</h2>
-        <p class="text-base text-body md:text-lg">No RMA number needed. You only pay the shipping.</p>
-      </div>
-      <ol class="grid gap-2 md:gap-4 xl:grid-cols-3 xl:gap-6">
-        {% for s in l.steps %}
-        <li class="flex min-w-0 flex-col items-start gap-4 rounded bg-white p-5 md:p-6 lg:flex-row lg:items-center lg:gap-6 xl:flex-col xl:items-start xl:gap-4">
-          <div class="flex shrink-0 items-center gap-4">
-            <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon s.icon, "h-7 w-7" %}</span>
-            <span class="text-base font-medium text-primary-500">Step {{ loop.index }}</span>
-          </div>
-          <div class="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 class="text-lg font-bold text-heading md:text-h4">{{ s.title }}</h3>
-            <p class="text-base text-body">{{ s.text }}</p>
-          </div>
-          {% if loop.first %}
-          <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ol>
-    </section>
-
   </div>
 </div>
 
+{# Request a Free Repair (35122:1338): a full-width band in Figma's secondary-100
+   (#f1f5f8, like the badge band under the hero), title and text left, the client's download button right. Under an
+   outline-colour line the three steps, numbered 01-03 in large light navy rather than with the badge band's icon
+   circles, so the two bands don't read as one component: one row from xl, split by outline-colour rules, and
+   stacked below that with the numeral beside each step. #}
+<section id="request-repair" aria-labelledby="request-title" class="{{ anchor }} bg-secondary-100" data-figma="35122:1338">
+  <div class="container-page flex flex-col gap-6 py-8 md:gap-8 md:py-10">
+    <div class="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+      <div class="flex min-w-0 flex-col gap-2" data-figma="35122:1341">
+        <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Free Repair</h2>
+        <p class="text-base text-body md:text-lg">No RMA number needed. You only pay the shipping.</p>
+      </div>
+      <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
+    </div>
+    <ol class="grid divide-y divide-outline border-t border-outline xl:grid-cols-3 xl:divide-x xl:divide-y-0">
+      {% for s in l.steps %}
+      <li class="flex min-w-0 items-start gap-5 py-6 last:pb-0 md:py-8 md:last:pb-0 xl:flex-col xl:gap-3 xl:px-8 xl:pb-0 xl:first:pl-0 xl:last:pr-0">
+        <span aria-hidden="true" class="w-12 shrink-0 text-[40px] font-bold leading-none text-primary-500/30 md:text-5xl xl:w-auto">0{{ loop.index }}</span>
+        <div class="flex min-w-0 flex-col gap-1">
+          <h3 class="text-lg font-bold text-heading"><span class="sr-only">Step {{ loop.index }}: </span>{{ s.title }}</h3>
+          <p class="text-base text-body">{{ s.text }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
 {# Quality Instruments. Long-Term Value. ("SEO Section" 35122:1354): the hands photo under a navy fade, text on the
-   right, plus a shop button. From xl the fade (valueFade) is solid navy before the
+   right, as drawn. From xl the fade (valueFade) is solid navy before the
    886px text column starts; below xl the text column covers the photo, so the photo sits under an 85% navy tint.
    Phones: a 160px photo strip above the navy text block, like the Repair Services band. #}
 <section class="relative isolate overflow-hidden bg-primary-500" aria-labelledby="value-title" data-figma="35122:1354">
@@ -136,7 +135,6 @@ permalink: /free-lifetime-repair/
     <div class="flex max-w-[886px] flex-col items-start gap-6 md:gap-7 xl:ml-auto" data-figma="35122:1355">
       <h2 id="value-title" class="text-h3 font-medium text-white md:text-h2 md:font-bold">{{ l.value.title }} <span class="text-accent">{{ l.value.accent }}</span></h2>
       <p class="text-base text-white md:text-lg">{{ l.value.text }}</p>
-      {{ c.arrowButton("Shop Ambler Instruments", "/product-lines/ambler-surgical/", "", "w-full md:w-auto") }}
     </div>
   </div>
 </section>

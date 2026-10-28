@@ -14,21 +14,22 @@ import images from "./images.js";
  * aboutFade: About hero, solid navy to 14%, clear at 64%.
  * whyFade: About "Why Us" band, clear at 12%, solid navy from 50%.
  * titleLine: 2px line under hero titles, orange with a white highlight and clear ends.
- * valueFade: Free Lifetime Repair value band (35122:1354), Figma's clear at 10-12% and solid navy at 50%, but never
- *   later than 950px before the right edge, so the 886px text column always sits on solid navy (from 1280px).
+ * valueFade: Free Lifetime Repair value band (35122:1354), Figma's solid navy from 50% and clear at 12%, but solid at
+ *   least over the last 950px, so the 886px text column sits on navy (from 1280px), and fading over 500px or more.
+ *   Eased like microFade, measured from the right edge (270deg), as a short straight fade showed a hard line.
  * microFade: Micro Instrument hero (35098:39058), solid navy to 38.9%, clear at 94.5%, but solid at least to the end of
  *   the 593px text column (625px, or 50% - 175px once the container is centred) and fading over 300px or more.
  *   Past 1920px it stays where it is at 1920 relative to the centre (clear at 50% + 854px), like the hero photo.
  *   The fade eases in and out (smoothstep), as a straight fade showed a line where the solid navy ends.
  */
-/** Navy from solid at `from` to clear at `to` (CSS lengths), eased in and out over 11 stops. */
-function easedFade(from, to) {
+/** Navy from solid at `from` to clear at `to` (CSS lengths along `deg`), eased in and out over 11 stops. */
+function easedFade(from, to, deg = 90) {
   const stops = Array.from({ length: 11 }, (_, i) => {
     const t = i / 10;
     const alpha = Math.round((1 - t * t * (3 - 2 * t)) * 1000) / 1000;
     return `rgba(0, 71, 118, ${alpha}) calc(${from} + (${to} - ${from}) * ${t})`;
   });
-  return `linear-gradient(90deg, ${stops.join(", ")})`;
+  return `linear-gradient(${deg}deg, ${stops.join(", ")})`;
 }
 
 const gradients = {
@@ -36,7 +37,7 @@ const gradients = {
   heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 100%)",
   aboutFade: "linear-gradient(90deg, #004776 14%, rgba(0, 71, 118, 0) 64%)",
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
-  valueFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) min(12%, 100% - 1130px), #004776 min(50%, 100% - 950px))",
+  valueFade: easedFade("max(50%, 950px)", "max(88%, 1450px)", 270),
   microFade: easedFade("max(38.9%, 625px, 50% - 175px)", "max(min(94.5%, 50% + 854px), 925px)"),
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
@@ -304,11 +305,11 @@ const lifetime = {
     title: "Confidence in Your Instruments. Support for a Lifetime.",
     text: "At Ambler Surgical, we stand behind the quality of our ophthalmic instruments. That's why we offer Free Lifetime Repair on qualifying Ambler brand ophthalmic instruments, helping you extend the life of your instruments and reduce replacement costs.",
   },
-  /** Eligibility checks (35126:1378). */
+  /** Who qualifies (35126:1378), as trust badges in a band under the hero; icon: the badge's glyph. */
   eligibility: [
-    { figma: "35126:1379", title: "Ambler brand instruments", text: 'Product codes ending in "E" or "T"' },
-    { figma: "35126:1386", title: "Purchased after July 1, 2007", text: "From AmblerSurgical.com" },
-    { figma: "35126:1393", title: "Up to 50 free repairs", text: "Per customer, per fiscal year" },
+    { figma: "35126:1379", icon: "shield-check", title: "Ambler brand instruments", text: 'Product codes ending in "E" or "T"' },
+    { figma: "35126:1386", icon: "calendar-search", title: "Purchased after July 1, 2007", text: "From AmblerSurgical.com" },
+    { figma: "35126:1393", icon: "tool", title: "Up to 50 free repairs", text: "Per customer, per fiscal year" },
   ],
   /** What's Included cards (35122:1317), photo by Figma image hash. Figma's forceps photo is a cropped close-up, so the
       card shows the site's forceps photo (the Forceps category card's) with that card's turn, as the cards share its
@@ -321,9 +322,9 @@ const lifetime = {
   ],
   /** "Request a Free Repair" (35122:1338) as three steps, in the words of amblersurgical.com/repair-services. */
   steps: [
-    { icon: "download", title: "Download the form", text: "Complete the repair form for your instruments." },
-    { icon: "box", title: "Pack your instruments", text: "Include the form in the box with your sterilized instruments." },
-    { icon: "truck-delivery", title: "Ship them to us", text: "Ship the box to our Exton, PA facility. We will notify you once your shipment arrives." },
+    { title: "Download the form", text: "Complete the repair form for your instruments." },
+    { title: "Pack your instruments", text: "Include the form in the box with your sterilized instruments." },
+    { title: "Ship them to us", text: "Ship the box to our Exton, PA facility. We will notify you once your shipment arrives." },
   ],
   /** "SEO Section" band (35122:1354). */
   value: {

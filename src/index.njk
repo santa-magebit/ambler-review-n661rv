@@ -14,18 +14,14 @@ title: Home
 } %}
 
 {# Hero: eye photo, navy fade from the left, 593px text column. Phones (mobile 34141:38087): 280px, 20px gaps, full-width button. #}
-<section class="relative isolate overflow-hidden bg-primary-500" data-figma="34141:37899">
-  <img src="{{ '0cdfda6c' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-[78%_50%] md:object-right">
-  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
-  <div class="container-page flex min-h-[280px] items-center py-8 md:min-h-[360px] md:py-12 lg:min-h-[480px]">
-    <div class="flex max-w-[593px] flex-col items-start gap-5 md:gap-7">
-      {{ c.heroTitle("The Smarter Source") }}
-      <p class="text-base text-white md:text-lg">Ambler Surgical offers the largest selection of premium-quality surgical instruments with a fast, easy-to-use online catalog.</p>
-      {{ c.arrowButton("Browse Surgical Instruments", "/browse-by-specialty/", "", "w-full md:w-auto") }}
-    </div>
-  </div>
-</section>
+{% call c.hero({
+  title: "The Smarter Source", figma: "34141:37899", image: "0cdfda6c",
+  text: "Ambler Surgical offers the largest selection of premium-quality surgical instruments with a fast, easy-to-use online catalog.",
+  photo: "inset-0 h-full w-full object-cover object-[78%_50%] md:object-right",
+  pad: "min-h-[280px] py-8"
+}) %}
+  {{ c.arrowButton("Browse Surgical Instruments", "/browse-by-specialty/", "", "w-full md:w-auto") }}
+{% endcall %}
 
 {# Specialties: Ophthalmology with its four categories, then the other eight specialties in two columns.
    Phones (mobile 34141:38087): 32px padding, 16px under the Medium 24/32 title, everything in two 171px columns 8px apart. #}

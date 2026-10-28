@@ -11,19 +11,16 @@ permalink: /about-ambler-surgical/
 
 {{ ui.breadcrumbs([{ label: "About Ambler Surgical" }]) }}
 
-{# Hero: surgeon photo (mirrored in Figma) under a navy fade. Phones (mobile 34974:121015): the photo unmirrored and
-   right-aligned (blurred theatre, no surgeon) under the phone hero fade, 40/32 padding, 12px gap, 16/24 intro. #}
-<section class="relative isolate overflow-hidden bg-primary-500" data-figma="34971:47249">
-  <img src="{{ 'fb1d6319' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-right md:-scale-x-100 md:object-center lg:inset-auto lg:right-0 lg:top-[-155px] lg:h-[848px] lg:w-[1600px] lg:max-w-none">
-  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ contentPages.gradients.aboutFade }}"></div>
-  <div class="container-page flex items-center pb-8 pt-10 md:min-h-[360px] md:py-12 lg:min-h-[480px]">
-    <div class="flex max-w-[593px] flex-col items-start gap-3 md:gap-7">
-      {{ c.heroTitle("About Ambler Surgical") }}
-      <p class="text-base text-white md:text-lg">{{ a.intro }}</p>
-    </div>
-  </div>
-</section>
+{# Hero: surgeon photo (mirrored in Figma) under a navy fade. From lg the photo is Figma's 1600px (83% of the 1920 frame,
+   right-aligned) and grows with wider screens; its left edge fades out (mask, mirrored with the photo) so it blends
+   into the navy with no line.
+   Phones (mobile 34974:121015): the photo unmirrored and right-aligned (blurred theatre, no surgeon) under the phone
+   hero fade, 40/32 padding, 12px gap, 16/24 intro. #}
+{{ c.hero({
+  title: "About Ambler Surgical", text: a.intro, figma: "34971:47249", image: "fb1d6319",
+  fade: contentPages.gradients.aboutFade, gap: "gap-3",
+  photo: "inset-0 h-full w-full object-cover object-right md:-scale-x-100 md:object-center lg:inset-auto lg:right-0 lg:top-[calc(50%+29px)] lg:h-auto lg:w-[max(1600px,83.333%)] lg:max-w-none lg:-translate-y-1/2 lg:[mask-image:linear-gradient(270deg,transparent,#000_10%)]"
+}) }}
 
 {# Sticky sub-navigation: anchor tabs (orange underline on the section in view) + links to other pages.
    Phones (mobile 34974:121015, scrolled 34971:56818): 57px bar, tabs 24px apart scrolling edge to edge. #}

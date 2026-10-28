@@ -9,6 +9,27 @@
 <h1 class="inline-block bg-bottom bg-no-repeat pb-2.5 text-h2 font-medium text-white md:text-hero" style="background-image: {{ contentPages.gradients.titleLine }}; background-size: 100% 2px">{{ title }}</h1>
 {% endmacro %}
 
+{# Hero, one component for Home (34141:37899), About (34971:47249) and Repair Services (34799:68558): a photo under a
+   navy fade from the left, 593px column with the title, intro and optional caller content (buttons). A photo that
+   starts partway across fades in over its first 10% (mask in `photo`) so no line shows where it meets the fade.
+   Phones (mobile 34141:38087, 34974:121015, 34897:7756): the phone fade over the photo, 16/24 intro.
+   h: { title, text, image (hash8), photo (placement classes), figma, fade? (web gradient, default heroFade),
+        bg? (under the photo), pad? (phone padding), gap? (phone gap) } #}
+{% macro hero(h) %}
+<section class="relative isolate overflow-hidden {{ h.bg or 'bg-primary-500' }}" data-figma="{{ h.figma }}">
+  <img src="{{ h.image | img }}" alt="" class="absolute -z-10 {{ h.photo }}">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ h.fade or contentPages.gradients.heroFade }}"></div>
+  <div class="container-page flex items-center {{ h.pad or 'pb-8 pt-10' }} md:min-h-[360px] md:py-12 lg:min-h-[480px]">
+    <div class="flex max-w-[593px] flex-col items-start {{ h.gap or 'gap-5' }} md:gap-7">
+      {{ heroTitle(h.title) }}
+      <p class="text-base text-white md:text-lg">{{ h.text }}</p>
+      {% if caller %}{{ caller() }}{% endif %}
+    </div>
+  </div>
+</section>
+{% endmacro %}
+
 {# Title band for pages Figma does not draw (Sterilization, Contact): the hero's navy, title and optional intro, without a photo.
    Phones follow the mobile Repair Services hero (34897:7756): 40/32 padding, 20px gap, 16/24 text. #}
 {% macro titleBand(title, text) %}

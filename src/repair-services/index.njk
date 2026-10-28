@@ -13,17 +13,10 @@ permalink: /repair-services/
 
 {# Hero: instruments photo on the right, navy fade from the left over white.
    Phones (mobile 34897:7756): 40/32 padding, 20px gap, 16/24 intro. #}
-<section class="relative isolate overflow-hidden bg-white" data-figma="34799:68558">
-  <img src="{{ '91e2c639' | img }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover md:inset-auto md:right-0 md:top-[3px] md:h-[484px] md:w-[67.14%]">
-  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ contentPages.gradients.heroFade }}"></div>
-  <div class="container-page flex items-center pb-8 pt-10 md:min-h-[360px] md:py-12 lg:min-h-[480px]">
-    <div class="flex max-w-[593px] flex-col items-start gap-5 md:gap-7">
-      {{ c.heroTitle("Repair Services") }}
-      <p class="text-base text-white md:text-lg">{{ r.intro }}</p>
-    </div>
-  </div>
-</section>
+{{ c.hero({
+  title: "Repair Services", text: r.intro, figma: "34799:68558", image: "91e2c639", bg: "bg-white",
+  photo: "inset-0 h-full w-full object-cover md:inset-auto md:right-0 md:top-[3px] md:h-[484px] md:w-[67.14%] md:[mask-image:linear-gradient(90deg,transparent,#000_10%)]"
+}) }}
 
 {# The six repair services. Phones (mobile 34897:7756): Medium 28/36 title, 16px under it, cards 8px apart. #}
 <section class="bg-white" data-figma="34799:68567">

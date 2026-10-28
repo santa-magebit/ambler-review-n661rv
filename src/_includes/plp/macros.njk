@@ -9,14 +9,15 @@
 {% macro rich(text, linkClass="link") %}{{ text | escape | replace(r/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="' + linkClass + '">$1</a>') | safe }}{% endmacro %}
 
 {#
-  Hero (PLP heroes, e.g. 34719:11294): 480px, photo + navy gradient, text column 593px.
+  Hero (PLP heroes, e.g. 34719:11294): 480px, photo + navy gradient, text column 593px. A photo on the right half fades
+  in over its first 10% so no line shows where it starts (as on the content heroes).
   Phones (mobile PLP heroes, e.g. 34726:18657): content height, padding 40/32, title Medium 32/40, text 16/24.
   h: { eyebrow?, title, text?, image (hash8), flip?, placement? ("right": photo on the right half), wide? (navy reaches further) }
 #}
 {% macro hero(h, figma) %}
 <section class="relative overflow-hidden bg-white" data-figma="{{ figma }}">
   {% if h.placement == "right" %}
-  <img src="{{ h.image | img }}" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-right md:w-[58%]">
+  <img src="{{ h.image | img }}" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-right md:w-[58%] md:[mask-image:linear-gradient(90deg,transparent,#000_10%)]">
   {% else %}
   <img src="{{ h.image | img }}" alt="" class="absolute inset-0 h-full w-full object-cover {{ '-scale-x-100 object-[50%_88%]' if h.flip }}">
   {% endif %}

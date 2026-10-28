@@ -493,7 +493,7 @@ const micro = {
  */
 const cryo = {
   // The frame's intro trimmed for the hero like the Micro Instrument one (78 to 64 words): the same claims, fewer
-  // fillers, pointing to the request strip under the prices.
+  // fillers, pointing to the Download Repair Form button under it.
   intro:
     "Restore your cryosurgical handpieces to peak performance with Ambler Surgical. Our technicians leverage over two decades of experience to stop leaks and restore critical freezing power for all major makes and models. We provide a transparent cost range for each of the three repair levels and quote every refurbishment for your approval before completing any work. Download the repair form below to get started.",
   /** Typical Repair Charges (Level 1-3, 35098:39331 / 39336 / 39341). */

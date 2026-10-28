@@ -4,14 +4,15 @@ title: Search results
 permalink: /search/
 ---
 {#- Not drawn in Figma: the header search submits here (?q=). Same listing as the Product Type Page,
-    over every catalog product whose name, item number, description or type matches. -#}
+    over every catalog product whose name, item number, description or type matches. Phones follow the
+    mobile Product Type Page (34730:7891). -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
 
 {{ ui.breadcrumbs([{ label: "Search results" }]) }}
 <section class="bg-white" x-data="{ q: (new URLSearchParams(location.search).get('q') || '').trim() }">
-  <div class="container-page pt-10">
-    <h1 class="text-h2 font-bold text-heading md:text-h1">
+  <div class="container-page pt-8 md:pt-10">
+    <h1 class="text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">
       <span x-show="q" x-cloak>Search results for &ldquo;<span x-text="q"></span>&rdquo;</span>
       <span x-show="!q">Search results</span>
     </h1>

@@ -18,7 +18,7 @@
 
 {# Phones only: "back" button next to the page title (40x32, #f1f5f8, 1px #dee7ed, chevron-left; 14714:138751). #}
 {% macro backButton(href, label="Back") %}
-<a href="{{ href }}" aria-label="{{ label }}" class="flex h-8 w-10 shrink-0 items-center justify-center rounded border border-secondary-200 bg-secondary-100 text-primary-500 hover:text-ink md:hidden">{% icon "chevron-right", "h-6 w-6 rotate-180" %}</a>
+<a href="{{ href }}" aria-label="{{ label }}" class="flex h-8 w-10 shrink-0 items-center justify-center rounded border border-secondary-200 bg-secondary-100 text-primary-500 hover:text-ink md:hidden">{% icon "chevron-left", "h-6 w-6" %}</a>
 {% endmacro %}
 
 {# Section heading (Medium 24/32, phones 20/28 with -2% letter spacing) with an optional "Label ->" link under it (dashboard "h3" 14714:137098). #}
@@ -95,7 +95,7 @@
    Phones (23115:35480, 21071:136476): 40px padding, 24px under the illustration, Medium 20/28 ink title;
    btnGap: space above the button on phones (24px Address Book, 32px My Orders). #}
 {% macro emptyState(image, title, text, href, linkLabel, figma="", padding="md:py-[60px]", btnGap="mt-6") %}
-<div class="flex flex-col items-center rounded border border-outline bg-white p-10 text-center md:px-6 {{ padding }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
+<div class="flex flex-col items-center rounded border border-outline bg-white p-[39px] text-center md:px-6 {{ padding }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
   <img src="{{ image }}" alt="" width="160" height="160" class="h-40 w-40">
   <h2 class="mt-6 text-h4 font-medium tracking-title text-ink md:mt-8 md:text-h2 md:font-bold md:tracking-normal md:text-heading">{{ title }}</h2>
   <p class="mt-2 max-w-[500px] text-base text-body">{{ text }}</p>
@@ -128,13 +128,13 @@
 {% endmacro %}
 
 {# Phones: tables are drawn as stacked cards ("table-card" 14714:138225). Card body: white, 1px #dde7ee,
-   24px padding, 12px between rows; a row is a 110px ink label and the value right-aligned. #}
+   24px padding, 12px between rows; a row is a 110px ink label and the value right-aligned (rowClass: row alignment). #}
 {% set cardCls = "flex flex-col gap-3 border border-outline bg-white p-[23px] text-base text-body" %}
 {# Card action strip: 44px, white cells with #dde7ee lines, icon + Regular 16/24 label. #}
 {% set cardActionsCls = "grid h-11 auto-cols-fr grid-flow-col divide-x divide-outline border-x border-b border-outline bg-white text-base text-body" %}
 {% set cardActionCls = "flex items-center justify-center gap-2.5 hover:text-primary-500" %}
-{% macro cardRow(label, valueClass="", center=false) %}
-<div class="flex {{ 'items-center' if center else 'items-start' }}">
+{% macro cardRow(label, valueClass="", rowClass="items-start") %}
+<div class="flex {{ rowClass }}">
   <dt class="min-w-[110px] shrink-0 whitespace-nowrap text-ink">{{ label }}</dt>
   <dd class="min-w-0 flex-1 text-right {{ valueClass }}">{{ caller() }}</dd>
 </div>
@@ -153,7 +153,7 @@
         {% call cardRow("Date:") %}{{ o.date }}{% endcall %}
         {% call cardRow("Ship To:") %}{{ o.shipTo }}{% endcall %}
         {% call cardRow("Order Total:", "font-bold text-ink") %}{{ o.total }}{% endcall %}
-        {% call cardRow("Status:", "", true) %}{{ statusBadge(o.status) }}{% endcall %}
+        {% call cardRow("Status:", "", "-mt-0.5 items-center") %}{{ statusBadge(o.status) }}{% endcall %}
       </dl>
       <div class="{{ cardActionsCls }}">
         <a href="/sales/order/view/" class="{{ cardActionCls }}">{% icon "eye", "h-6 w-6" %}View Order</a>

@@ -24,6 +24,8 @@ const gradients = {
   heroWide: "linear-gradient(90deg, #004776 15%, rgba(0, 71, 118, 0) 62%)",
   // Info bands: photo on the left, navy on the right (34719:11393, 34888:121815, 34777:59028).
   band: "linear-gradient(90deg, rgba(0, 71, 118, 0) 10%, #004776 50%)",
+  // Phones: the band photo is a strip above the copy, turning navy towards the right (34726:18657).
+  bandMobile: "linear-gradient(90deg, rgba(0, 71, 118, 0) 35%, rgba(0, 71, 118, 0.7) 100%)",
   // 2px line under the hero title.
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
@@ -60,6 +62,11 @@ const typePhotoStyle = {
   handpieces: "transform: rotate(30deg) scale(1.5) translate(-4%, 4%)",
   clamps: "transform: rotate(30deg) scale(1.5) translate(8%, 6%)",
 };
+/** Phones draw the same photos in a wide 350x156 card, turned only slightly (mobile PLP "category-card", 34726:18657). */
+const mobileDiagonal = "translate(24%, 14%) rotate(20deg) scale(1.5)";
+/** …and in the shorter 350x116 "Shop By Categories" cards (34777:58812), centred. */
+const mobileNavDiagonal = "rotate(18deg) scale(1.7)";
+const typePhotoMobile = { speculum: "translate(-3%, 12%) scale(1.3)", handpieces: "rotate(15deg) scale(1.2)" };
 
 /**
  * Hover descriptions on category cards (styleguide "Hover — shows description"). Cannulas and the
@@ -518,6 +525,7 @@ const forcepsType = {
       image: "9d8ed65f",
       fit: "contain",
       style: "transform: rotate(37deg) scale(1.45) translate(4%, 0)",
+      mobileTransform: mobileDiagonal,
       hover: [
         "Hold tissue securely yet gently, from a firm grip to sensitive organs.",
         "Toothed Allis for tough fascia, atraumatic Babcock and bowel graspers for delicate structures.",
@@ -608,6 +616,7 @@ function typeCard(t, href, count, extra = {}) {
     fit: photo || product ? "contain" : "cover",
     position: photo || product ? null : "top",
     style: photo ? typePhotoStyle[t.slug] || diagonal : null,
+    mobileTransform: photo ? typePhotoMobile[t.slug] || mobileDiagonal : null,
     hover: typeHoverText[t.slug] || null,
     ...extra,
   };
@@ -651,6 +660,7 @@ const specialtyPages = specialties.map((s) => {
             fit: pick ? "contain" : "cover",
             position: pick ? null : "top",
             style: pick ? typePhotoStyle[pick] || diagonal : null,
+            mobileTransform: pick ? typePhotoMobile[pick] || mobileNavDiagonal : null,
             menu: g.items.map((name) => ({ label: name, href: `${instrumentsUrl}${slugify(name)}/` })),
           };
         });

@@ -106,10 +106,11 @@
 {% endif %}
 {% endmacro %}
 
-{# Bullet item (About 34974:1180): 8x2 orange dash centred on the first 28px line, 12px gap. #}
+{# Bullet item (About 34974:1180): 8x2 orange dash centred on the first 28px line, 12px gap. The dash keeps a
+   28px line box, so one-line items stay 28px tall with the 24px phone text (mobile 34974:121015). #}
 {% macro bullet(class="") %}
 <li class="flex gap-3 {{ class }}">
-  <span aria-hidden="true" class="mt-[13px] h-0.5 w-2 shrink-0 rounded-[1px] bg-accent"></span>
+  <span aria-hidden="true" class="mb-[13px] mt-[13px] h-0.5 w-2 shrink-0 rounded-[1px] bg-accent"></span>
   <span class="min-w-0">{{ caller() }}</span>
 </li>
 {% endmacro %}
@@ -122,6 +123,11 @@
     <path d="M31 6.5C26 8 22 12.5 22 18v10.5a2.5 2.5 0 0 0 2.5 2.5h4a2.5 2.5 0 0 0 2.5-2.5V22a2.5 2.5 0 0 0-2.5-2.5H27c0-4 1.5-7 4-8.5z"/>
   </g>
 </svg>
+{% endmacro %}
+
+{# Chevron down, 28px, 2px stroke (mobile About "Read more", icon/24px/chevron-down). #}
+{% macro chevronDown() %}
+<svg viewBox="0 0 28 28" class="h-7 w-7 shrink-0" fill="none" aria-hidden="true"><path d="M7 10.5l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 {% endmacro %}
 
 {# Orange button with the arrow (Landing Page hero 34141:37899 "btn": 12/30/12/32 padding). cls: extra classes, e.g. full width on phones. #}

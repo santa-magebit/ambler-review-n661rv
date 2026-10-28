@@ -10,14 +10,14 @@ import images from "./images.js";
 /**
  * Gradients measured from the Figma renders (the dumps only say GRADIENT_LINEAR).
  * heroFade: navy over the Landing Page and Repair Services hero photos.
- * heroFadePhone: the same on phones (mobile 34141:38087), solid navy under the text, clear at 75%.
+ * heroFadePhone: the same on phones (mobile 34141:38087, 34897:7756), solid navy to 30%, then fading out across the photo.
  * aboutFade: About hero, solid navy to 14%, clear at 64%.
  * whyFade: About "Why Us" band, clear at 12%, solid navy from 50%.
  * titleLine: 2px line under hero titles, orange with a white highlight and clear ends.
  */
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
-  heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 75%)",
+  heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 100%)",
   aboutFade: "linear-gradient(90deg, #004776 14%, rgba(0, 71, 118, 0) 64%)",
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
   titleLine:
@@ -149,14 +149,14 @@ const about = {
   ],
   societiesText:
     "Our customers turn to us because in addition to supplying the highest quality instruments at affordable prices, we do our best to provide additional guidance when it comes to new products, cleaning and sterilization, and trends in our industry. Our industry affiliations and partnerships allow us to provide valuable service and information about membership opportunities, webinars, continuing education and useful documents for your ophthalmic O.R.",
-  /** Logo boxes (34974:1283): an image, or the name set as text where Figma has no logo. */
+  /** Logo boxes (34974:1283): an image, or the name set as text where Figma has no logo (phones: mobile 34974:121015 sizes). */
   societies: [
     { name: "American Academy of Ophthalmology", image: images["11463f33"] },
     { name: "American Society of Cataract and Refractive Surgery", image: images["e239b139"] },
     { name: "American Society of Ophthalmic Administrators", image: images["272be983"] },
     { name: "Outpatient Surgery Magazine", image: images["0f5459fa"] },
-    { name: "EyeCare Market", size: "text-h4" },
-    { name: "American Society of Ophthalmic Registered Nurses (ASORN)", size: "text-sm leading-[18px]" },
+    { name: "EyeCare Market", size: "text-lg md:text-h4" },
+    { name: "American Society of Ophthalmic Registered Nurses (ASORN)", size: "text-xs md:text-sm md:leading-[18px]" },
   ],
   testimonials: [
     {

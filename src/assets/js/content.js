@@ -58,14 +58,14 @@ document.addEventListener("alpine:init", () => {
         this.update();
       }, 900);
     },
-    /** Phones: keep the active tab visible in the horizontally scrolling tab row. */
+    /** Phones: keep the active tab visible in the horizontally scrolling tab row (20px page margin, mobile 34971:56818). */
     reveal() {
       const list = this.$refs.tabs;
       const tab = list && list.querySelector(`[data-section="${this.active}"]`);
       if (!tab || list.scrollWidth <= list.clientWidth) return;
       const left = tab.offsetLeft - list.offsetLeft;
       if (left < list.scrollLeft || left + tab.offsetWidth > list.scrollLeft + list.clientWidth) {
-        list.scrollTo({ left: Math.max(0, left - 16), behavior: "smooth" });
+        list.scrollTo({ left: Math.max(0, left - 20), behavior: "smooth" });
       }
     },
   }));

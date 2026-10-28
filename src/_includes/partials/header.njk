@@ -68,8 +68,8 @@
 {% endset %}
 {# Cart item count: styleguide "With Items" (14714:56856), a white tab in the button's top-right corner (corners 0 / 3 / 0 / 4). #}
 {% set cartCount %}<span x-show="$store.cart.count > 0" x-cloak x-text="$store.cart.count" class="absolute right-0.5 top-0.5 flex h-5 min-w-[22px] items-center justify-center rounded-bl rounded-tr-[3px] bg-white p-0.5 text-xs font-bold text-accent group-hover:text-accent-dark"></span>{% endset %}
-{# Sticky on desktop: the Figma "sticky sub-nav" example (34971:56679) keeps the header on screen while scrolled. #}
-<header x-data="siteHeader" @keydown.escape.window="menu = null" @click.outside="menu = null" class="relative z-40 bg-white shadow-100 xl:sticky xl:top-0" data-figma="34141:37898">
+{# Sticky at every width: the Figma "sticky sub-nav" examples (web 34971:56679, mobile 34971:56818) keep the header on screen while scrolled. #}
+<header x-data="siteHeader" @keydown.escape.window="menu = null" @click.outside="menu = null" class="sticky top-0 z-40 bg-white shadow-100" data-figma="34141:37898">
   {# Mobile #}
   <div class="xl:hidden" data-figma="34739:21830">
     <a href="{{ site.contact.phoneHref }}" class="flex h-10 items-center justify-center gap-1 border-t-2 border-accent bg-white text-lg font-semibold leading-6 tracking-[0.1em] text-primary-500">{% icon "phone-call", "h-6 w-6 text-accent" %}{{ site.contact.phone }}</a>
@@ -77,7 +77,7 @@
       <button type="button" @click="drawer = true" aria-label="Open menu" class="flex h-[52px] w-[52px] shrink-0 items-center justify-center">
         <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
       </button>
-      <a href="/" class="ml-2 shrink-0" aria-label="Ambler Surgical home"><img src="/img/logo-header.png" alt="Ambler Surgical" class="h-[30px] w-auto"></a>
+      <a href="/" class="ml-2 min-w-0 shrink" aria-label="Ambler Surgical home"><img src="/img/logo-header.png" alt="Ambler Surgical" class="h-[30px] w-auto max-w-full object-contain object-left"></a>
       <div class="ml-auto flex">
         <a href="/quick-order/" x-show="$store.auth.loggedIn" aria-label="Quick Order" class="flex h-[52px] w-[52px] items-center justify-center hover:bg-white/10">{% icon "checkup-list", "h-6 w-6" %}</a>
         <div class="relative">

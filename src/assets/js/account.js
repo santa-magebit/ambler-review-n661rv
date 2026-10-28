@@ -138,10 +138,21 @@
       fromHash() {
         const hash = window.location.hash.slice(1);
         this.tab = this.tabs.includes(hash) ? hash : "items";
+        this.$nextTick(() => this.revealTab());
       },
       select(name) {
         this.tab = name;
         history.replaceState(null, "", name === "items" ? window.location.pathname : `#${name}`);
+        this.revealTab();
+      },
+      /** Phones: the tab row scrolls sideways (14714:138846); keep the selected tab in view. */
+      revealTab() {
+        const tab = this.$refs[`tab-${this.tab}`];
+        const row = tab.parentElement;
+        const t = tab.getBoundingClientRect();
+        const r = row.getBoundingClientRect();
+        if (t.right > r.right) row.scrollLeft += t.right - r.right;
+        else if (t.left < r.left) row.scrollLeft -= r.left - t.left;
       },
       /** Arrow keys move between tabs (WAI-ARIA tabs pattern). */
       step(delta) {

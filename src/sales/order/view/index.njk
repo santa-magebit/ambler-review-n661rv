@@ -74,8 +74,8 @@ accountNavActive: /sales/order/history/
     </div>
     <div class="flex items-center gap-3 md:flex-wrap" data-figma="14714:137978">
       <a href="/sales/order/history/" class="btn hidden pl-[30px] text-primary-500 hover:text-ink md:inline-flex">{% icon "arrow-left" %}Back To Orders</a>
-      <button type="button" @click="print()" class="btn-secondary min-w-0 flex-1 px-2 md:flex-initial md:pl-[30px] md:pr-8">{% icon "printer" %}<span x-text="{ items: 'Print Order', invoices: 'Print Invoice', shipments: 'Print Shipment', refunds: 'Print Refund' }[tab]">Print Order</span></button>
-      <button type="button" @click="reorder()" data-reorder class="btn-primary min-w-0 flex-1 px-2 md:flex-initial md:pl-[30px] md:pr-8">{% icon "reload", "h-7 w-7" %}Reorder</button>
+      <button type="button" @click="print()" class="btn-secondary min-w-0 flex-1 px-0 max-md:whitespace-nowrap md:flex-initial md:pl-[30px] md:pr-8">{% icon "printer" %}<span x-text="{ items: 'Print Order', invoices: 'Print Invoice', shipments: 'Print Shipment', refunds: 'Print Refund' }[tab]">Print Order</span></button>
+      <button type="button" @click="reorder()" data-reorder class="btn-primary min-w-0 flex-1 px-0 max-md:whitespace-nowrap md:flex-initial md:pl-[30px] md:pr-8">{% icon "reload", "h-7 w-7" %}Reorder</button>
     </div>
   </div>
 

@@ -8,7 +8,8 @@ permalink: "{{ cp.url }}"
 eleventyComputed:
   title: "{{ cp.name | safe }} | {{ cp.specialty.name | safe }}"
 ---
-{#- Browse by Specialty > <Specialty> > <Category>: Figma "PLP - Category page" (34719:11290), drawn for Ophthalmology > Instruments. -#}
+{#- Browse by Specialty > <Specialty> > <Category>: Figma "PLP - Category page" (34719:11290), drawn for Ophthalmology > Instruments;
+    phones "mobile - PLP - Category page" (34726:18657). -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
 
@@ -18,9 +19,9 @@ eleventyComputed:
 {% if cp.cards.length %}
 {# Popular Categories #}
 <section class="bg-white" data-figma="34719:11304">
-  <div class="container-page py-10">
+  <div class="container-page py-8 md:py-10">
     {% call plp_ui.titleRow("Popular Categories") %}{{ plp_ui.quickSelect(cp.quickSelect, "All Categories", "34873:118749") }}{% endcall %}
-    <div class="mt-8">{{ plp_ui.cardGrid(cp.cards, "34719:11310") }}</div>
+    <div class="mt-4 md:mt-8">{{ plp_ui.cardGrid(cp.cards, "34719:11310") }}</div>
   </div>
 </section>
 {% endif %}

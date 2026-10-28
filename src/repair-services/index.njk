@@ -56,13 +56,14 @@ permalink: /repair-services/
 </section>
 
 {# Surgical Instrument Repair for Every Need: technician photo band, text on the right.
-   Phones (mobile 34897:7756): a 132px photo strip above the navy text block, Medium 24/32 title, 16/24 text 16px apart. #}
+   Phones (mobile 34897:7756): a 132px photo strip above the navy text block, Medium 24/32 title (orange line 4px lower),
+   16/24 text 16px apart. #}
 <section class="relative isolate overflow-hidden bg-primary-500" data-figma="34799:68611">
   <img src="{{ 'de7cda38' | img }}" alt="" loading="lazy" class="relative -z-10 block h-[132px] w-full object-cover object-left md:absolute md:inset-0 md:h-full">
   <div aria-hidden="true" class="absolute inset-0 -z-10 hidden bg-primary-500/80 md:block lg:hidden"></div>
   <div class="container-page flex py-10 lg:min-h-[424px] lg:items-center">
     <div class="flex max-w-[886px] flex-col gap-6 md:gap-7 lg:ml-auto" data-figma="34799:68612">
-      <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Surgical Instrument Repair for Every Need<br><span class="text-accent">Restore Precision. Extend Instrument Life.</span></h2>
+      <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Surgical Instrument Repair for Every Need<br><span class="mt-1 inline-block text-accent md:mt-0 md:inline">Restore Precision. Extend Instrument Life.</span></h2>
       <div class="flex flex-col gap-4 text-base text-white md:gap-3 md:text-lg">
         {% for p in r.everyNeed %}<p>{{ p }}</p>{% endfor %}
       </div>

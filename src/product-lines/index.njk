@@ -3,7 +3,7 @@ layout: layouts/base.njk
 title: Product Lines
 permalink: /product-lines/
 ---
-{#- Figma "PLP - Product Lines - 1920px" (34907:8363). -#}
+{#- Figma "PLP - Product Lines - 1920px" (34907:8363); phones "mobile - PLP - Product Lines" (34907:120439). -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
 {% set pl = plp.productLinePage %}
@@ -13,28 +13,29 @@ permalink: /product-lines/
 
 {# Popular Product Lines #}
 <section class="bg-white" data-figma="34907:8376">
-  <div class="container-page py-10">
+  <div class="container-page pb-5 pt-10 md:py-10">
     {{ plp_ui.titleRow("Popular Product Lines") }}
-    <div class="mt-8">{{ plp_ui.cardGrid(pl.popular, "34907:8386") }}</div>
+    <div class="mt-4 md:mt-8">{{ plp_ui.cardGrid(pl.popular, "34907:8386") }}</div>
   </div>
 </section>
 
-{# All Product Lines: search and sort over the tiles #}
-<section class="bg-secondary-100" data-figma="34907:8416" x-data="plpLines">
-  <div class="container-page py-10">
-    <div class="flex flex-wrap items-center justify-between gap-x-10 gap-y-4" data-figma="34912:8508">
-      <h2 class="flex flex-wrap items-baseline gap-2 text-h2 font-bold text-heading md:text-h1">All Product Lines <span class="text-lg font-normal text-body" x-text="countLabel">{{ pl.all.length }} product lines</span></h2>
-      <div class="flex w-full flex-wrap items-center gap-x-10 gap-y-4 md:w-auto">
+{# All Product Lines: search and sort over the tiles (phones: white, full-width search and "Sort By", 2 columns of tiles, gap 12) #}
+<section class="bg-white md:bg-secondary-100" data-figma="34907:8416" x-data="plpLines">
+  <div class="container-page pb-10 pt-5 md:py-10">
+    <div class="flex flex-wrap items-center justify-between gap-x-10 gap-y-6 md:gap-y-4" data-figma="34912:8508">
+      <h2 class="flex flex-wrap items-baseline gap-2 text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">All Product Lines <span class="text-lg font-normal text-body" x-text="countLabel">{{ pl.all.length }} product lines</span></h2>
+      <div class="flex w-full flex-wrap items-center gap-x-10 gap-y-3 md:w-auto md:gap-y-4">
         <label class="relative block w-full md:w-[320px]">
           <span class="sr-only">Search product lines</span>
           <span class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-primary-500">{% icon "search" %}</span>
           <input type="search" x-model="q" placeholder="Search product lines" class="input pl-[60px] font-medium placeholder:font-medium">
         </label>
-        <div class="flex items-center gap-5" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
-          <span class="shrink-0 text-base text-body" id="lines-sort">Sort By:</span>
-          <div class="relative w-[240px]">
-            <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="lines-sort lines-sort-v" class="flex h-[52px] w-full items-center justify-between gap-3 rounded border bg-white px-5 text-left text-lg font-medium" :class="open ? 'border-primary-500 text-ink' : 'border-secondary-200 text-body hover:border-grayscale-400'">
-              <span id="lines-sort-v" x-text="sortLabel">Featured</span>
+        <div class="flex w-full items-center gap-5 md:w-auto" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
+          <span class="sr-only shrink-0 text-base text-body md:not-sr-only" id="lines-sort">Sort By:</span>
+          <div class="relative w-full md:w-[240px]">
+            <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="true" aria-labelledby="lines-sort lines-sort-v" class="{{ plp_ui.mControlClass }}" :class="{{ plp_ui.mControlState }}">
+              <span class="md:hidden" aria-hidden="true">Sort By</span>
+              <span id="lines-sort-v" class="hidden md:inline" x-text="sortLabel">Featured</span>
               <span x-show="!open">{% icon "dropdown" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up" %}</span>
             </button>
             <ul x-show="open" x-cloak x-transition.opacity class="absolute right-0 top-full z-30 mt-1 w-full rounded border border-outline bg-white py-2 shadow-[0_8px_24px_0_rgba(13,48,84,0.12)]">
@@ -46,7 +47,7 @@ permalink: /product-lines/
         </div>
       </div>
     </div>
-    <ul class="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6" data-figma="34911:8953">
+    <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:mt-10 md:gap-5 lg:grid-cols-6" data-figma="34911:8953">
       {% for b in pl.all %}
       <li class="min-w-0" x-show="isShown('{{ b.slug }}')" :style="{ order: rank('{{ b.slug }}') }" data-slug="{{ b.slug }}" data-name="{{ b.name }}">{{ plp_ui.logoTile(b) }}</li>
       {% endfor %}

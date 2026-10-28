@@ -19,15 +19,15 @@
   <div class="flex flex-col gap-5 md:p-5" data-figma="34224:49541">
     <div class="relative" @touchstart.passive="touchStart($event)" @touchend="touchEnd($event)">
       <button type="button" x-ref="opener" @click="open()" aria-label="Zoom image"
-              class="block aspect-square w-full cursor-zoom-in overflow-hidden border-b border-outline bg-white md:aspect-[974/522] md:rounded md:border">
+              class="block aspect-square w-full cursor-zoom-in overflow-hidden border-b border-outline bg-white sm:aspect-[974/522] md:rounded md:border">
         <img src="{{ gallery[0] }}" :src="src" alt="{{ product.name }}" class="h-full w-full object-contain">
       </button>
       {# Mobile slider controls (34224:49918): 44px #eff7fd back + zoom buttons 20px in, dots, count. #}
       {% set backHref = typeHref or "/browse-by-specialty/ophthalmology/" %}
       <a href="{{ backHref }}" aria-label="Back to {{ product.typeName }}"
-         class="absolute left-5 top-5 flex h-11 w-11 items-center justify-center rounded bg-[#eff7fd] text-primary-500 md:hidden">{% icon "chevron-right", "h-6 w-6 rotate-180" %}</a>
+         class="absolute left-5 top-5 flex h-11 w-11 items-center justify-center rounded bg-[#eff7fd] text-primary-500 md:hidden">{% icon "chevron-left", "h-6 w-6" %}</a>
       <button type="button" @click="open()" aria-label="Zoom image"
-              class="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded bg-[#eff7fd] text-primary-500 md:hidden">{{ gfx.zoomIn() }}</button>
+              class="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded bg-[#eff7fd] text-primary-500 md:hidden">{% icon "zoom-in", "h-6 w-6" %}</button>
       {% if gallery.length > 1 %}
       <div class="absolute bottom-3.5 left-1/2 flex -translate-x-1/2 md:hidden">
         {% for img in gallery %}

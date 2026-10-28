@@ -8,7 +8,7 @@ permalink: "{{ br.url }}"
 eleventyComputed:
   title: "{{ br.name | safe }}"
 ---
-{#- Product Lines > <Line>: Figma "PLP - Brand Page - Duckworth & Kent - 1920px" (34926:9036). -#}
+{#- Product Lines > <Line>: Figma "PLP - Brand Page - Duckworth & Kent - 1920px" (34926:9036); phones 34926:121048. -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
 
@@ -20,9 +20,9 @@ eleventyComputed:
 <section class="bg-white" data-figma="34926:120968">
   <div class="container-page pb-5 pt-10">
     {% call plp_ui.titleRow("Popular Categories") %}{{ plp_ui.quickSelect(br.quickSelect, "All Categories", "34926:120995") }}{% endcall %}
-    <div class="mt-8">{{ plp_ui.cardGrid(br.cards, "34926:120978") }}</div>
+    <div class="mt-4 md:mt-8">{{ plp_ui.cardGrid(br.cards, "34926:120978") }}</div>
   </div>
 </section>
 {% endif %}
 
-{{ plp_ui.listing(br.listing, "34926:9196") }}
+{{ plp_ui.listing(br.listing, "34926:9196", false, "pb-10 pt-5" if br.cards.length else "pb-10 pt-8") }}

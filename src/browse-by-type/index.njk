@@ -3,41 +3,54 @@ layout: layouts/base.njk
 title: Browse by Type
 permalink: /browse-by-type/
 ---
-{#- Figma "PLP - Browse by Type" (34723:18102). -#}
+{#- Figma "PLP - Browse by Type" (34723:18102); phones "mobile - PLP - Browse by Type" (34735:4220). -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
 
 {{ ui.breadcrumbs([{ label: "Browse by Type" }]) }}
 {{ plp_ui.hero({ eyebrow: "Explore and Browse Surgical", title: "Instruments by Type", text: intros.pages.browseByType, image: "be970610", flip: true, wide: true }, "34723:18106") }}
 
-{# Popular Types #}
+{# Phones search the instrument types: while typing, the A to Z list below shows only the matching types. #}
+<div x-data="plpTypeIndex">
+{# Popular Types (phones: search field, the first 6 cards and "View All Types") #}
 <section class="bg-white" data-figma="34723:18115">
-  <div class="container-page py-10">
+  <div class="container-page py-8 md:py-10">
     {{ plp_ui.titleRow("Popular Types") }}
-    <div class="mt-8">{{ plp_ui.cardGrid(plp.browseTypeIndex.popular, "34723:18125") }}</div>
+    <label class="relative mt-4 block md:hidden" data-figma="34735:4220">
+      <span class="sr-only">Search instrument types</span>
+      <span class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-primary-500">{% icon "search" %}</span>
+      <input type="search" x-model="q" placeholder="Search instrument types" class="input pl-[60px] font-medium placeholder:font-medium">
+    </label>
+    <div x-show="!needle" class="mt-4 md:mt-8">
+      {{ plp_ui.cardGrid(plp.browseTypeIndex.popular, "34723:18125", 6) }}
+      <a href="#all-types" class="btn-secondary mt-4 w-full md:hidden">View All Types</a>
+    </div>
   </div>
 </section>
 
-{# All Instrument Types, A to Z #}
-<section class="bg-secondary-100" data-figma="34723:18155">
-  <div class="container-page pb-20 pt-10">
-    <h2 class="text-h3 font-bold text-heading md:text-h2">All Instrument Types</h2>
-    <nav aria-label="Jump to letter" class="mt-6 flex flex-wrap items-center gap-3" data-figma="34723:18158">
-      <span class="text-base text-body">Jump to:</span>
-      {% for l in plp.browseTypeIndex.letters %}
-      <a href="#letter-{{ l.letter | lower }}" class="flex h-12 min-w-[50px] items-center justify-center rounded border border-secondary-200 bg-white px-5 text-base text-ink hover:border-primary-500 hover:text-primary-500">{{ l.letter }}</a>
-      {% endfor %}
+{# All Instrument Types, A to Z (phones: white, "Jump to" letters in one scrolling row, 2 columns of links) #}
+<section id="all-types" class="scroll-mt-4 bg-white md:bg-secondary-100" data-figma="34723:18155">
+  <div class="container-page pb-10 pt-8 md:pb-20 md:pt-10">
+    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">All Instrument Types</h2>
+    <nav aria-label="Jump to letter" class="mt-4 flex flex-wrap items-center gap-4 md:mt-6 md:gap-3" data-figma="34723:18158">
+      <span class="w-full text-base text-body md:w-auto">Jump to:</span>
+      <div class="-mx-5 flex w-[calc(100%+40px)] gap-2 overflow-x-auto px-5 md:contents">
+        {% for l in plp.browseTypeIndex.letters %}
+        <a href="#letter-{{ l.letter | lower }}" x-show="hasMatch('letter-{{ l.letter | lower }}')" class="flex h-12 min-w-[50px] shrink-0 items-center justify-center rounded border border-secondary-200 bg-white px-5 text-base text-ink hover:border-primary-500 hover:text-primary-500">{{ l.letter }}</a>
+        {% endfor %}
+      </div>
     </nav>
-    <div class="mt-10 flex flex-col gap-10" data-figma="34723:18169">
+    <p x-show="needle && !count" x-cloak class="mt-8 text-lg text-heading">No instrument types match &ldquo;<span x-text="q.trim()"></span>&rdquo;</p>
+    <div class="mt-8 flex flex-col gap-8 md:mt-10 md:gap-10" data-figma="34723:18169">
       {% for l in plp.browseTypeIndex.letters %}
-      <section id="letter-{{ l.letter | lower }}" class="scroll-mt-4" aria-labelledby="letter-{{ l.letter | lower }}-h">
-        <div class="flex items-center gap-6">
-          <h3 id="letter-{{ l.letter | lower }}-h" class="text-h2 font-bold text-heading">{{ l.letter }}</h3>
+      <section id="letter-{{ l.letter | lower }}" x-show="hasMatch('letter-{{ l.letter | lower }}')" class="scroll-mt-4" aria-labelledby="letter-{{ l.letter | lower }}-h">
+        <div class="flex items-center gap-4 md:gap-6">
+          <h3 id="letter-{{ l.letter | lower }}-h" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ l.letter }}</h3>
           <span class="h-px flex-1 bg-card"></span>
         </div>
-        <ul class="mt-10 grid gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-2 md:mt-10 md:grid-cols-3 md:gap-x-6 md:gap-y-4 lg:grid-cols-5">
           {% for t in l.items %}
-          <li class="min-w-0 text-base"><a href="{{ t.url }}" class="text-primary-500 hover:underline">{{ t.name }}</a>{% if t.count %}<span class="text-body">&nbsp; ({{ t.count }})</span>{% endif %}</li>
+          <li class="min-w-0 text-base" data-name="{{ t.name }}" x-show="match($el.dataset.name)"><a href="{{ t.url }}" class="font-medium text-primary-500 hover:underline md:font-normal">{{ t.name }}</a>{% if t.count %}<span class="text-body">&nbsp; ({{ t.count }})</span>{% endif %}</li>
           {% endfor %}
         </ul>
       </section>
@@ -45,3 +58,4 @@ permalink: /browse-by-type/
     </div>
   </div>
 </section>
+</div>

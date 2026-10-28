@@ -8,8 +8,9 @@ permalink: "{{ bt.url }}"
 eleventyComputed:
   title: "{{ bt.name | safe }}"
 ---
-{#- Browse by Type > <Type>: Figma "PLP - Type Page - Forceps - 1920px" (34887:118658). The product listing
-    below "Browse by Name" is the shared listing from the Product Type Page (34723:17181). -#}
+{#- Browse by Type > <Type>: Figma "PLP - Type Page - Forceps - 1920px" (34887:118658), phones 34887:119242
+    (40px section padding like the web frame). The product listing below "Browse by Name" is the shared
+    listing from the Product Type Page (34723:17181). -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
 
@@ -23,9 +24,9 @@ eleventyComputed:
     {% set subItems = [] %}
     {% for s in bt.subtypes %}{% set subItems = (subItems.push({ label: s.name, href: "#" }), subItems) %}{% endfor %}
     {% call plp_ui.titleRow("Browse by Type") %}{{ plp_ui.quickSelect(subItems, "All Types", "34887:119134", true) }}{% endcall %}
-    <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-figma="34887:119137">
+    <ul class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-8 md:gap-5 lg:grid-cols-4" data-figma="34887:119137">
       {% for s in bt.subtypes %}
-      <li class="min-w-0">{{ plp_ui.categoryCard({ name: s.name, href: "#", image: s.image, fit: s.fit or "cover", style: s.style, hover: s.hover, proto: true }, "34887:119138") }}</li>
+      <li class="min-w-0">{{ plp_ui.categoryCard({ name: s.name, href: "#", image: s.image, fit: s.fit or "cover", mobileFit: "contain", style: s.style, mobileTransform: s.mobileTransform, hover: s.hover, proto: true }, "34887:119138") }}</li>
       {% endfor %}
     </ul>
   </div>
@@ -39,11 +40,12 @@ eleventyComputed:
     {% set nameItems = [] %}
     {% for n in bt.names %}{% set nameItems = (nameItems.push({ label: n.name, href: "?name=" + (n.name | urlencode), filter: n.key }), nameItems) %}{% endfor %}
     {% call plp_ui.titleRow("Browse by Name", "md") %}{{ plp_ui.quickSelect(nameItems, "All Names", "34887:119145") }}{% endcall %}
-    <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-figma="34887:119148">
+    {# Phones: 2 columns of 169x50 cards, name Medium 16/24, count 14/20 grey (34887:119242). #}
+    <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-2 md:mt-8 md:gap-5 lg:grid-cols-4" data-figma="34887:119148">
       {% for n in bt.names %}
       <li class="min-w-0">
-        <a href="?name={{ n.name | urlencode }}" @click.prevent="$dispatch('plp-filter', '{{ n.key }}')" class="card-hover flex h-[58px] items-center justify-between gap-3 rounded border border-primary-500 bg-[#f5f7fa] px-5 text-primary-500 hover:bg-primary-500 hover:text-white" data-figma="34887:120029">
-          <span class="flex min-w-0 items-baseline gap-2"><span class="truncate text-h3 font-medium">{{ n.name }}</span><span class="text-base opacity-80">({{ n.count }})</span></span>
+        <a href="?name={{ n.name | urlencode }}" @click.prevent="$dispatch('plp-filter', '{{ n.key }}')" class="card-hover group flex h-[50px] items-center justify-between gap-3 rounded border border-primary-500 bg-[#f5f7fa] px-3 text-primary-500 hover:bg-primary-500 hover:text-white md:h-[58px] md:px-5" data-figma="34887:120029">
+          <span class="flex min-w-0 items-baseline gap-1 md:gap-2"><span class="truncate text-base font-medium md:text-h3">{{ n.name }}</span><span class="text-sm text-body group-hover:text-white md:text-base md:text-inherit md:opacity-80">({{ n.count }})</span></span>
           {% icon "arrow-narrow-right", "h-6 w-6" %}
         </a>
       </li>
@@ -53,14 +55,14 @@ eleventyComputed:
 </section>
 {% endif %}
 
-{{ plp_ui.listing(bt.listing, "34723:17181") }}
-{% if bt.band %}{{ plp_ui.infoBand(bt.band) }}{% endif %}
+{{ plp_ui.listing(bt.listing, "34723:17181", false, "pb-8 pt-10") }}
+{% if bt.band %}{{ plp_ui.infoBand(bt.band, "py-10") }}{% endif %}
 {% if bt.seo %}
-<section class="bg-[#f5f7fa]" data-figma="{{ bt.seo.figma }}">
-  <div class="container-page pb-5 pt-10">
-    <h2 class="text-h3 font-bold text-heading md:text-h2">{{ bt.seo.title }}</h2>
-    <div class="mt-6 flex max-w-[856px] flex-col gap-4">{% for p in bt.seo.paragraphs %}<p class="text-lg text-body">{{ p }}</p>{% endfor %}</div>
+<section class="bg-white md:bg-[#f5f7fa]" data-figma="{{ bt.seo.figma }}">
+  <div class="container-page py-10 md:pb-5">
+    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ bt.seo.title }}</h2>
+    <div class="mt-4 flex max-w-[856px] flex-col gap-4 md:mt-6">{% for p in bt.seo.paragraphs %}<p class="text-base text-body md:text-lg">{{ p }}</p>{% endfor %}</div>
   </div>
 </section>
 {% endif %}
-{{ plp_ui.faq(plp.faq.general, "34887:118753", "wide", "#f5f7fa", "pt-5" if bt.seo else "pt-10") }}
+{{ plp_ui.faq(plp.faq.general, "34887:118753", "wide", "#f5f7fa", "pt-10 md:pt-5" if bt.seo else "pt-10") }}

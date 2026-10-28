@@ -88,7 +88,8 @@
     {% if c.count %}<span class="shrink-0 text-base text-primary-500 group-hover:text-secondary-100 group-focus-visible:text-secondary-100 md:text-lg">{{ c.count }} product{{ "s" if c.count != 1 }}</span>{% endif %}
   </span>
   <span class="relative block min-h-0 flex-1 overflow-hidden">
-    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'group-hover:opacity-0 group-focus-visible:opacity-0' if c.hover }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
+    {# Phones: the wide 350x156 photo shows the middle of the picture, turned by c.mobileTransform instead (34726:18657). #}
+    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'max-md:object-contain' if c.mobileFit == 'contain' }} {{ 'object-[50%_30%] md:object-top' if c.position == 'top' }} {{ 'group-hover:opacity-0 group-focus-visible:opacity-0' if c.hover }} {{ 'mix-blend-multiply max-md:![transform:var(--m)]' if c.style }}" {% if c.style %}style="{{ c.style }}{% if c.mobileTransform %}; --m: {{ c.mobileTransform }}{% endif %}"{% endif %}>
     {% if c.hover %}
     <span class="absolute inset-0 flex flex-col gap-2 p-5 text-base text-primary-500 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
       {% for t in c.hover %}<span>{{ t }}</span>{% endfor %}
@@ -98,10 +99,10 @@
 </a>
 {% endmacro %}
 
-{# 4-up grid of category cards (34719:11310); one column, gap 8 on phones. #}
-{% macro cardGrid(cards, figma="34719:11310") %}
+{# 4-up grid of category cards (34719:11310); one column, gap 8 on phones, showing the first mobileMax cards (0: all). #}
+{% macro cardGrid(cards, figma="34719:11310", mobileMax=0) %}
 <ul class="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4" data-figma="{{ figma }}">
-  {% for c in cards %}<li class="min-w-0">{{ categoryCard(c) }}</li>{% endfor %}
+  {% for c in cards %}<li class="min-w-0 {{ 'max-md:hidden' if mobileMax and loop.index > mobileMax }}">{{ categoryCard(c) }}</li>{% endfor %}
 </ul>
 {% endmacro %}
 
@@ -118,7 +119,8 @@
     {% icon "arrow-narrow-right", "h-6 w-6 text-primary-500 group-hover:text-white" %}
   </a>
   <a href="{{ c.href }}" tabindex="-1" aria-hidden="true" class="block min-h-0 flex-1 overflow-hidden">
-    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-top' if c.position == 'top' }} {{ 'mix-blend-multiply' if c.style }}" {% if c.style %}style="{{ c.style }}"{% endif %}>
+    {# Phones: the wide 350x116 photo shows the middle of the picture, turned by c.mobileTransform instead (34777:58812). #}
+    <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'object-[50%_30%] md:object-top' if c.position == 'top' }} {{ 'mix-blend-multiply max-md:![transform:var(--m)]' if c.style }}" {% if c.style %}style="{{ c.style }}{% if c.mobileTransform %}; --m: {{ c.mobileTransform }}{% endif %}"{% endif %}>
   </a>
   {% if c.menu.length %}
   <button type="button" @click="open = !open" :aria-expanded="open" class="flex h-10 shrink-0 items-center justify-between rounded-b bg-white px-3 text-base text-primary-500 hover:bg-secondary-100 md:h-[52px] md:px-5 md:text-lg">
@@ -266,8 +268,8 @@
         </button>
         <div id="{{ l.id }}-m-{{ a.key }}" x-show="sheetAttr === '{{ a.key }}'" x-collapse x-cloak>
           {% for g in a.groups %}
-          <div role="group" aria-labelledby="{{ l.id }}-m-{{ g.key }}" class="border-t border-secondary-200">
-            <p id="{{ l.id }}-m-{{ g.key }}" class="px-5 pb-1 pt-5 text-lg font-bold text-primary-500">{{ g.label }}</p>
+          <div role="group" aria-labelledby="{{ l.id }}-mg-{{ g.key }}" class="border-t border-secondary-200">
+            <p id="{{ l.id }}-mg-{{ g.key }}" class="px-5 pb-1 pt-5 text-lg font-bold text-primary-500">{{ g.label }}</p>
             {% for o in g.options %}
             <label class="flex cursor-pointer items-center gap-2 p-5" x-show="countOf('{{ o.key }}') > 0 || applied.includes('{{ o.key }}')">
               <input type="checkbox" value="{{ o.key }}" x-model="applied" class="peer sr-only">
@@ -301,9 +303,11 @@
             <input type="search" x-model.debounce.150ms="within" @input="page = 1" placeholder="Search within {{ l.cfg.title }}" class="input pl-[60px] font-medium placeholder:font-medium">
           </label>
           {% if l.filters.length %}
-          <button type="button" @click="openSheet()" aria-haspopup="dialog" class="btn-secondary flex-1 px-4 md:hidden">
-            Filters<span x-show="applied.length" x-cloak x-text="applied.length" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold leading-5 text-ink"></span>
-          </button>
+          <div class="flex-1 md:hidden">
+            <button type="button" @click="openSheet()" aria-haspopup="dialog" class="btn-secondary w-full px-4">
+              Filters<span x-show="applied.length" x-cloak x-text="applied.length" class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold leading-5 text-ink"></span>
+            </button>
+          </div>
           {% endif %}
           <div class="flex flex-1 items-center gap-5 md:flex-initial" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
             <span class="sr-only shrink-0 text-base text-body md:not-sr-only" id="{{ l.id }}-sort">Sort By:</span>
@@ -380,7 +384,7 @@
     <div class="container-page grid grid-cols-[minmax(0,1fr)_130px] items-end gap-x-4 gap-y-4 pb-8 md:flex md:h-[160px] md:flex-row md:items-center md:gap-20 md:py-0 md:text-left">
       <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="col-start-2 row-start-1 -mt-[26px] h-[126px] w-[130px] shrink-0 object-cover md:-my-[74px] md:h-[228px] md:w-[228px] md:-translate-y-2 md:scale-[1.19]">
       <div class="contents md:flex md:flex-1 md:flex-col md:gap-4">
-        <h2 class="col-start-1 row-start-1 self-end text-h3 font-medium text-white md:text-h2">{{ plp.repairBanner.title }}</h2>
+        <h2 class="col-start-1 row-start-1 self-end text-h3 font-medium text-white md:self-auto md:text-h2">{{ plp.repairBanner.title }}</h2>
         <p class="col-span-2 text-base text-[#d3dce5] md:text-lg">{{ plp.repairBanner.text }}</p>
       </div>
       <a href="{{ plp.repairBanner.href }}" class="btn col-span-2 mt-2 bg-white pl-8 pr-[30px] text-primary-500 hover:bg-[#f5f5f5] md:mt-0">{{ plp.repairBanner.cta }}{% icon "arrow-narrow-right" %}</a>
@@ -415,6 +419,7 @@
 <section class="relative overflow-hidden bg-primary-500" data-figma="{{ b.figma }}">
   <img src="{{ b.image | img }}" alt="" loading="lazy" class="block h-[132px] w-full object-cover object-left md:absolute md:inset-y-0 md:left-0 md:h-full md:w-[62%]">
   <div class="absolute inset-0 hidden md:block" style="background-image: {{ plp.gradients.band }}"></div>
+  <div class="absolute inset-x-0 top-0 h-[132px] md:hidden" style="background-image: {{ plp.gradients.bandMobile }}"></div>
   <div class="container-page relative flex justify-end {{ pad }} md:py-10">
     <div class="flex w-full max-w-[886px] flex-col gap-6 md:w-[56%] md:gap-7">
       <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">{{ b.title }}{% if b.accent %}<span class="mt-1 block text-accent md:mt-0">{{ b.accent }}</span>{% endif %}</h2>
@@ -509,7 +514,7 @@
   {% elif b.logo %}
   <img src="{{ b.logo }}" alt="{{ b.name }}" loading="lazy" class="max-h-12 max-w-full object-contain" style="width: {{ plp.logoWidths[b.slug] or 160 }}px">
   {% else %}
-  <span class="text-lg font-medium leading-6 text-primary-500">{{ b.name }}</span>
+  <span class="text-base font-medium leading-[22px] text-primary-500 md:text-lg md:leading-6">{{ b.name }}</span>
   {% endif %}
 </a>
 {% endmacro %}

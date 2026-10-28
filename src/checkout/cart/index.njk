@@ -11,7 +11,7 @@ permalink: /checkout/cart/
   {# Phones: 40x32 back button left of a Medium 28/36 title (14714:103652). #}
   <div class="flex items-center gap-5 md:block">
     <a href="/" @click.prevent="history.length > 1 ? history.back() : (location.href = $el.href)" aria-label="Back"
-       class="flex h-8 w-10 shrink-0 items-center justify-center rounded border border-outline bg-secondary-100 text-primary-500 md:hidden">{% icon "chevron-right", "h-6 w-6 rotate-180" %}</a>
+       class="flex h-8 w-10 shrink-0 items-center justify-center rounded border border-outline bg-secondary-100 text-primary-500 md:hidden">{% icon "chevron-left", "h-6 w-6" %}</a>
     <h1 class="text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">Cart</h1>
   </div>
 

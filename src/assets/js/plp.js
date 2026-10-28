@@ -44,8 +44,9 @@ document.addEventListener("alpine:init", () => {
     perPage: cfg.perPage,
     perPageOptions: [...new Set([12, cfg.perPage, 40])].sort((a, b) => a - b),
     // Filter screen on phones (mobile-filters 34731:36331): open, its expanded attribute, filters it opened with.
+    // All attributes start closed (the frame's open "Type" row is an example); a pre-applied filter opens its own.
     sheet: false,
-    sheetAttr: cfg.active,
+    sheetAttr: null,
     sheetFrom: [],
 
     init() {
@@ -236,6 +237,28 @@ document.addEventListener("alpine:init", () => {
     go(n) {
       this.page = Math.min(Math.max(1, n), this.pages);
       this.$refs.top.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+  }));
+
+  /**
+   * Browse by Type index on phones (34735:4220): "Search instrument types" narrows the A to Z list
+   * (links, letter sections and "Jump to" letters) to the names that contain the text.
+   */
+  Alpine.data("plpTypeIndex", () => ({
+    q: "",
+    get needle() {
+      return lower(this.q.trim());
+    },
+    match(name) {
+      return !this.needle || lower(name).includes(this.needle);
+    },
+    /** Does the letter section with this id hold a matching type? */
+    hasMatch(id) {
+      const section = document.getElementById(id);
+      return !this.needle || [...section.querySelectorAll("[data-name]")].some((li) => this.match(li.dataset.name));
+    },
+    get count() {
+      return [...this.$root.querySelectorAll("[data-name]")].filter((li) => this.match(li.dataset.name)).length;
     },
   }));
 

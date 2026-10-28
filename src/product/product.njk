@@ -20,15 +20,13 @@ eleventyComputed:
   {% set browseType = plp.browseTypes | find("slug", product.type) %}
   {% set typeHref = browseType.url if browseType else "" %}
 {% endif %}
-{# No breadcrumbs on phones (Mobile PDP 34224:49918); the gallery's back button links up to the type. #}
-<div class="hidden md:block">
+{# Phones: no breadcrumbs (Mobile PDP 34224:49918); the gallery's back button links up to the type. #}
 {{ ui.breadcrumbs([
   { label: "Browse by Specialty", href: "/browse-by-specialty/" },
   { label: "Ophthalmology", href: "/browse-by-specialty/ophthalmology/" },
   { label: product.typeName, href: typeHref },
   { label: product.name }
 ]) }}
-</div>
 
 <div class="container-page grid gap-7 md:gap-6 md:pt-10 lg:grid-cols-[minmax(0,1fr)_400px] xl:grid-cols-[minmax(0,1fr)_496px]" data-figma="34224:49540">
   {% include "pdp-cart/gallery.njk" %}

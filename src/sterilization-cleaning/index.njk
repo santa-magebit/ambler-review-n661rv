@@ -6,7 +6,9 @@ permalink: /sterilization-cleaning/
 {# Not designed in Figma. Built in the Repair Services / category page language: breadcrumb, navy
    title band, a grid of category cards (title strip of the styleguide "Category card", 14714:57254)
    and the "why us?" band. Each card has id="<catalog.sterilization slug>" so the header menu links
-   /sterilization-cleaning/#<slug> land on it; the listings behind the cards are not part of the prototype. #}
+   /sterilization-cleaning/#<slug> land on it; the listings behind the cards are not part of the prototype.
+   Phones follow the mobile Repair Services frame (34897:7756): 32px section padding, cards 8px apart with its
+   44px card-title strip (Medium 20/28, 12px sides). #}
 {% import "macros/ui.njk" as ui with context %}
 {% import "content/macros.njk" as c with context %}
 
@@ -15,13 +17,13 @@ permalink: /sterilization-cleaning/
 {{ c.titleBand("Sterilization Products", intros.pages.sterilization) }}
 
 <section class="bg-white" aria-labelledby="sterilization-categories">
-  <div class="container-page py-10">
+  <div class="container-page py-8 md:py-10">
     <h2 id="sterilization-categories" class="sr-only">Categories</h2>
-    <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="grid gap-2 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
       {% for s in catalog.sterilization %}
       <li class="flex min-w-0">
         <a href="#{{ s.slug }}" id="{{ s.slug }}" data-proto
-           class="group flex min-h-14 flex-1 scroll-mt-6 items-center justify-between gap-3 rounded border border-primary-500 bg-menu px-5 py-3 text-h4 font-medium tracking-title text-primary-500 transition-colors hover:bg-primary-500 hover:text-white target:ring-2 target:ring-accent target:ring-offset-2 sm:text-h3">
+           class="group flex min-h-11 flex-1 scroll-mt-6 items-center justify-between gap-3 rounded border border-primary-500 bg-menu px-[11px] py-[7px] text-h4 font-medium tracking-title text-primary-500 transition-colors hover:bg-primary-500 hover:text-white target:ring-2 target:ring-accent target:ring-offset-2 sm:text-h3 md:min-h-14 md:px-5 md:py-3">
           {{ s.name }}{% icon "arrow-narrow-right", "h-6 w-6" %}
         </a>
       </li>
@@ -30,4 +32,4 @@ permalink: /sterilization-cleaning/
   </div>
 </section>
 
-{{ c.trustBand("34141:38022") }}
+{{ c.trustBand("34141:38022", "py-8") }}

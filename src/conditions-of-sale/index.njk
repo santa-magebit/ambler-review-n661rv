@@ -10,14 +10,14 @@ permalink: /conditions-of-sale/
    - Section bar ("Contents Sub Menu" 35098:39780): the frame's #f5f8fa bar and seven links, sticky under the header
      like the About sub-nav. The link of the section in view is orange (the frame's orange "Warranty" is that state).
      Phones scroll the links sideways.
-   - "Search Terms & Conditions" (35098:39790) works: it keeps only the subsections that mention the words and marks
-     them (termsSearch in content.js).
+   - "Search Terms & Conditions" (35098:39790), in the PLP's "Search within" field, works: it keeps only the
+     subsections that mention the words and marks them (termsSearch in content.js).
    - Sections: the frame's title with a rule to its right, white and #f5f8fa in turn (as Section 1 and 2). The frame's
      "Back to Top" under each section is one sticky button instead. The text keeps the 756px reading width; from xl the room to its right holds
      the section's subsection index, sticky under the bar (the frame's hidden rows 35098:39900 to 40038 list the
      same subsections, with the live page's shorter titles).
    - Tables (4.5, and 4.7 with all 45 product lines) look like the repair price tables; the 4.7 table keeps the
-     frame's search field, which filters its product lines.
+     frame's search field (the same PLP field), which filters its product lines.
    - "Questions About These Terms?": the live page's closing contact box, as a tinted callout. #}
 {% import "macros/ui.njk" as ui with context %}
 {% import "content/macros.njk" as c with context %}
@@ -27,25 +27,23 @@ permalink: /conditions-of-sale/
 {% set sectionOffset = "scroll-mt-[57px] md:scroll-mt-[69px]" %}
 {% set itemOffset = "scroll-mt-[81px] md:scroll-mt-[93px]" %}
 
-{# Search field (Figma "input" 149:1156 with the orange 52px search button): white, 1px outline border, 16/24 text.
-   model: the Alpine property it edits; submit: Alpine expression on Enter / the button. #}
+{# Search field: the PLP's "Search within" field (plp/macros.njk, 34723:17182) instead of the frame's input with the
+   orange button: 320px from md, the navy search icon inside on the left, filtering as you type.
+   model: the Alpine property it edits; submit: Alpine expression on Enter. #}
 {% macro searchField(placeholder, label, model, submit) %}
-<form role="search" @submit.prevent="{{ submit }}" class="flex h-[52px] w-full md:w-[366px]">
-  <label class="relative flex min-w-0 flex-1">
+<form role="search" @submit.prevent="{{ submit }}" class="w-full md:w-[320px]">
+  <label class="relative block">
     <span class="sr-only">{{ label }}</span>
-    <input type="text" inputmode="search" enterkeyhint="search" autocomplete="off" x-model.debounce.150ms="{{ model }}" @keydown.escape="{{ model }} = ''"
-           placeholder="{{ placeholder }}" :class="{{ model }} && '!pr-10'"
-           class="h-full w-full min-w-0 rounded-l border border-r-0 border-outline bg-white pl-5 pr-3 text-base text-ink outline-none placeholder:text-card focus:border-primary-500">
-    <button type="button" x-show="{{ model }}" x-cloak @click="{{ model }} = ''" aria-label="Clear search" class="absolute right-3 top-1/2 -translate-y-1/2 text-ink hover:text-primary-500">{% icon "close", "h-5 w-5" %}</button>
+    <span class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-primary-500">{% icon "search" %}</span>
+    <input type="search" enterkeyhint="search" autocomplete="off" x-model.debounce.150ms="{{ model }}" @keydown.escape="{{ model }} = ''" placeholder="{{ placeholder }}" class="input pl-[60px] font-medium placeholder:font-medium">
   </label>
-  <button type="submit" aria-label="Search" class="flex w-[52px] shrink-0 items-center justify-center rounded-r bg-accent text-white hover:bg-accent-dark">{% icon "search", "h-6 w-6" %}</button>
 </form>
 {% endmacro %}
 
 {# Table in the repair price tables' look (Micro Instrument Repair): navy header (SemiBold, white), rows white and
    #f5f8fa in turn with the 1px outline lines, 4px corners, "Not Returnable" in Bold. The first column takes the rest
    of the width. Phones: 14/20 text, 104px value columns. tb.filter: rows rendered by Alpine (tableFilter) under
-   the frame's search field; the empty row says when no product line matches. #}
+   the search field; the empty row says when no product line matches. #}
 {% macro table(tb) %}
 {% set head = "bg-primary-500 px-3 py-3 text-sm font-semibold text-white md:px-4 md:py-4 md:text-lg" %}
 {% set cell = "border-b border-l border-outline px-3 pb-[11px] pt-3 md:px-4 md:py-3" %}

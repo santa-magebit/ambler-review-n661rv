@@ -13,7 +13,7 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
      The warranty line is the band's last row.
    - No Free Lifetime Repair band: cryosurgical handpieces are excluded from the programme.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
-   - "Disclaimers": a callout where the frame has them, the brands line as its title.
+   - "Disclaimers": a note box where the frame has them, the brands line as its title.
    - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
      are the live page's. #}
 {% import "macros/ui.njk" as ui with context %}
@@ -73,17 +73,16 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
 
 {{ plp_ui.features(cr.seo) }}
 
-{# Disclaimers (35098:39350) as a callout under the features, in the styleguide trust badge's shape (34747:15477:
-   52px navy circle with the repair icon, title, text): the brands line as a Bold title, the pricing line and the
-   trademark notice under it as fine print. A tinted box with the price tables' outline border, like the other callouts; the text keeps the
-   756px reading width. Phones: the circle above the text. #}
+{# Disclaimers (35098:39350) under the features as a note box in the warranty row's look: #f5f8fa with the outline
+   border, the orange info icon beside the brands line (Bold navy), the pricing line and the trademark notice under
+   it in the page's body size (16/24, 18/28 from md), in the 756px reading width. Picked from options on 2026-10-28. #}
 <section class="bg-white pb-8 pt-6 md:pb-10" aria-label="Brands we repair" data-figma="35098:39350">
   <div class="container-page">
-    <div class="flex flex-col items-start gap-4 rounded border border-outline bg-secondary-100 px-5 py-6 sm:flex-row sm:items-center sm:gap-5 md:px-8">
-      <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon "tool", "h-7 w-7" %}</span>
+    <div class="flex items-start gap-3 rounded border border-outline bg-menu px-5 py-5 md:px-8">
+      {% icon "info-square-rounded", "mt-0.5 h-5 w-5 text-accent md:mt-1" %}
       <div class="flex min-w-0 max-w-[756px] flex-col gap-1">
         <p class="text-base font-bold text-heading md:text-lg">{{ cr.brands }}</p>
-        <p class="text-sm text-body">{{ cr.pricingNote }} {{ cr.trademarks }}</p>
+        <p class="text-base text-body md:text-lg">{{ cr.pricingNote }} {{ cr.trademarks }}</p>
       </div>
     </div>
   </div>

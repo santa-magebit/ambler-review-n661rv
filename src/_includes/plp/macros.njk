@@ -389,7 +389,8 @@
 
 {#
   "Free Lifetime Repair" banner (34777:59015). Phones (34777:58840): "Free" over "Lifetime Repair" (Medium 24/32, -2%)
-  beside the seal (130x126, rising 26px above the navy) in a 100px row, text 16px under it and a full-width button
+  beside the seal (130x126, rising 26px above the navy; the square stamp with Figma's crop, the web banner uses its own
+  export) in a 100px row, text 16px under it and a full-width button
   24px under that. Tablets keep the phone layout with the web text sizes and a button sized to its label, as the web
   row (seal, text, button) needs the width from lg.
 #}
@@ -397,7 +398,10 @@
 <section class="bg-white pt-8 md:py-10" data-figma="34777:59015">
   <div class="bg-primary-500">
     <div class="container-page grid grid-cols-[minmax(0,1fr)_130px] items-end gap-x-4 gap-y-4 pb-8 lg:flex lg:h-[160px] lg:flex-row lg:items-center lg:gap-20 lg:py-0 lg:text-left">
-      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="col-start-2 row-start-1 -mt-[26px] h-[126px] w-[130px] shrink-0 object-cover lg:-my-[74px] lg:h-[228px] lg:w-[228px] lg:-translate-y-2 lg:scale-[1.19]">
+      <span class="relative col-start-2 row-start-1 -mt-[26px] block h-[126px] w-[130px] shrink-0 overflow-hidden lg:hidden">
+        <img src="{{ 'a3c1af5e' | img }}" alt="Free Lifetime Repair" class="absolute left-[-2.34%] top-[-4.03%] h-[108.06%] w-[104.69%] max-w-none">
+      </span>
+      <img src="{{ '8693ed54' | img }}" alt="Free Lifetime Repair" class="hidden shrink-0 object-cover lg:-my-[74px] lg:block lg:h-[228px] lg:w-[228px] lg:-translate-y-2 lg:scale-[1.19]">
       <div class="contents lg:flex lg:flex-1 lg:flex-col lg:gap-4">
         <h2 class="col-start-1 row-start-1 self-end text-h3 font-medium tracking-title text-white md:text-h2 lg:self-auto lg:tracking-normal">{{ plp.repairBanner.title | replace(" ", '<br class="lg:hidden"> ', 1) | safe }}</h2>
         <p class="col-span-2 text-base text-[#d3dce5] md:text-lg">{{ plp.repairBanner.text }}</p>

@@ -6,15 +6,16 @@
   logo | socials + BBB, then Quick Links | Contact Information.
   Mobile (Figma "mobile/footer" 34739:21934): centred logo, contact buttons, one row per link,
   socials + BBB, copyright only in the bar.
-  The logo matches the header's visually: the blue logo on white reads smaller than the white one on
-  navy, so it is about 8% taller (56px on web vs the header's 52px, 32px on mobile vs 30px).
+  On web the logo matches the header's visually: the blue logo on white reads smaller than the white one
+  on navy, so it is about 8% taller (56px vs the header's 52px). Phones use the frame's 239x64 logo box in a
+  120px row; the logo keeps its own proportions inside it (Figma squashes it to 239x60).
 #}
 {% set mapsHref = "https://www.google.com/maps/search/?api=1&query=" + (site.contact.address | replace("|", "") | urlencode) %}
 <footer class="mt-auto" data-figma="34141:38086">
   {# Mobile #}
   <div class="bg-white min-[769px]:hidden" data-figma="34739:21934">
-    <div class="flex justify-center py-7">
-      <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo.png" alt="Ambler Surgical" width="138" height="32" class="h-8 w-auto"></a>
+    <div class="flex h-[120px] items-center justify-center px-5">
+      <a href="/" aria-label="Ambler Surgical home"><img src="/img/logo.png" alt="Ambler Surgical" width="239" height="64" class="h-16 w-[239px] max-w-full object-contain"></a>
     </div>
     <div class="flex flex-col gap-2 border-t border-[#dedede] px-4 py-6">
       <a href="{{ site.contact.phoneHref }}" class="btn-accent w-full">{% icon "phone-call" %}{{ site.contact.phone }}</a>

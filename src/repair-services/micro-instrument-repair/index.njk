@@ -10,8 +10,8 @@ permalink: /repair-services/micro-instrument-repair/
    - "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and #f5f8fa), as
      real tables. Every cell border is the same light outline, including the line before the price column that Figma
      draws navy, and the tables get the 4px corners.
-   - "Request a Repair" under the prices (not in the frame): the strip of Figma's "Request a Free Repair"
-     (35122:1338, its header row without the steps), so the repair form is offered again once the prices are read.
+   - "Request a Repair" under the prices (not in the frame), so the repair form is offered again once the prices are
+     read: a light blue strip with the hero's instruments cut-out, picked from three options on 2026-10-28.
    - Free Lifetime Repair band: the PLP banner (34777:59015), the same seal, copy and button.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
    - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
@@ -39,9 +39,12 @@ permalink: /repair-services/micro-instrument-repair/
 {% endcall %}
 
 {# Typical Repair Charges ("Content" 35098:39067, the intro moved into the hero): 36px between the title and the tables.
-   The request strip follows the last table with the tables' own gap (24px, 36px from md): #f1f5f8, 24/32 padding, the 32px navy tool
-   icon, Bold 18/28 title over a 16/24 line, the primary download button on the right. Phones: icon and text in a row,
-   the button full width under them.
+   The request strip follows the last table with the tables' own gap (24px, 36px from md): #eff7fd (the Free Lifetime
+   Repair eligibility card), one row from md with the title and line on the left and the primary download button
+   on the right. From xl the instruments cut-out (300px tall, fading at both ends, as the photo crops the instruments on its right)
+   sits between them, its right
+   edge 360px from the strip's (48px padding + the 281px button + a gap), so its diagonal leads to the button.
+   Phones: text, then the button full width.
    Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall with their 1px bottom line,
    Bold prices in a 300px column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39067">
@@ -66,15 +69,15 @@ permalink: /repair-services/micro-instrument-repair/
       </tbody>
     </table>
     {% endfor %}
-    <section id="request-repair" aria-labelledby="request-title" class="flex flex-col gap-4 rounded bg-secondary-100 px-5 py-6 md:flex-row md:items-center md:gap-6 md:px-8" data-figma="35122:1338">
-      <div class="flex min-w-0 flex-1 items-center gap-4 md:gap-6" data-figma="35176:927">
-        {% icon "tool", "h-8 w-8 text-primary-500" %}
-        <div class="flex min-w-0 flex-col gap-1">
-          <h2 id="request-title" class="text-lg font-bold text-heading">Request a Repair</h2>
-          <p class="text-base text-body">No RMA number needed.</p>
+    <section id="request-repair" aria-labelledby="request-title" class="relative isolate overflow-hidden rounded bg-[#eff7fd]">
+      <img src="{{ 'd61fe469' | img }}" alt="" loading="lazy" class="absolute right-[360px] top-1/2 -z-10 hidden h-[300px] w-auto max-w-none -translate-y-1/2 [mask-image:linear-gradient(90deg,transparent,#000_35%,#000_80%,transparent)] xl:block">
+      <div class="flex flex-col items-start gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-6 md:px-12 md:py-10">
+        <div class="flex min-w-0 flex-col gap-2">
+          <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Repair</h2>
+          <p class="text-base text-body md:text-lg">No RMA number needed.</p>
         </div>
+        <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto">Download Repair Form{% icon "download" %}</a>
       </div>
-      <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
     </section>
   </div>
 </section>

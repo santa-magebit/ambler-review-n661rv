@@ -111,7 +111,7 @@
   "Shop By Categories" card on the specialty page (34777:59000): strip with title + arrow, photo,
   and a "Select a Category" menu at the bottom listing the category's instrument types.
   Phones (34777:58812): 350x200, 44px strip (title 20/28), 40px menu row (16/24).
-  c: { title, href, image, fit, menu: [{ label, href }] }
+  c: { title, href, image, fit, menu: [{ label, href, proto? }] } (proto: no page in the prototype yet)
 #}
 {% macro navCard(c) %}
 <div class="card-hover group/card relative flex h-[200px] min-w-0 flex-col rounded border border-primary-500 bg-white md:aspect-square md:h-auto" data-figma="34777:59000" x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false">
@@ -129,7 +129,7 @@
     <span x-show="!open">{% icon "dropdown", "h-6 w-6" %}</span><span x-show="open" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
   </button>
   <ul x-show="open" x-cloak x-transition.opacity class="absolute inset-x-0 top-full z-30 mt-1 max-h-[320px] overflow-y-auto rounded border border-outline bg-white py-2 shadow-[0_8px_24px_0_rgba(13,48,84,0.12)]">
-    {% for i in c.menu %}<li><a href="{{ i.href }}" class="{{ optionClass }}">{{ i.label }}</a></li>{% endfor %}
+    {% for i in c.menu %}<li><a href="{{ i.href }}" {% if i.proto %}data-proto{% endif %} class="{{ optionClass }}">{{ i.label }}</a></li>{% endfor %}
   </ul>
   {% else %}
   <a href="{{ c.href }}" class="flex h-10 shrink-0 items-center justify-between rounded-b bg-white px-3 text-base text-primary-500 hover:bg-secondary-100 md:h-[52px] md:px-5 md:text-lg">Select a Category{% icon "dropdown", "h-6 w-6" %}</a>

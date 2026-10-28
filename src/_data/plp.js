@@ -54,23 +54,54 @@ const typePhotos = {
   forceps: "c4c410a7", scissors: "0eeb23f0", "needle-holders": "c7706cf1", markers: "4e1fbba9", speculum: "408eb6d1",
   choppers: "b92bdf3f", spatulas: "637dbdfb", hooks: "796c4462", handpieces: "513dc3d7", knives: "2d1f2ca4", clamps: "ca7442a9",
 };
-/** Figma draws the long instruments turned to the diagonal and enlarged; the exports are straight. */
+/**
+ * Long instruments on category cards run corner to corner at 45°, tip top-left, the handle off the bottom-right:
+ * Figma draws them that way; the exports are straight. Each turn pivots on the photo's left end, where the tip is
+ * (object-position and transform-origin left, so a photo narrower than its box sits on the pivot too), pins it just
+ * inside the photo box's top-left corner (x, y in % of the box) and enlarges the photo (scale), so the tip always
+ * shows whole. Upright things (trays, rings, discs) are not turned.
+ * turn(x, y, deg, scale): the CSS transform; turnStyle: the style attribute around it.
+ */
+const turn = (x, y, deg, scale) => `translate(${x}%, ${y}%) rotate(${deg}deg) scale(${scale})`;
 // brightness lifts the JPEGs' off-white edges so the turned rectangle does not show.
-const diagonal = "transform: rotate(42deg) scale(1.7) translate(13%, 0); filter: brightness(1.04)";
-const typePhotoStyle = {
-  speculum: "transform: rotate(8deg) scale(1.3) translate(4%, 2%)",
-  handpieces: "transform: rotate(30deg) scale(1.5) translate(-4%, 4%)",
-  clamps: "transform: rotate(30deg) scale(1.5) translate(8%, 6%)",
+const turnStyle = (t) => `object-position: left; transform-origin: left; transform: ${t}; filter: brightness(1.04)`;
+const hashOf = (image) => String(image).split("/").pop().slice(0, 8);
+/** Instruments that are not level in their photo: the tilt (degrees, measured from the photo) the turn makes up for. */
+const photoTilt = { c4c410a7: -7, "408eb6d1": 10, ae00e760: 10, becc0b30: 6, "9d8ed65f": 4, ca7442a9: 3, "209da060": 3 };
+/** The turn that lands a photo's instrument at 45°. */
+const angleOf = (image) => 45 - (photoTilt[hashOf(image)] || 0);
+/**
+ * Tip pin and scale [x, y, scale] per card size: desktop, phone cards (350x156, mobile PLP "category-card" 34726:18657)
+ * and the shorter phone "Shop By Categories" cards (350x116, 34777:58812). Some photos and shapes need their own.
+ */
+// Phone cards are short and wide: at 45° an instrument only spans the card's height, so its tip is pinned about a
+// third of the way in to sit it in the middle of the card.
+const pins = { desktop: [8, -30, 1.7], phone: [30, -28, 1.3], phoneNav: [34, -22, 1.3] };
+const photoPins = {
+  // Forceps: the tips sit low and left in the photo. Clamps: the jaws fill the photo's height. Handpieces: a close-up hub.
+  c4c410a7: { desktop: [16, -52, 1.7], phone: [36, -40, 1.1], phoneNav: [38, -40, 1.1] },
+  ca7442a9: { desktop: [12, -25, 1.5], phone: [32, -5, 1.0], phoneNav: [34, -5, 0.9] },
+  "513dc3d7": { desktop: [5, -20, 1.4], phone: [28, -15, 1.2], phoneNav: [28, -15, 1.2] },
+  // Drawn smaller in Figma: Ophthalmology "Disposables" (34777:59000) and the forceps "Grasping" card. Cannulas: a long
+  // needle before the hub, kept smaller so the hub shows too.
+  becc0b30: { desktop: [8, -28, 0.95] },
+  "3b70fc23": { desktop: [8, -30, 1.2], phone: [30, -28, 1.0] },
+  "9d8ed65f": { desktop: [6, -25, 1.45] },
 };
-/** Phones draw the same photos in a wide 350x156 card, turned only slightly (mobile PLP "category-card", 34726:18657). */
-const mobileDiagonal = "translate(24%, 14%) rotate(20deg) scale(1.5)";
-/** …and in the shorter 350x116 "Shop By Categories" cards (34777:58812), centred. */
-const mobileNavDiagonal = "rotate(18deg) scale(1.7)";
-const typePhotoMobile = { speculum: "translate(-3%, 12%) scale(1.3)", handpieces: "rotate(15deg) scale(1.2)" };
+/** A speculum is wide rather than long: pinned further in and smaller, so both blades stay whole. */
+const shapePins = { speculum: { desktop: [12, -15, 1.15], phone: [25, -10, 0.95], phoneNav: [28, -10, 0.85] } };
 /** Types whose photos stay upright on category cards: not long instruments. */
 const uprightTypes = new Set(["trays", "fixation-rings"]);
-/** Card turn for a type's photo (a type photo or a product's own photo): the diagonal for long instruments. */
-const turnFor = (slug) => (uprightTypes.has(slug) ? {} : { style: typePhotoStyle[slug] || diagonal, mobileTransform: typePhotoMobile[slug] || mobileDiagonal });
+/** Card turn for a photo of a type (its type photo or a product's own photo); nav: the short phone cards. */
+const turnFor = (slug, image, nav = false) => {
+  if (uprightTypes.has(slug)) return {};
+  const pin = (size) => photoPins[hashOf(image)]?.[size] || shapePins[slug]?.[size] || pins[size];
+  const [x, y, scale] = pin("desktop");
+  const [mx, my, mscale] = pin(nav ? "phoneNav" : "phone");
+  return { style: turnStyle(turn(x, y, angleOf(image), scale)), mobileTransform: turn(mx, my, angleOf(image), mscale) };
+};
+/** The plain diagonal, for straight photos on the content pages' cards. */
+const diagonal = turnFor(null, "").style;
 
 /**
  * Hover descriptions on category cards (styleguide "Hover — shows description"). Cannulas and the
@@ -408,7 +439,7 @@ const ophthalmologyPage = {
   categories: [
     { slug: "instruments", image: "1907881e", position: "top" },
     // Drawn rotated in Figma.
-    { slug: "disposables", image: "becc0b30", fit: "contain", style: "transform: translate(3%, 6%) rotate(27deg) scale(1.15)" },
+    { slug: "disposables", image: "becc0b30", fit: "contain", style: turnFor(null, "becc0b30").style },
     { slug: "diamond-knives", image: "75819727" },
     { slug: "specialty", image: "35ef7b05", fit: "contain" },
   ],
@@ -519,6 +550,8 @@ const forcepsType = {
     {
       name: "Bipolar",
       image: "66e4e59f",
+      // Drawn at 38°: lifted to the cards' 45°, and lowered so the tips stay whole.
+      style: "transform: translate(0, 17%) rotate(7deg)",
       hover: [
         "Confine current between the tips for precise coagulation with minimal collateral damage.",
         "Adson, bayonet, fenestrated and Malis-type designs for neuro, ENT and microsurgery.",
@@ -528,8 +561,7 @@ const forcepsType = {
       name: "Grasping",
       image: "9d8ed65f",
       fit: "contain",
-      style: "transform: rotate(37deg) scale(1.45) translate(4%, 0)",
-      mobileTransform: mobileDiagonal,
+      ...turnFor(null, "9d8ed65f"),
       hover: [
         "Hold tissue securely yet gently, from a firm grip to sensitive organs.",
         "Toothed Allis for tough fascia, atraumatic Babcock and bowel graspers for delicate structures.",
@@ -611,7 +643,7 @@ const ownCount = (pred) => listingProducts.filter(pred).length;
 function typeCard(t, href, count, extra = {}) {
   const photo = typePhotos[t.slug];
   const product = listingProducts.find((p) => p.type === t.slug);
-  const turn = photo || product ? turnFor(t.slug) : {};
+  const photoTurn = photo || product ? turnFor(t.slug, photo || product.image) : {};
   return {
     name: t.name,
     slug: t.slug,
@@ -620,8 +652,8 @@ function typeCard(t, href, count, extra = {}) {
     image: photo ? images[photo] : product ? product.image : images["1907881e"],
     fit: photo || product ? "contain" : "cover",
     position: photo || product ? null : "top",
-    style: turn.style || null,
-    mobileTransform: turn.mobileTransform || null,
+    style: photoTurn.style || null,
+    mobileTransform: photoTurn.mobileTransform || null,
     hover: typeHoverText[t.slug] || null,
     ...extra,
   };
@@ -649,7 +681,10 @@ const specialtyPages = specialties.map((s) => {
   const categories = isOph
     ? ophthalmologyPage.categories.map((c) => {
         const cat = ophthalmologyCategories.find((x) => x.slug === c.slug);
-        return { title: cat.name, href: `${s.url}${c.slug}/`, image: images[c.image], fit: c.fit || "cover", position: c.position, style: c.style, menu: c.slug === "instruments" ? typeMenu : [] };
+        // Instruments lists its type pages; the other categories list the old site's sub-categories, which have no
+        // pages in the prototype (data-proto).
+        const menu = c.slug === "instruments" ? typeMenu : (cat.items || []).map((label) => ({ label, href: `${s.url}${c.slug}/`, proto: true }));
+        return { title: cat.name, href: `${s.url}${c.slug}/`, image: images[c.image], fit: c.fit || "cover", position: c.position, style: c.style, menu };
       })
     : (() => {
         // Each group card shows a photo of one of its types, a different one per card where possible.
@@ -664,8 +699,7 @@ const specialtyPages = specialties.map((s) => {
             image: images[pick ? typePhotos[pick] : "1907881e"],
             fit: pick ? "contain" : "cover",
             position: pick ? null : "top",
-            style: pick ? typePhotoStyle[pick] || diagonal : null,
-            mobileTransform: pick ? typePhotoMobile[pick] || mobileNavDiagonal : null,
+            ...(pick ? turnFor(pick, typePhotos[pick], true) : { style: null, mobileTransform: null }),
             menu: g.items.map((name) => ({ label: name, href: `${instrumentsUrl}${slugify(name)}/` })),
           };
         });
@@ -788,7 +822,7 @@ const brandPages = lines.map((b) => {
         href: `/browse-by-type/${t.slug}/?manufacturer=${encodeURIComponent(b.name)}`,
         image: product.image,
         fit: "contain",
-        ...turnFor(t.slug),
+        ...turnFor(t.slug, product.image),
         hover: hover[t.slug] || typeHoverText[t.slug] || null,
       };
     }),
@@ -829,6 +863,8 @@ const search = listing(products, { title: "results", id: "search-results", searc
 
 export default {
   diagonal,
+  turn,
+  turnStyle,
   gradients,
   logoWidths,
   trust,

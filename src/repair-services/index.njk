@@ -24,7 +24,7 @@ permalink: /repair-services/
     <h2 class="text-mobile-h1 font-medium text-heading md:text-h2 md:font-bold lg:text-h1">Expert Surgical Instrument Repair Services</h2>
     <ul class="grid gap-2 sm:grid-cols-2 md:gap-x-6 md:gap-y-8 lg:grid-cols-3" data-figma="34799:68570">
       {% for s in r.services %}
-      <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard({ title: s.title, image: s.image, id: s.slug, figma: s.figma, imgClass: s.imgClass }, "large") }}</li>
+      <li class="flex min-w-0 [&>*]:flex-1">{{ c.imageCard({ title: s.title, image: s.image, id: s.slug, figma: s.figma, imgClass: s.imgClass, style: s.style }, "large") }}</li>
       {% endfor %}
     </ul>
   </div>

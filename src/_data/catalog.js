@@ -126,12 +126,42 @@ const specialtyList = [
   },
 ];
 
-/** Second-level categories under Ophthalmology (Landing Page card). */
+/**
+ * Second-level categories under Ophthalmology (Landing Page card). items: the category's sub-categories in the
+ * live amblersurgical.com menu, for the "Select a Category" dropdowns (Instruments lists its instrument types instead).
+ */
 const ophthalmologyCategories = [
   { name: "Instruments", slug: "instruments", image: images["1907881e"] },
-  { name: "Specialty", slug: "specialty", image: images["a76c7e54"] },
-  { name: "Diamond Knives", slug: "diamond-knives", image: images["c565e376"] },
-  { name: "Disposables", slug: "disposables", image: images["050f5724"] },
+  {
+    name: "Specialty",
+    slug: "specialty",
+    image: images["a76c7e54"],
+    items: [
+      "Aaron Burr II", "Algerbrush II", "Bipolar Cords", "Bipolar Pencils", "Demagnetizers", "Electrodes", "Eye Compresses",
+      "Eye Models", "Eye Shields", "Honan Balloon", "I-A Handpieces", "Intraocular Magnets", "Iris Retractors", "Lenses",
+      "Occluders", "Orbital Sizers", "Phaco Handpieces", "Phaco Flushers", "Phaco Tip Wrenches", "Reinverters",
+      "Symblepharon Rings", "Trocar Systems",
+    ],
+  },
+  {
+    name: "Diamond Knives",
+    slug: "diamond-knives",
+    image: images["c565e376"],
+    items: ["Clear-Cornea", "Crescent", "Keratome", "LRI", "Trapezoid", "Paracentesis", "Step/Micrometer"],
+  },
+  {
+    name: "Disposables",
+    slug: "disposables",
+    image: images["050f5724"],
+    items: [
+      "Bipolar Cords", "Bipolar Pencils", "Calipers", "Cannulas", "Capsular Tension Rings", "Cautery Tips", "Choppers",
+      "Conformers", "Curettes", "Depressors", "Dilators", "Eye Bubbles", "Eye Spheres", "Fluid Filters", "Forceps",
+      "Glide Sheets", "Handpieces", "Headbands", "Hooks", "I-A Handpieces", "Iris Retractors", "Knives", "Knob Covers",
+      "Laser Probes", "Manipulators", "Markers", "Marking Pads", "Membrane Scrapers", "Needle Holders", "Orbital Sizers",
+      "Probes", "Punctum Plugs", "Pupil Expanders", "Rotators", "Scissors", "Spatulas", "Speculum", "Sponges", "Spuds",
+      "Trephine Blades", "Trephine Punches", "Wipes",
+    ],
+  },
 ];
 
 const specialties = specialtyList.map((s) => ({

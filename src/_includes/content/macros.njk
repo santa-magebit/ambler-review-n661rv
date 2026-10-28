@@ -81,8 +81,9 @@
                     phones 171x200, 48px strip, Bold 16/24 title, arrow at the end)
            "large"  Repair Services grid (496x342, navy border, #f5f8fa strip, 24px title;
                     phones 350x200, 44px strip, Medium 20/28 title)
-  card: { title, image, href?, id?, figma?, imgClass? }. Without href the card is data-proto.
-  imgClass reproduces the Figma crop or flip of a photo (e.g. object-top, -scale-y-100).
+  card: { title, image, href?, id?, figma?, imgClass?, style? }. Without href the card is data-proto.
+  imgClass reproduces the Figma crop or flip of a photo (e.g. object-top, -scale-y-100); style carries a diagonal turn
+  of a long instrument (plp.turnStyle).
   Phone sizes are 1px under Figma's inside the border (strip height, side padding, photo box), because a Figma
   stroke takes no space and the CSS border does; the cards then come out at Figma's outer size.
 #}
@@ -99,7 +100,7 @@
     <span class="truncate">{{ card.title }}</span>{% icon "arrow-narrow-right", "h-6 w-6" %}
   </span>
   <span class="relative block overflow-hidden bg-white {{ v.media }}">
-    <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover {{ card.imgClass }}">
+    <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover {{ card.imgClass }}" {% if card.style %}style="{{ card.style }}"{% endif %}>
   </span>
 </a>
 {% endmacro %}

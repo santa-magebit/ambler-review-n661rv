@@ -10,7 +10,7 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
      hero in Figma) and, as in the frame, the orange "Download Repair Form" button, the page's one download of the
      form (with the download icon rather than Figma's arrow). No Request a Repair strip under the prices.
    - "Typical Repair Charges": the frame's three levels as one band whose column headers darken with the level.
-     Under them the warranty line as a notice bar.
+     The warranty line is the band's last row.
    - No Free Lifetime Repair band: cryosurgical handpieces are excluded from the programme.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
    - "Disclaimers": a callout where the frame has them, the brands line as its title.
@@ -42,19 +42,22 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
 {% endcall %}
 
 {# Typical Repair Charges ("Charges" 35098:39328, the intro moved into the hero): 36px between the title and the
-   levels, as above the micro price tables; the warranty note follows with a 24px gap. #}
+   levels, as above the micro price tables. #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39328">
   <div class="container-page flex flex-col gap-6 py-10 md:gap-9 md:py-[50px]">
     <h2 id="charges-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1" data-figma="35098:39329">Typical Repair Charges</h2>
-    <div class="flex flex-col gap-4 md:gap-6">
-      {# The levels in one band, each heading its column with a strip that darkens with the level (#dee7ed with navy
-         text, #4e6284 and #004776 with white text): the level as a Medium line, the price range in Bold 24/32 (phones
-         20/28), the text in body grey on white below, 32px sides (phones 20px). Outline border and rules between the
-         columns; side by side from xl, stacked below. Picked from options on 2026-10-28. #}
-      <ol class="grid overflow-hidden rounded border border-outline xl:grid-cols-3" data-figma="35098:39330">
+    {# The levels in one band, each heading its column with a strip that darkens with the level (#dee7ed with navy
+       text, #4e6284 and #004776 with white text): the level as a Medium line, the price range in Bold 24/32 (phones
+       20/28), the text in body grey on white below, 32px sides (phones 20px). Outline border around the band, no
+       rules between the columns; side by side from xl, stacked below. The warranty note (35098:39346, the line only,
+       as in Figma) is the band's last row, across all three levels as it applies to all of them: #f5f8fa under an
+       outline rule, centred Medium navy 14/20 (16/24 from md) with the orange info icon. Both picked from options on
+       2026-10-28. #}
+    <div class="overflow-hidden rounded border border-outline">
+      <ol class="grid xl:grid-cols-3" data-figma="35098:39330">
         {% for lv in cr.levels %}
         {% set strip = ["bg-secondary-200 text-primary-500", "bg-secondary-400 text-white", "bg-primary-500 text-white"][loop.index0] %}
-        <li class="flex min-w-0 flex-col {{ 'xl:border-l xl:border-outline' if not loop.first }}" data-figma="{{ lv.figma }}">
+        <li class="flex min-w-0 flex-col" data-figma="{{ lv.figma }}">
           <h3 class="flex flex-col gap-1 px-5 py-4 md:px-8 md:py-5 {{ strip }}">
             <span class="text-base font-medium md:text-lg">{{ lv.name }}</span>
             <span class="text-h4 font-bold md:text-h3">{{ lv.price }}</span>
@@ -63,10 +66,7 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
         </li>
         {% endfor %}
       </ol>
-      {# Warranty note (35098:39346), the warranty line only as in Figma, as a notice bar so it reads as a condition:
-         the outline border with a 4px orange left edge on #f5f8fa, an orange info icon, Medium navy text (Figma's
-         orange text is too light on white). Picked from three options on 2026-10-28. #}
-      <p class="flex items-center gap-3 rounded border border-l-4 border-outline border-l-accent bg-menu px-4 py-3 text-base font-medium text-heading md:text-lg" data-figma="35098:39346">{% icon "info-square-rounded", "h-6 w-6 text-accent" %}<span>{{ cr.warranty }}</span></p>
+      <p class="flex items-center justify-center gap-2 border-t border-outline bg-menu px-5 py-3 text-center text-sm font-medium text-heading md:text-base" data-figma="35098:39346">{% icon "info-square-rounded", "h-5 w-5 text-accent" %}<span>{{ cr.warranty }}</span></p>
     </div>
   </div>
 </section>

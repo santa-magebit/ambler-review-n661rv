@@ -43,6 +43,7 @@ come from the "Styleguide and Spacing" page (`14714:56317`) and live in
 | `/about-ambler-surgical/` | CMS Pages | CMS - About Ambler Surgical - 1920px | `34974:1141` |
 | `/free-lifetime-repair/` | (section Free Lifetime Repair - Adjusted) | Free Lifetime Repair - Web (client version, copy source: `35098:38806`) | `35122:1207` |
 | `/repair-services/micro-instrument-repair/` | WIP | Repair - Micro Instrument (client's 1600px frame, built with the redesign's components; FAQ answers from the live page) | `35098:38988` |
+| `/repair-services/cryosurgical-handpiece-repair/` | WIP | Repair - Cryosurgical Handpiece (client's 1600px frame, built like Micro Instrument; FAQ answers from the live page) | `35098:39248` |
 
 Not designed in Figma, built in the same style: `/browse-by-specialty/`,
 `/sterilization-cleaning/`, `/search/`, `/contact/`, `/checkout/onepage/success/`.

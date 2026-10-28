@@ -21,6 +21,10 @@ import images from "./images.js";
  *   the 593px text column (625px, or 50% - 175px once the container is centred) and fading over 300px or more.
  *   Past 1920px it stays where it is at 1920 relative to the centre (clear at 50% + 854px), like the hero photo.
  *   The fade eases in and out (smoothstep), as a straight fade showed a line where the solid navy ends.
+ * cryoFade: Cryosurgical Handpiece hero (35098:39317, a 1272px fade in the 1600px frame), solid navy to 31.9%,
+ *   #0e5593 at 90% at 45.7% and clear #1c63b1 at 75.1%, but solid at least to the end of the 593px text column
+ *   (625px, or 50% - 175px once the container is centred) and fading over 300px or more; past 1600px it is clear
+ *   at 50% + 402px, where it is at 1600. The middle stop keeps Figma's place between the ends (32%).
  */
 /** Navy from solid at `from` to clear at `to` (CSS lengths along `deg`), eased in and out over 11 stops. */
 function easedFade(from, to, deg = 90) {
@@ -32,6 +36,11 @@ function easedFade(from, to, deg = 90) {
   return `linear-gradient(${deg}deg, ${stops.join(", ")})`;
 }
 
+/** cryoFade (see above): Figma's three stops between a solid `from` and a clear `to`. */
+function cryoFade(from, to) {
+  return `linear-gradient(90deg, #004776 ${from}, rgba(14, 85, 147, 0.9) calc(${from} + (${to} - ${from}) * 0.32), rgba(28, 99, 177, 0) ${to})`;
+}
+
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
   heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 100%)",
@@ -39,6 +48,7 @@ const gradients = {
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
   valueFade: easedFade("max(50%, 950px)", "max(88%, 1450px)", 270),
   microFade: easedFade("max(38.9%, 625px, 50% - 175px)", "max(min(94.5%, 50% + 854px), 925px)"),
+  cryoFade: cryoFade("max(31.9%, 625px, 50% - 175px)", "max(min(75.1%, 50% + 402px), 925px)"),
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
 };
@@ -295,7 +305,7 @@ const repair = {
 
 /**
  * Free Lifetime Repair - Adjusted (Figma 35122:1207). Copy from the frame and the client's version (35098:38806); the
- * steps and the FAQ answers Figma leaves empty come from amblersurgical.com/free-lifetime-repair and /repair-services.
+ * FAQ answers Figma leaves empty come from amblersurgical.com/free-lifetime-repair and /repair-services.
  */
 const lifetime = {
   // The hero adds the "*" as a link to the restrictions.
@@ -320,12 +330,8 @@ const lifetime = {
     { figma: "35122:1328", title: "Needle Holder Re-Setting", image: images["393cbe8d"], style: plp.diagonal },
     { figma: "35122:1333", title: "Hook Straightening", image: images["a9a5e53d"], style: plp.diagonal },
   ],
-  /** "Request a Free Repair" (35122:1338) as three steps, in the words of amblersurgical.com/repair-services. */
-  steps: [
-    { title: "Download the form", text: "Complete the repair form for your instruments." },
-    { title: "Pack your instruments", text: "Include the form in the box with your sterilized instruments." },
-    { title: "Ship them to us", text: "Ship the box to our Exton, PA facility. We will notify you once your shipment arrives." },
-  ],
+  /** "Request a Free Repair" line (client frame 35098:38908). */
+  request: "Download and complete the instrument repair form to submit your instrument for a free repair.",
   /** "SEO Section" band (35122:1354). */
   value: {
     title: "Quality Instruments.",
@@ -478,4 +484,81 @@ const micro = {
   ],
 };
 
-export default { gradients, trust, home, about, repair, lifetime, micro };
+// ---------------------------------------------------------------------------
+// Cryosurgical Handpiece Repair
+
+/**
+ * Repair - Cryosurgical Handpiece (Figma 35098:39248, the client's 1600px frame). Copy from the frame; the FAQ answers
+ * Figma leaves out are word for word from amblersurgical.com/repair-services/cryosurgical-handpiece-repair.
+ */
+const cryo = {
+  // The frame's intro trimmed for the hero like the Micro Instrument one (78 to 64 words): the same claims, fewer
+  // fillers, pointing to the request strip under the prices.
+  intro:
+    "Restore your cryosurgical handpieces to peak performance with Ambler Surgical. Our technicians leverage over two decades of experience to stop leaks and restore critical freezing power for all major makes and models. We provide a transparent cost range for each of the three repair levels and quote every refurbishment for your approval before completing any work. Download the repair form below to get started.",
+  /** Typical Repair Charges (Level 1-3, 35098:39331 / 39336 / 39341). */
+  levels: [
+    {
+      figma: "35098:39331",
+      name: "Level I",
+      price: "$300.00 - $395.00",
+      text: "Initial evaluation and service. This includes visual inspection, leak test, flow test, operational check, freeze and defrost time, sound displayed temperature, de-oxidize boiler tip, de-oxidize thermocouple contacts, repair minor tip bends as well as the exhaust port, and perform thermocouple isolation test.",
+    },
+    {
+      figma: "35098:39336",
+      name: "Level II",
+      price: "$500.00 - $950.00",
+      text: "All of Level I repairs plus inspection of internal components, filter cleaning, replacement of outer tubing and service to connector.",
+    },
+    {
+      figma: "35098:39341",
+      name: "Level III",
+      price: "$975.00 - $1,395.00",
+      text: "Any or all of Level II repairs plus complete repair to all internal components, high-pressure valve service, thermocouple replacement, filter / housing assembly replacement, teflon delivery tube replacement.",
+    },
+  ],
+  warranty: "All Repairs Come with a 90 Day Limited Warranty on Parts and Labor.",
+  /** "SEO Text" (35098:39347), in the shape of the PLP features list (plp_ui.features). */
+  seo: {
+    figma: "35098:39347",
+    title: "Cryosurgical Handpiece Repair Services for Every Need",
+    intro: "Our repair capabilities are structured into three distinct tiers to address everything from basic maintenance to major component failure. This means you get the best value for your exact case.",
+    items: [
+      ["Evaluation & Maintenance", "We perform visual inspections, leak and flow tests, and operational checks. This includes verifying freeze and defrost times, de-oxidizing boiler tips and thermocouple contacts, and performing thermocouple isolation tests."],
+      ["External & Tubing Repair", "For units with physical wear, we repair minor tip bends and exhaust ports. We also inspect internal components, clean filters, replace outer tubing, and service the connector to ensure a secure link to your gas source."],
+      ["Major Component Replacement", "We can perform complete repairs on internal components. This includes high-pressure valve service and the replacement of thermocouples, filter/housing assemblies, and Teflon delivery tubes."],
+    ],
+  },
+  /** "Disclaimers" (35098:39351), one line each. The pricing line is shown under the prices it qualifies. */
+  pricingNote: "Pricing shown is for Frigitronics Brand Ophthalmic Cryosurgical Probes. Pricing varies based on make and model of probe.",
+  disclaimers: [
+    "We repair all models of Keeler, Frigitronics, MIRA, and D.O.R.C. Cryosurgical Probes.",
+    "The above referenced companies are registered trademarks of the respective owners.",
+    "Ambler Surgical has no affiliation whatsoever with the companies, nor do we distribute their products.",
+  ],
+  /** FAQ (35098:39355), in the live site's order (Figma's rows read left to right). */
+  faq: [
+    {
+      id: "brands",
+      q: "What brands of cryo handpieces do you repair?",
+      a: ["Our technicians understand the inner workings of virtually every unique make and model. We can service units from major manufacturers like Keeler, MIRA, and Frigitronics."],
+    },
+    {
+      id: "quote",
+      q: "Do you quote the price before starting work?",
+      a: ["Yes, we provide estimated cost ranges for Level I, II, and III repairs, but we will always provide a specific quote for your approval after evaluating the handpiece. We do not complete any work without your signed approval. Please note that pricing can vary based on the make and model of the probe."],
+    },
+    {
+      id: "send",
+      q: "How do I send my cryo unit in for repair?",
+      a: ["Simply download the Cryosurgical Repair Form, fill it out, and include it in the box with your unit. Ship the package to our facility, and we will contact you with an evaluation."],
+    },
+    {
+      id: "warranty",
+      q: "What is included in the warranty?",
+      a: ["All cryosurgical repairs come with a 90-day limited warranty on parts and labor, giving you peace of mind that the repair was done correctly."],
+    },
+  ],
+};
+
+export default { gradients, trust, home, about, repair, lifetime, micro, cryo };

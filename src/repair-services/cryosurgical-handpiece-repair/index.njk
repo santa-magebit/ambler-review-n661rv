@@ -1,0 +1,83 @@
+---
+layout: layouts/base.njk
+title: Cryosurgical Handpiece Repair
+permalink: /repair-services/cryosurgical-handpiece-repair/
+---
+{# Repair - Cryosurgical Handpiece (Figma 35098:39248, the client's 1600px frame on the WIP page); the URL is the
+   live site's. No redesigned or phone frame exists, so the sections use the redesign's components and type scale, as
+   on Micro Instrument Repair:
+   - Hero: the shared content hero with the frame's photo and fade, the title and the frame's intro (drawn under the
+     hero in Figma). Figma's hero button "Download Repair Form" is left out, as on Micro Instrument Repair: the form
+     is downloaded from the request strip under the prices, which the intro points to.
+   - "Typical Repair Charges": the frame's three level cards with the micro price tables' look (navy header, 1px
+     #dde7ee border, 4px corners). Under them the warranty line, not in orange text (too light on white) but with
+     an orange shield, and the first disclaimer, which says what the prices are for.
+   - "Request a Repair": the shared strip, with the hero photo.
+   - No Free Lifetime Repair band: cryosurgical handpieces are excluded from the programme.
+   - "SEO Text": the PLP features list (bold lead-in, orange dashes).
+   - "Disclaimers": the other three lines as fine print, where the frame has them.
+   - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
+     are the live page's. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+{% set cr = contentPages.cryo %}
+
+{{ ui.breadcrumbs([{ label: "Repair Services", href: "/repair-services/" }, { label: "Cryosurgical Handpiece" }]) }}
+
+{# Hero: the handpieces photo (blue all over) under the frame's fade (cryoFade). From xl the photo is Figma's
+   1849x693 (the screen's width from 1849px, so it always reaches the right edge), with the probe tip (43.7% across
+   the photo) 60px past the 593px text column: never left of 123px before the screen's edge, which puts the tip at
+   685px up to 1600px. From lg to xl it is 1450px wide with the tip at 685px, so more of the handpieces fits beside
+   the text. The photo is centred on the hero's height a little high (54%), which keeps both handpieces in view on
+   wide screens (Figma's 107px above the hero at 1600). Phones and tablets have no room beside the text: the photo
+   covers the hero with the handpieces on the right, under the phone fade (also on tablets, where cryoFade would
+   cover all of it) and a 60% navy tint that keeps the white text readable over the light blue. #}
+{{ c.hero({
+  title: "Cryosurgical Handpiece Repair", text: cr.intro, figma: "35098:39315", image: "077f3d82",
+  fade: contentPages.gradients.cryoFade, fadeAt: "lg",
+  photo: "inset-0 h-full w-full object-cover object-[80%_70%] lg:inset-auto lg:left-[51px] lg:top-1/2 lg:h-auto lg:w-[1450px] lg:max-w-none lg:-translate-y-[54%] xl:left-[max(-123px,calc(50%_-_115px_-_max(808px,43.7%)))] xl:w-[max(1849px,100%)]",
+  scrim: "bg-primary-500/60 lg:hidden"
+}) }}
+
+{# Typical Repair Charges ("Charges" 35098:39328, the intro moved into the hero): 36px between the title and the
+   cards, as above the micro price tables. Cards: navy header with the level and its price range (Bold 24/32 white,
+   centred as drawn; phones 20/28), Regular 18/28 navy text with Figma's 32px sides (phones 16/24, 20px), three in a
+   row from xl, stacked below. The notes and the request strip follow with the cards' gap. #}
+<section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39328">
+  <div class="container-page flex flex-col gap-6 py-10 md:gap-9 md:py-[50px]">
+    <h2 id="charges-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1" data-figma="35098:39329">Typical Repair Charges</h2>
+    <div class="flex flex-col gap-4 md:gap-6">
+      <ul class="grid gap-4 md:gap-6 xl:grid-cols-3" data-figma="35098:39330">
+        {% for lv in cr.levels %}
+        <li class="flex min-w-0 flex-col" data-figma="{{ lv.figma }}">
+          <h3 class="rounded-t bg-primary-500 px-4 py-3 text-center text-h4 font-bold text-white md:py-4 md:text-h3">{{ lv.name }}: {{ lv.price }}</h3>
+          <p class="flex-1 rounded-b border border-t-0 border-outline px-5 py-6 text-base text-primary-500 md:px-8 md:text-lg">{{ lv.text }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="flex flex-col gap-2" data-figma="35098:39346">
+        <p class="flex items-start gap-3 text-base font-bold text-heading md:text-lg">{% icon "shield-check", "h-6 w-6 shrink-0 text-accent md:mt-0.5" %}<span>{{ cr.warranty }}</span></p>
+        <p class="text-sm text-body md:text-base">{{ cr.pricingNote }}</p>
+      </div>
+    </div>
+    {# The hero photo cropped to the handpieces, fading in from the strip's tint: from md the right 55% of the strip,
+       the handpieces under the button; phones: a 120px band along the bottom, under the full-width button. #}
+    {{ c.requestStrip({
+      image: "077f3d82",
+      photo: "inset-x-0 bottom-0 h-[120px] w-full object-cover object-[85%_75%] [mask-image:linear-gradient(180deg,transparent,#000_60%)] md:inset-x-auto md:inset-y-0 md:right-0 md:h-full md:w-[55%] md:object-[100%_60%] md:[mask-image:linear-gradient(90deg,transparent,#000_45%)]"
+    }) }}
+  </div>
+</section>
+
+<div class="pb-8 md:pb-10">{{ plp_ui.features(cr.seo) }}</div>
+
+{# Disclaimers (35098:39350): fine print after the features, with the Free Lifetime Repair fine print's line above
+   it; centred from md as drawn. #}
+<section class="border-t border-outline bg-white" aria-label="Disclaimers" data-figma="35098:39350">
+  <div class="container-page flex flex-col gap-1 py-6 text-sm text-body md:py-8 md:text-center">
+    {% for d in cr.disclaimers %}<p>{{ d }}</p>{% endfor %}
+  </div>
+</section>
+
+{{ c.faqSection(cr.faq, { section: "35098:39352", list: "35098:39355", card: "34799:68654" }) }}

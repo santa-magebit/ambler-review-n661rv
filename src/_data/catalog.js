@@ -200,7 +200,10 @@ const sterilization = [
 ].map((name) => ({ name, slug: slugify(name) }));
 
 // href: the service's own page; the others link to their card on /repair-services/#<slug>.
-const repairPages = { "micro-instrument": "/repair-services/micro-instrument-repair/" };
+const repairPages = {
+  "cryosurgical-handpiece": "/repair-services/cryosurgical-handpiece-repair/",
+  "micro-instrument": "/repair-services/micro-instrument-repair/",
+};
 const repairServices = [
   "Cryosurgical Handpiece", "Diamond Knife", "General Instrument", "Micro Instrument", "Phaco Handpiece", "Surgical/Diagnostic Lenses",
 ].map((name) => {

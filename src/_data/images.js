@@ -4,6 +4,7 @@ export default {
   "03b29f40": "/img/03b29f40.jpg", // image 4 37x24
   "050f5724": "/img/050f5724.png", // mobile-header 268x192
   "06d43d81": "/img/06d43d81.jpg", // mobile-header 366x310
+  "077f3d82": "/img/077f3d82.jpg", // image 24 2048x768 (Cryosurgical Handpiece Repair hero)
   "0c03b05c": "/img/0c03b05c.png", // image 108x108
   "0cdfda6c": "/img/0cdfda6c.jpg", // Eye Image 1920x480
   "0d9fa3de": "/img/0d9fa3de.jpg", // mobile-header 366x200

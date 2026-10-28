@@ -10,12 +10,13 @@
 {% endmacro %}
 
 {# Hero, one component for Home (34141:37899), About (34971:47249), Repair Services (34799:68558), Free Lifetime
-   Repair (35122:1294) and Micro Instrument Repair (35098:39055):a photo under a navy fade from the left, 593px column with the title, intro and optional caller
+   Repair (35122:1294), Micro Instrument Repair (35098:39055) and Cryosurgical Handpiece Repair (35098:39315): a photo
+   under a navy fade from the left, 593px column with the title, intro and optional caller
    content (buttons). A photo that starts partway across fades in over its first 10% (mask in `photo`) so no line shows
    where it meets the fade.
    Phones (mobile 34141:38087, 34974:121015, 34897:7756): the phone fade over the photo, 16/24 intro.
    h: { title, text? (Micro Instrument 35098:39055 has none), image (hash8), photo (placement classes), figma,
-        fade? (web gradient, default heroFade),
+        fade? (web gradient, default heroFade), fadeAt? ("lg": the phone fade stays on tablets, default "md"),
         bg? (under the photo), pad? (phone padding), gap? (phone gap),
         eyebrow? (Medium 18/28 line 12px above the title, Free Lifetime Repair 35122:1299),
         footnote? { href, label } (a "*" after the intro linking to the fine print),
@@ -24,8 +25,9 @@
 <section class="relative isolate overflow-hidden {{ h.bg or 'bg-primary-500' }}" data-figma="{{ h.figma }}">
   <img src="{{ h.image | img }}" alt="" class="absolute -z-10 {{ h.photo }}">
   {% if h.scrim %}<div aria-hidden="true" class="absolute inset-0 -z-10 {{ h.scrim }}"></div>{% endif %}
-  <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
-  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ h.fade or contentPages.gradients.heroFade }}"></div>
+  {% set fadeAt = { md: ["md:hidden", "md:block"], lg: ["lg:hidden", "lg:block"] }[h.fadeAt or "md"] %}
+  <div aria-hidden="true" class="absolute inset-0 -z-10 {{ fadeAt[0] }}" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden {{ fadeAt[1] }}" style="background-image: {{ h.fade or contentPages.gradients.heroFade }}"></div>
   <div class="container-page flex items-center {{ h.pad or 'pb-8 pt-10' }} md:min-h-[360px] md:py-12 lg:min-h-[480px]">
     <div class="flex max-w-[593px] flex-col items-start {{ h.gap or 'gap-5' }} md:gap-7">
       {% if h.eyebrow %}
@@ -212,6 +214,24 @@
         {{ arrowButton("Contact Our Team", "/contact/", "", "w-full md:w-auto") }}
       </div>
     </div>
+  </div>
+</section>
+{% endmacro %}
+
+{# "Request a Repair" strip under the repair price lists (Micro Instrument 35194:1189, Cryosurgical Handpiece), the
+   page's one download of the repair form: #eff7fd with the price tables' 1px #dde7ee border, one row from md with the
+   title and line on the left and the primary download button on the right, a photo of the page's instruments
+   running under the button (the strip crops it).
+   r: { image (hash8), photo (classes placing the photo), figma? } #}
+{% macro requestStrip(r) %}
+<section id="request-repair" aria-labelledby="request-title" class="relative isolate overflow-hidden rounded border border-outline bg-[#eff7fd]" {% if r.figma %}data-figma="{{ r.figma }}"{% endif %}>
+  <img src="{{ r.image | img }}" alt="" loading="lazy" class="absolute -z-10 max-w-none {{ r.photo }}">
+  <div class="flex flex-col items-start gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-6 md:px-12 md:py-10">
+    <div class="flex min-w-0 flex-col gap-2">
+      <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Repair</h2>
+      <p class="text-base text-body md:text-lg">No RMA number needed.</p>
+    </div>
+    <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto">Download Repair Form{% icon "download" %}</a>
   </div>
 </section>
 {% endmacro %}

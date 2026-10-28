@@ -110,8 +110,9 @@
   </div>
 </section>
 
-{# From 768px; phones show their copy under the Order Summary totals (summary.njk) #}
+{# From 768px; phones show their copy under the Order Summary totals (summary.njk). Terms & Conditions opens the
+   Conditions of Sale page in a new tab, so the checkout keeps what was entered. #}
 <div class="hidden flex-col gap-6 md:flex" data-figma="34799:87941">
-  {% call co.checkbox("terms", "accept-terms") %}I accept <a href="#" data-proto class="link">Terms &amp; Conditions</a> and <a href="#" data-proto class="link">Privacy Policy</a>{% endcall %}
+  {% call co.checkbox("terms", "accept-terms") %}I accept <a href="/conditions-of-sale/" target="_blank" rel="noopener" class="link">Terms &amp; Conditions</a> and <a href="#" data-proto class="link">Privacy Policy</a>{% endcall %}
   <button type="submit" disabled :disabled="!terms" class="btn-primary h-[60px] w-full">{% icon "checks", "h-7 w-7" %}Place Order</button>
 </div>

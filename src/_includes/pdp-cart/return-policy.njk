@@ -1,12 +1,12 @@
 {# "Return Policy" band on the PDP (34660:60511): #eff7fd background, policy text on the left,
    "Items that can't be returned" card on the right. Phones (34224:49918): one column 20px apart,
-   the full-width "See Full Return Policy" button last. #}
+   the full-width "See Full Return Policy" button last, which opens Cancellations & Returns on Conditions of Sale. #}
 {% set rp = pdpCart.pdp.returnPolicy %}
 <section aria-labelledby="return-title" class="bg-[#eff7fd] py-8 md:py-10 lg:py-20" data-figma="34660:60511">
   <div class="container-page flex flex-col gap-5 md:gap-10">
     <div class="contents flex-wrap items-center justify-between gap-5 md:flex" data-figma="34660:60512">
       <h2 id="return-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ rp.title }}</h2>
-      <button type="button" data-proto class="btn-secondary order-last w-full md:order-none md:w-auto">{{ rp.buttonLabel }}</button>
+      <a href="/conditions-of-sale/#cancellations-returns" class="btn-secondary order-last w-full md:order-none md:w-auto">{{ rp.buttonLabel }}</a>
     </div>
     <div class="grid gap-5 md:gap-6 lg:grid-cols-[minmax(0,723fr)_minmax(0,789fr)] lg:items-start" data-figma="34660:60596">
       <div class="flex flex-col gap-5 text-lg text-ink md:gap-8">

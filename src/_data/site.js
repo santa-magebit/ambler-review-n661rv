@@ -20,6 +20,8 @@ export default {
     { label: "About Ambler Surgical", href: "/about-ambler-surgical/" },
     { label: "Customer Support", href: "/contact/" },
     { label: "My Account", href: "/customer/account/" },
+    // In the client's footer (Conditions of Sale frame 35098:40086) and the live site's.
+    { label: "Conditions of Sale", href: "/conditions-of-sale/" },
   ],
   social: [
     { label: "Facebook", icon: "brand-facebook", href: "https://www.facebook.com/AmblerSurgical" },

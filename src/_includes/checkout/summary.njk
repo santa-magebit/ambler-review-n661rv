@@ -70,7 +70,7 @@
 
     {# Phones: terms and Place Order come after the totals (Figma "Frame 5679"); it submits #checkout-form. #}
     <div class="mt-4 flex flex-col gap-4 md:hidden">
-      {% call co.checkbox("terms", "accept-terms-mobile") %}I accept <a href="#" data-proto class="link">Terms &amp; Conditions</a> and <a href="#" data-proto class="link">Privacy Policy</a>{% endcall %}
+      {% call co.checkbox("terms", "accept-terms-mobile") %}I accept <a href="/conditions-of-sale/" target="_blank" rel="noopener" class="link">Terms &amp; Conditions</a> and <a href="#" data-proto class="link">Privacy Policy</a>{% endcall %}
       <button type="submit" form="checkout-form" disabled :disabled="!terms" class="btn-primary h-[60px] w-full">{% icon "checks", "h-7 w-7" %}Place Order</button>
     </div>
 

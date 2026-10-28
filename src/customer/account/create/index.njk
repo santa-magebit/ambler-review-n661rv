@@ -34,7 +34,7 @@ permalink: /customer/account/create/
       {{ ui.field("E-mail", "email", "email", false, "email", "Enter your email") }}
       {{ acc.passwordField("Password", "create-password", "Enter your password", false, "new-password") }}
       {{ acc.passwordField("Confirm Password", "create-password-confirm", "Re enter your password", false, "new-password") }}
-      {% call acc.checkbox("", "required", "terms") %}I have read and agree to the <a href="#" data-proto class="link font-medium">Terms and Conditions</a> and <a href="#" data-proto class="font-medium text-primary-500 underline hover:text-ink">Privacy Policy</a>{% endcall %}
+      {% call acc.checkbox("", "required", "terms") %}I have read and agree to the <a href="/conditions-of-sale/" target="_blank" rel="noopener" class="link font-medium">Terms and Conditions</a> and <a href="#" data-proto class="font-medium text-primary-500 underline hover:text-ink">Privacy Policy</a>{% endcall %}
       <div class="flex flex-col gap-3">
         <button type="submit" class="btn-primary w-full">Create an Account</button>
         <a href="/customer/account/login/" class="btn-link w-full">Already Customer? Log In</a>

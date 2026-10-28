@@ -1,0 +1,146 @@
+---
+layout: layouts/base.njk
+title: Free Lifetime Repair
+permalink: /free-lifetime-repair/
+---
+{# Free Lifetime Repair - Adjusted (Figma 35122:1207); the URL is the live site's. No phone frame exists, so phones
+   follow the Repair Services and About phone frames. Changes to the frame, for a page whose job is to get a repair
+   requested (and to sell Ambler instruments to everyone else):
+   - Hero: the hidden "btn" (35122:1303) is shown as "Request a Free Repair", jumping to the steps; the "*" after the
+     intro links to the fine print.
+   - "What's Included" cards are information, not links: no arrow and no hover, so they don't promise a page.
+   - "Request a Free Repair" (35122:1338) spells out the three steps from the old site's repair FAQ ("No RMA number
+     needed"), with one download button instead of a button and an inline link to the same form.
+   - The value band (35122:1354) carries the testimonial from amblersurgical.com/free-lifetime-repair and a "Shop
+     Ambler Instruments" button.
+   - "See all restrictions & exclusions" and the FAQ link jump to the fine print at the end.
+   - The FAQ loads closed (Figma's open third answer is an example state); every question has an answer. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% set l = contentPages.lifetime %}
+{# Jump targets land 24px under the sticky header (the page's scroll-padding-top covers the header itself). #}
+{% set anchor = "scroll-mt-6" %}
+
+{{ ui.breadcrumbs([{ label: "Repair Services", href: "/repair-services/" }, { label: "Free Lifetime Repair" }]) }}
+
+{# Hero: the surgeon photo, mirrored, under the About navy fade (Figma 15% to 65%). From 1920px the photo is Figma's
+   107.5% of the frame (2064px, 144px past the right edge, top-aligned) and grows with the screen. From lg to 1920 it
+   stays 2064px and slides further past the right edge as the screen narrows (right: 31.9% - 756px, -144px at 1920,
+   -430px at 1024), so the surgeon stays clear of the 593px text column. Phones and tablets have no room beside the
+   text: the photo covers the hero with the surgeon on the right, under a 60% navy tint that keeps the white text
+   readable over his light gown. #}
+{% call c.hero({
+  title: "Free Lifetime Repair", eyebrow: "Repair Services", text: l.intro, figma: "35122:1294", image: "f188b990",
+  fade: contentPages.gradients.aboutFade, footnote: { href: "#restrictions", label: "Restrictions and exclusions apply" },
+  photo: "inset-0 h-full w-full -scale-x-100 object-cover object-[30%_center] lg:inset-auto lg:right-[min(-7.5%,calc(31.9%_-_756px))] lg:top-0 lg:h-auto lg:w-[max(2064px,107.5%)] lg:max-w-none",
+  scrim: "bg-primary-500/60 lg:hidden"
+}) %}
+  {{ c.arrowButton("Request a Free Repair", "#request-repair", "", "w-full md:w-auto") }}
+{% endcall %}
+
+<div class="bg-white" data-figma="35122:1309">
+  <div class="container-page flex flex-col gap-10 py-10 md:gap-[60px] md:py-[60px]">
+
+    {# Eligibility: the seal beside the promise and three checks. The checks sit in three columns from lg; the seal
+       moves beside the text from xl, where the three columns still fit. #}
+    <section id="eligibility" aria-labelledby="eligibility-title" class="{{ anchor }} flex flex-col items-start gap-4 rounded bg-[#eff7fd] px-5 py-6 md:gap-6 md:px-12 md:py-10 xl:flex-row xl:items-center xl:gap-12" data-figma="35122:1310">
+      <span class="relative block h-[126px] w-[120px] shrink-0 overflow-hidden md:h-[168px] md:w-40 xl:h-[210px] xl:w-[200px]">
+        <img src="{{ 'a3c1af5e' | img }}" alt="Free Lifetime Repair seal" class="absolute left-[-7.41%] top-[-3.98%] h-[107.96%] w-[112.96%] max-w-none">
+      </span>
+      <div class="flex min-w-0 flex-1 flex-col items-start gap-4" data-figma="35122:1312">
+        <h2 id="eligibility-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">{{ l.confidence.title }}</h2>
+        <p class="max-w-[960px] text-base text-body md:text-lg">{{ l.confidence.text }}</p>
+        <ul class="grid w-full gap-2 md:gap-4 lg:grid-cols-3" aria-label="Who qualifies" data-figma="35126:1378">
+          {% for e in l.eligibility %}
+          <li class="flex min-w-0 items-start gap-3 rounded bg-white p-4" data-figma="{{ e.figma }}">
+            {% icon "circle-check", "h-6 w-6 text-primary-500" %}
+            <span class="flex min-w-0 flex-col gap-0.5">
+              <span class="text-base font-bold text-heading">{{ e.title }}</span>
+              <span class="text-sm text-body">{{ e.text }}</span>
+            </span>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="#restrictions" class="link text-base">See all restrictions &amp; exclusions</a>
+      </div>
+    </section>
+
+    {# What's Included: the styleguide category card (14714:57254) without the arrow and hover, as nothing opens.
+       Two columns until xl; titles wrap rather than cut off, Medium 20/28 until the cards are wide enough for 24/32. #}
+    <section aria-labelledby="included-title" class="flex flex-col gap-4" data-figma="35122:1315">
+      <h2 id="included-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">What's Included?</h2>
+      <p class="text-base text-body md:text-lg">On qualifying Ambler brand instruments, including manipulators and hooks.</p>
+      <ul class="grid grid-cols-2 gap-2 md:gap-6 xl:grid-cols-4" data-figma="35122:1317">
+        {% for card in l.included %}
+        <li class="flex min-w-0 flex-col overflow-hidden rounded border border-primary-500 bg-white" data-figma="{{ card.figma }}">
+          <h3 class="flex min-h-[47px] items-center bg-menu px-[11px] py-2 text-sm font-bold leading-[18px] text-primary-500 md:min-h-14 md:px-5 md:py-3 md:text-h4 md:font-medium md:tracking-title min-[1800px]:text-h3">{{ card.title }}</h3>
+          <span class="relative block aspect-[364/308] bg-white">
+            <img src="{{ card.image }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-contain {{ card.imgClass }}">
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    {# Request a Free Repair: the Figma band (#f1f5f8, tool icon, title, download button) with the three steps under it. #}
+    <section id="request-repair" aria-labelledby="request-title" class="{{ anchor }} flex flex-col gap-5 rounded bg-secondary-100 px-5 py-6 md:gap-6 md:px-8" data-figma="35122:1338">
+      <div class="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-6">
+        {% icon "tool", "h-8 w-8 text-primary-500" %}
+        <div class="flex min-w-0 flex-1 flex-col gap-1" data-figma="35122:1341">
+          <h2 id="request-title" class="text-lg font-bold text-heading">Request a Free Repair</h2>
+          <p class="text-base text-body">Three steps, no RMA number needed. You only pay the shipping.</p>
+        </div>
+        <a href="#" data-proto class="btn-primary w-full whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
+      </div>
+      <ol class="grid gap-2 md:gap-4 lg:grid-cols-3">
+        {% for s in l.steps %}
+        <li class="flex min-w-0 items-start gap-3 rounded bg-white p-4">
+          <span aria-hidden="true" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">{{ loop.index }}</span>
+          <span class="flex min-w-0 flex-col gap-0.5">
+            <span class="text-base font-bold text-heading">{{ s.title }}</span>
+            <span class="text-sm text-body">{{ s.text }}</span>
+          </span>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+
+  </div>
+</div>
+
+{# Quality Instruments. Long-Term Value. ("SEO Section" 35122:1354): the hands photo under a navy fade, text on the
+   right, plus the old site's testimonial and a shop button. From xl the fade (valueFade) is solid navy before the
+   886px text column starts; below xl the text column covers the photo, so the photo sits under an 85% navy tint.
+   Phones: a 160px photo strip above the navy text block, like the Repair Services band. #}
+<section class="relative isolate overflow-hidden bg-primary-500" aria-labelledby="value-title" data-figma="35122:1354">
+  <img src="{{ 'c2747fef' | img }}" alt="" loading="lazy" class="relative -z-10 block h-40 w-full object-cover md:absolute md:inset-0 md:h-full">
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden xl:block" style="background-image: {{ contentPages.gradients.valueFade }}"></div>
+  <div aria-hidden="true" class="absolute inset-0 -z-10 hidden bg-primary-500/85 md:block xl:hidden"></div>
+  <div class="container-page flex pb-10 pt-8 md:py-10 xl:min-h-[360px] xl:items-center">
+    <div class="flex max-w-[886px] flex-col items-start gap-6 md:gap-7 xl:ml-auto" data-figma="35122:1355">
+      <h2 id="value-title" class="text-h3 font-medium text-white md:text-h2 md:font-bold">{{ l.value.title }} <span class="text-accent">{{ l.value.accent }}</span></h2>
+      <p class="text-base text-white md:text-lg">{{ l.value.text }}</p>
+      <figure class="flex flex-col gap-4 border-t border-white/20 pt-6 md:pt-7">
+        {{ c.quoteMark() }}
+        <blockquote class="text-base text-white md:text-lg">“{{ l.testimonial.quote }}”</blockquote>
+        <figcaption class="flex flex-col gap-0.5">
+          <span class="text-base font-bold text-white md:text-lg">{{ l.testimonial.name }}</span>
+          <span class="text-sm text-secondary-200 md:text-base">{{ l.testimonial.role }}</span>
+        </figcaption>
+      </figure>
+      {{ c.arrowButton("Shop Ambler Instruments", "/product-lines/ambler-surgical/", "", "w-full md:w-auto") }}
+    </div>
+  </div>
+</section>
+
+{{ c.faqSection(l.faq, { section: "35122:1381", list: "35122:1384", card: "35122:1406" }) }}
+
+{# Restrictions & Exclusions: the fine print the "*" and the restriction links jump to. #}
+<section id="restrictions" aria-labelledby="restrictions-title" class="{{ anchor }} border-t border-outline bg-white" data-figma="35122:1416">
+  <div class="container-page flex flex-col gap-4 pb-10 pt-8 md:pb-[60px] md:pt-10">
+    <h2 id="restrictions-title" class="text-base font-bold text-heading">*Restrictions &amp; Exclusions of the Free Lifetime Repair Program</h2>
+    {% for r in l.restrictions %}
+    <p class="text-sm text-body"><strong class="font-bold text-heading">{{ r.label }}</strong> {{ r.text }}{% if r.link %} <a href="{{ r.link.href }}" class="link">{{ r.link.label }}</a>{{ r.after }}{% endif %}</p>
+    {% endfor %}
+  </div>
+</section>

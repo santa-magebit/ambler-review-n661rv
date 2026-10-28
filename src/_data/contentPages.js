@@ -14,12 +14,15 @@ import images from "./images.js";
  * aboutFade: About hero, solid navy to 14%, clear at 64%.
  * whyFade: About "Why Us" band, clear at 12%, solid navy from 50%.
  * titleLine: 2px line under hero titles, orange with a white highlight and clear ends.
+ * valueFade: Free Lifetime Repair value band (35122:1354), Figma's clear at 10-12% and solid navy at 50%, but never
+ *   later than 950px before the right edge, so the 886px text column always sits on solid navy (from 1280px).
  */
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
   heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 100%)",
   aboutFade: "linear-gradient(90deg, #004776 14%, rgba(0, 71, 118, 0) 64%)",
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
+  valueFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) min(12%, 100% - 1130px), #004776 min(50%, 100% - 950px))",
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
 };
@@ -118,7 +121,7 @@ const about = {
     {
       title: "Lifetime repair on Ambler brand ophthalmic instruments.",
       text: "* Sharpening, finishing, and aligning — free of charge. *Most instruments qualify —",
-      link: { label: "see details", href: "/repair-services/" },
+      link: { label: "see details", href: "/free-lifetime-repair/" },
       after: ".",
     },
     { title: "Service beyond the sale.", text: "Timely updates on cleaning, sterilization, and industry trends through our email program and society partnerships." },
@@ -255,6 +258,7 @@ const repair = {
       title: "Free Lifetime Repair",
       text: "We were the first company to offer FREE lifetime sharpening, alignment, and adjustment for qualifying Ambler-brand ophthalmic instruments. Learn more about our",
       link: "Free Lifetime Repair Program",
+      href: "/free-lifetime-repair/",
     },
   ],
   everyNeed: [
@@ -265,4 +269,101 @@ const repair = {
   faq: plp.faq.general.map((f, i) => ({ id: ["sterilize", "cataract-tray", "materials", "repair-services"][i], ...f })),
 };
 
-export default { gradients, trust, home, about, repair };
+// ---------------------------------------------------------------------------
+// Free Lifetime Repair
+
+/**
+ * Free Lifetime Repair - Adjusted (Figma 35122:1207). Copy from the frame; the steps, the testimonial and the FAQ
+ * answers Figma leaves empty come from amblersurgical.com/free-lifetime-repair and its repair FAQ.
+ */
+const lifetime = {
+  // The hero adds the "*" as a link to the restrictions.
+  intro:
+    "Every instrument company guarantees its instruments against manufacturing defects. Ambler Surgical was the first instrument company to repair ophthalmic instruments free of charge, forever.",
+  confidence: {
+    title: "Confidence in Your Instruments. Support for a Lifetime.",
+    text: "At Ambler Surgical, we stand behind the quality of our ophthalmic instruments. That's why we offer Free Lifetime Repair on qualifying Ambler brand ophthalmic instruments, helping you extend the life of your instruments and reduce replacement costs.",
+  },
+  /** Eligibility checks (35126:1378). */
+  eligibility: [
+    { figma: "35126:1379", title: "Ambler brand instruments", text: 'Product codes ending in "E" or "T"' },
+    { figma: "35126:1386", title: "Purchased after July 1, 2007", text: "From AmblerSurgical.com" },
+    { figma: "35126:1393", title: "Up to 50 free repairs", text: "Per customer, per fiscal year" },
+  ],
+  /** What's Included cards (35122:1317), photo by Figma image hash. imgClass: the needle holder photo has a faint grey band
+      round the instrument that the Figma render brightens away. */
+  included: [
+    { figma: "35122:1318", title: "FREE Scissor Sharpening", image: images["1907881e"] },
+    { figma: "35122:1323", title: "FREE Forceps Alignment", image: images["478dcae3"] },
+    { figma: "35122:1328", title: "FREE Needle Holder Re-Setting", image: images["393cbe8d"], imgClass: "brightness-105" },
+    { figma: "35122:1333", title: "FREE Hook Straightening", image: images["a9a5e53d"] },
+  ],
+  /** "Request a Free Repair" (35122:1338) as three steps, from the old site's "How do I send my instruments in for repair?". */
+  steps: [
+    { title: "Download the form", text: "Fill in the repair form for the instruments you are sending." },
+    { title: "Pack your instruments", text: "Put the form in the box with your sterilized instruments. No RMA number needed." },
+    { title: "Ship them to us", text: "Send the box to our repair service center and we will contact you." },
+  ],
+  /** "SEO Section" band (35122:1354). */
+  value: {
+    title: "Quality Instruments.",
+    accent: "Long-Term Value.",
+    text: "Choosing Ambler means more than purchasing quality ophthalmic instruments. Our Free Lifetime Repair Program helps keep your instruments performing as intended while reducing long-term maintenance expenses.",
+  },
+  /** The testimonial on amblersurgical.com/free-lifetime-repair. */
+  testimonial: {
+    quote:
+      "UAB Callahan Eye Hospital is one of the busiest ophthalmic surgical hospitals in the country. We send instruments for repair on a weekly basis. Most of them were purchased from Ambler Surgical, and those repairs are FREE. Many instrument companies say that they stand by their instruments. Ambler Surgical is actually doing it, every day.",
+    name: "Cherry Maloney, RN MBA",
+    role: "Director Central Sterile/OR Educator, UAB Callahan Eye Hospital",
+  },
+  /** FAQ (35122:1384). Figma answers the third question; the others restate the program terms below. */
+  faq: [
+    {
+      id: "qualify",
+      q: "What instruments qualify for a free repair?",
+      a: [
+        'Ambler brand ophthalmic instruments bought on AmblerSurgical.com after July 1, 2007. Their product codes end in "E" or "T". That includes scissors, forceps, needle holders, manipulators and hooks.',
+        "The program covers up to 50 free repairs per customer per fiscal year (January 1 to December 31).",
+      ],
+    },
+    {
+      id: "request",
+      q: "How do I request a free repair?",
+      a: ["No RMA number needed. Download the repair form, fill it out and put it in the box with your sterilized instruments. Ship the box to our repair service center and we will contact you."],
+    },
+    {
+      id: "cost",
+      q: "Is there any cost to me if my instrument qualifies for a free repair?",
+      a: ["No. Qualifying repairs are done free of charge. You only cover the shipping to and from Ambler's instrument repair service center."],
+    },
+    {
+      id: "excluded",
+      q: "What's excluded from the free lifetime repair program?",
+      a: [
+        "Instruments that were misused, improperly sterilized, mishandled or intentionally damaged, and some instrument types, such as diamond knives, phaco and cryosurgical handpieces, disposables and lenses. Parts replacement, laser welding and re-insulation are quoted at standard repair charges.",
+        "If an Ambler instrument is beyond repair, we quote a replacement at 20% off the published price.",
+      ],
+      link: { label: "See all restrictions & exclusions", href: "#restrictions" },
+    },
+  ],
+  /** Restrictions & Exclusions (35122:1416), word for word from the old site. */
+  restrictions: [
+    {
+      label: "Program Limitations:",
+      text: `Offer valid only on Ambler brand ophthalmic instruments purchased after July 1st, 2007 and found on www.AmblerSurgical.com. Ophthalmic instruments have unique product codes that end in "E" or "T". Ambler's Free Lifetime Repair Program is limited to fifty (50) Ambler brand ophthalmic instrument repairs per customer per fiscal year (Jan 1st - Dec 31st). Any Ambler brand ophthalmic instruments received that are found to be misused, improperly sterilized, mishandled or intentionally damaged will not be covered under this repair program and will be quoted at standard repair charges. Customers are responsible for all shipping charges to and from Ambler's instrument repair service center. Ambler instruments that are deemed to be beyond repair will be quoted for replacement at 20% off the published price.`,
+    },
+    {
+      label: "Instruments Excluded:",
+      text: "Aaron burr handpiece and/or tips, Algerbrush handpiece and/or tips, Beehler dilators, bipolar cords, Busin forceps, cannulae, cautery tips, Ceramic-Coated instruments, cryosurgical handpieces, demagnetizers, diamond knives, disposable products, eye shields, Honan Balloon, iris retractors, irrigation/aspiration handpieces and/or tips, IOL injectors, jewelers forceps, lacrimal probes, laser-coated instruments, MICS instruments, wire lid speculae, Ocular Lenses, Volk Lenses, phaco handpieces, phaco tip wrenches, pulse-ox probes, Rare Earth Magnet, sterilization trays, tonometers, ultrasonic cleaners, vitreoretinal instruments.",
+    },
+    {
+      label: "Repairs Excluded:",
+      text: "Replacement of micro teeth on forceps, any parts replacement including spring or slide-locks on needle holders and/or forceps, any instrument requiring laser welding or re-insulation, any bipolar-type forceps requiring re-insulation or replacement of connector. These repairs will be quoted at our standard repair charges listed on our",
+      link: { label: "Repair Pricing Page", href: "/repair-services/" },
+      after: ".",
+    },
+  ],
+};
+
+export default { gradients, trust, home, about, repair, lifetime };

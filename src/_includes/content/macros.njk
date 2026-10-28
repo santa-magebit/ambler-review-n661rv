@@ -9,21 +9,33 @@
 <h1 class="inline-block bg-bottom bg-no-repeat pb-2.5 text-h2 font-medium text-white md:text-hero" style="background-image: {{ contentPages.gradients.titleLine }}; background-size: 100% 2px">{{ title }}</h1>
 {% endmacro %}
 
-{# Hero, one component for Home (34141:37899), About (34971:47249) and Repair Services (34799:68558): a photo under a
-   navy fade from the left, 593px column with the title, intro and optional caller content (buttons). A photo that
-   starts partway across fades in over its first 10% (mask in `photo`) so no line shows where it meets the fade.
+{# Hero, one component for Home (34141:37899), About (34971:47249), Repair Services (34799:68558) and Free Lifetime
+   Repair (35122:1294): a photo under a navy fade from the left, 593px column with the title, intro and optional caller
+   content (buttons). A photo that starts partway across fades in over its first 10% (mask in `photo`) so no line shows
+   where it meets the fade.
    Phones (mobile 34141:38087, 34974:121015, 34897:7756): the phone fade over the photo, 16/24 intro.
    h: { title, text, image (hash8), photo (placement classes), figma, fade? (web gradient, default heroFade),
-        bg? (under the photo), pad? (phone padding), gap? (phone gap) } #}
+        bg? (under the photo), pad? (phone padding), gap? (phone gap),
+        eyebrow? (Medium 18/28 line 12px above the title, Free Lifetime Repair 35122:1299),
+        footnote? { href, label } (a "*" after the intro linking to the fine print),
+        scrim? (classes of a tint over the photo, for a light photo that runs under the text) } #}
 {% macro hero(h) %}
 <section class="relative isolate overflow-hidden {{ h.bg or 'bg-primary-500' }}" data-figma="{{ h.figma }}">
   <img src="{{ h.image | img }}" alt="" class="absolute -z-10 {{ h.photo }}">
+  {% if h.scrim %}<div aria-hidden="true" class="absolute inset-0 -z-10 {{ h.scrim }}"></div>{% endif %}
   <div aria-hidden="true" class="absolute inset-0 -z-10 md:hidden" style="background-image: {{ contentPages.gradients.heroFadePhone }}"></div>
   <div aria-hidden="true" class="absolute inset-0 -z-10 hidden md:block" style="background-image: {{ h.fade or contentPages.gradients.heroFade }}"></div>
   <div class="container-page flex items-center {{ h.pad or 'pb-8 pt-10' }} md:min-h-[360px] md:py-12 lg:min-h-[480px]">
     <div class="flex max-w-[593px] flex-col items-start {{ h.gap or 'gap-5' }} md:gap-7">
+      {% if h.eyebrow %}
+      <div class="flex flex-col items-start gap-2 md:gap-3">
+        <p class="text-base font-medium text-white md:text-lg">{{ h.eyebrow }}</p>
+        {{ heroTitle(h.title) }}
+      </div>
+      {% else %}
       {{ heroTitle(h.title) }}
-      <p class="text-base text-white md:text-lg">{{ h.text }}</p>
+      {% endif %}
+      <p class="text-base text-white md:text-lg">{{ h.text }}{% if h.footnote %}<a href="{{ h.footnote.href }}" aria-label="{{ h.footnote.label }}" class="-mx-1 px-1 text-white hover:text-secondary-200">*</a>{% endif %}</p>
       {% if caller %}{{ caller() }}{% endif %}
     </div>
   </div>
@@ -149,6 +161,57 @@
 {# Chevron down, 28px, 2px stroke (mobile About "Read more", icon/24px/chevron-down). #}
 {% macro chevronDown() %}
 <svg viewBox="0 0 28 28" class="h-7 w-7 shrink-0" fill="none" aria-hidden="true"><path d="M7 10.5l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+{% endmacro %}
+
+{# Frequently Asked Questions + contact card (Repair Services 34799:68629, Free Lifetime Repair 35122:1381).
+   Phones (mobile 34897:7756): Medium 24/32 title 16px above the list; the navy card runs edge to edge under the
+   section, 32px padding, full-width button.
+   faq: [{ id, q, a: [paragraphs] | null (answer not written: data-proto), link?: { label, href } }]
+   figma: { section, list, card } node ids. #}
+{% macro faqSection(faq, figma) %}
+<section class="bg-menu" data-figma="{{ figma.section }}">
+  <div class="container-page flex flex-col gap-4 py-10 md:gap-8">
+    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Frequently Asked Questions</h2>
+    <div class="grid items-start gap-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">
+      <div x-data="faq" class="min-w-0" data-figma="{{ figma.list }}">
+        {% for f in faq %}
+        <div class="border-b border-secondary-200 py-4">
+          {% if f.a %}
+          <h3>
+            <button type="button" @click="toggle('{{ f.id }}')" :aria-expanded="open === '{{ f.id }}'" aria-controls="faq-{{ f.id }}"
+                    class="flex w-full items-center gap-3 text-left text-lg font-medium" :class="open === '{{ f.id }}' ? 'text-accent' : 'text-ink hover:text-primary-500'">
+              <span class="flex-1">{{ f.q }}</span>
+              <span x-show="open !== '{{ f.id }}'">{% icon "dropdown", "h-6 w-6" %}</span>
+              <span x-show="open === '{{ f.id }}'" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
+            </button>
+          </h3>
+          <div id="faq-{{ f.id }}" x-show="open === '{{ f.id }}'" x-collapse x-cloak>
+            <div class="flex flex-col gap-3 pt-3 text-lg text-body">
+              {% for p in f.a %}<p>{{ p }}</p>{% endfor %}
+              {% if f.link %}<p><a href="{{ f.link.href }}" class="link">{{ f.link.label }}</a></p>{% endif %}
+            </div>
+          </div>
+          {% else %}
+          {# Answer not written in Figma yet. #}
+          <h3>
+            <button type="button" data-proto aria-expanded="false" class="flex w-full items-center gap-3 text-left text-lg font-medium text-ink hover:text-primary-500">
+              <span class="flex-1">{{ f.q }}</span>{% icon "dropdown", "h-6 w-6" %}
+            </button>
+          </h3>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="-mx-5 -mb-10 flex min-w-0 flex-col items-start gap-6 bg-primary-500 px-5 py-8 md:mx-0 md:mb-0 md:rounded md:p-7" data-figma="{{ figma.card }}">
+        <div class="flex flex-col gap-4">
+          <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Can't find your answer?</h2>
+          <p class="text-base text-[#d3dce5] md:text-lg">Our instrument specialists respond within one business day.</p>
+        </div>
+        {{ arrowButton("Contact Our Team", "/contact/", "", "w-full md:w-auto") }}
+      </div>
+    </div>
+  </div>
+</section>
 {% endmacro %}
 
 {# Orange button with the arrow (Landing Page hero 34141:37899 "btn": 12/30/12/32 padding). cls: extra classes, e.g. full width on phones. #}

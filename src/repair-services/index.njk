@@ -39,7 +39,7 @@ permalink: /repair-services/
     <div class="grid gap-4 md:grid-cols-2 md:gap-6 md:[&>*]:min-h-[176px]" data-figma="34799:68588">
       {% for w in r.whyChoose %}
       {% if w.link %}
-      {% call c.descriptionCard(w.title, w.text, "", w.figma) %} <a href="#" data-proto class="link">{{ w.link }}</a>.{% endcall %}
+      {% call c.descriptionCard(w.title, w.text, "", w.figma) %} <a href="{{ w.href }}" class="link">{{ w.link }}</a>.{% endcall %}
       {% else %}
       {{ c.descriptionCard(w.title, w.text, "", w.figma) }}
       {% endif %}
@@ -64,47 +64,5 @@ permalink: /repair-services/
   </div>
 </section>
 
-{# Frequently Asked Questions + contact card. Phones (mobile 34897:7756): Medium 24/32 title 16px above the list;
-   the navy card runs edge to edge under the section, 32px padding, full-width button. #}
-<section class="bg-menu" data-figma="34799:68629">
-  <div class="container-page flex flex-col gap-4 py-10 md:gap-8">
-    <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Frequently Asked Questions</h2>
-    <div class="grid items-start gap-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">
-      <div x-data="faq" class="min-w-0" data-figma="34799:68632">
-        {% for f in r.faq %}
-        <div class="border-b border-secondary-200 py-4">
-          {% if f.a %}
-          <h3>
-            <button type="button" @click="toggle('{{ f.id }}')" :aria-expanded="open === '{{ f.id }}'" aria-controls="faq-{{ f.id }}"
-                    class="flex w-full items-center gap-3 text-left text-lg font-medium" :class="open === '{{ f.id }}' ? 'text-accent' : 'text-ink hover:text-primary-500'">
-              <span class="flex-1">{{ f.q }}</span>
-              <span x-show="open !== '{{ f.id }}'">{% icon "dropdown", "h-6 w-6" %}</span>
-              <span x-show="open === '{{ f.id }}'" x-cloak>{% icon "dropdown-up", "h-6 w-6" %}</span>
-            </button>
-          </h3>
-          <div id="faq-{{ f.id }}" x-show="open === '{{ f.id }}'" x-collapse x-cloak>
-            <div class="flex flex-col gap-3 pt-3 text-lg text-body">
-              {% for p in f.a %}<p>{{ p }}</p>{% endfor %}
-            </div>
-          </div>
-          {% else %}
-          {# Answer not written in Figma yet. #}
-          <h3>
-            <button type="button" data-proto aria-expanded="false" class="flex w-full items-center gap-3 text-left text-lg font-medium text-ink hover:text-primary-500">
-              <span class="flex-1">{{ f.q }}</span>{% icon "dropdown", "h-6 w-6" %}
-            </button>
-          </h3>
-          {% endif %}
-        </div>
-        {% endfor %}
-      </div>
-      <div class="-mx-5 -mb-10 flex min-w-0 flex-col items-start gap-6 bg-primary-500 px-5 py-8 md:mx-0 md:mb-0 md:rounded md:p-7" data-figma="34799:68654">
-        <div class="flex flex-col gap-4">
-          <h2 class="text-h3 font-medium text-white md:text-h2 md:font-bold">Can't find your answer?</h2>
-          <p class="text-base text-[#d3dce5] md:text-lg">Our instrument specialists respond within one business day.</p>
-        </div>
-        {{ c.arrowButton("Contact Our Team", "/contact/", "", "w-full md:w-auto") }}
-      </div>
-    </div>
-  </div>
-</section>
+{# Frequently Asked Questions + contact card. #}
+{{ c.faqSection(r.faq, { section: "34799:68629", list: "34799:68632", card: "34799:68654" }) }}

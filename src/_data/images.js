@@ -23,6 +23,7 @@ export default {
   "2df98bc7": "/img/2df98bc7.png", // mobile-header 366x310
   "31a47e5d": "/img/31a47e5d.png", // mobile-header 496x286
   "35ef7b05": "/img/35ef7b05.jpg", // mobile-header 366x258
+  "393cbe8d": "/img/393cbe8d.png", // mobile-header 366x310 (Free Lifetime Repair needle holder)
   "3971ee67": "/img/3971ee67.jpg", // img 108x108
   "3a05cae8": "/img/3a05cae8.jpg", // image 5 37x24
   "3b03abda": "/img/3b03abda.jpg", // volk_optical_logo 1 141x44
@@ -32,6 +33,7 @@ export default {
   "408eb6d1": "/img/408eb6d1.jpg", // mobile-header 366x310
   "41a72661": "/img/41a72661.jpg", // img 108x108
   "473743f3": "/img/473743f3.jpg", // mobile-header 366x200
+  "478dcae3": "/img/478dcae3.png", // mobile-header 366x310 (Free Lifetime Repair forceps)
   "47ab7959": "/img/47ab7959.jpg", // mobile-header 366x200
   "4e0a54ee": "/img/4e0a54ee.jpg", // image 3 37x24
   "4e1fbba9": "/img/4e1fbba9.jpg", // mobile-header 366x310
@@ -73,10 +75,12 @@ export default {
   "99dca01c": "/img/99dca01c.jpg", // thumbnail 108x108
   "9d8ed65f": "/img/9d8ed65f.png", // mobile-header 369x313
   "9f2fcfc0": "/img/9f2fcfc0.jpg", // mobile-header 366x200
+  "a3c1af5e": "/img/a3c1af5e.png", // Lifetime Repair Stamp Transparent 1 200x210
   "a53e626f": "/img/a53e626f.png", // mobile-header 369x313
   "a5e4aafa": "/img/a5e4aafa.png", // mobile-header 366x310
   "a76c7e54": "/img/a76c7e54.png", // mobile-header 268x192
   "a9a24800": "/img/a9a24800.png", // ambler.logo 1 298x80
+  "a9a5e53d": "/img/a9a5e53d.png", // mobile-header 366x310 (Free Lifetime Repair hook)
   "aa309b56": "/img/aa309b56.jpg", // mobile-header 366x200
   "aac4f963": "/img/aac4f963.jpg", // Oph Forceps Header Graphic 1920x480
   "aadc3c4a": "/img/aadc3c4a.jpg", // img 108x108
@@ -113,6 +117,7 @@ export default {
   "e3e99089": "/img/e3e99089.jpg", // bovie logo 130x44
   "eb36808d": "/img/eb36808d.png", // mobile-header 366x310
   "ec2b7392": "/img/ec2b7392.jpg", // Brand Image 175x44
+  "f188b990": "/img/f188b990.jpg", // Eye Image 2064x492 (Free Lifetime Repair hero)
   "fb1d6319": "/img/fb1d6319.jpg", // Eye Image 1600x800
   "fc765b3e": "/img/fc765b3e.png", // Rumex_LOGO_97804edd-f911-4b3a-87fb-4434e 162x38
 };

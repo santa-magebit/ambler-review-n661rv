@@ -396,7 +396,7 @@ const faq = {
   ],
 };
 
-const repairBanner = { title: "Free Lifetime Repair", text: "Free repair on most Ambler Surgical brand ophthalmic instruments", cta: "Learn More", href: "/repair-services/" };
+const repairBanner = { title: "Free Lifetime Repair", text: "Free repair on most Ambler Surgical brand ophthalmic instruments", cta: "Learn More", href: "/free-lifetime-repair/" };
 
 /** Ophthalmology specialty page (34777:58990). */
 const ophthalmologyPage = {

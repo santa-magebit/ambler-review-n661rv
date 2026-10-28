@@ -12,7 +12,7 @@ const base = (process.env.BASE_PATH || "").replace(/\/$/, "");
 // Page folders per area. ONLY=<area> builds just that area (plus 404), so
 // parallel work on one area cannot break another area's build.
 const areas = {
-  content: ["src/index.njk", "src/about-ambler-surgical/**", "src/repair-services/**", "src/sterilization-cleaning/**", "src/contact/**"],
+  content: ["src/index.njk", "src/about-ambler-surgical/**", "src/repair-services/**", "src/free-lifetime-repair/**", "src/sterilization-cleaning/**", "src/contact/**"],
   plp: ["src/browse-by-specialty/**", "src/browse-by-type/**", "src/product-lines/**", "src/search/**"],
   "pdp-cart": ["src/product/**", "src/checkout/cart/**", "src/quick-order/**"],
   checkout: ["src/checkout/index.njk", "src/checkout/onepage/**"],

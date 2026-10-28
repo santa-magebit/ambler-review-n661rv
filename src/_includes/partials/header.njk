@@ -214,6 +214,7 @@
               {% for s in catalog.sterilization %}<li><a href="/sterilization-cleaning/#{{ s.slug }}" class="text-lg text-primary-500 hover:underline">{{ s.name }}</a></li>{% endfor %}
             {% else %}
               {% for s in catalog.repairServices %}<li><a href="/repair-services/#{{ s.slug }}" class="text-lg text-primary-500 hover:underline">{{ s.name }}</a></li>{% endfor %}
+              <li><a href="/free-lifetime-repair/" class="text-lg text-primary-500 hover:underline">Free Lifetime Repair</a></li>
             {% endif %}
           </ul>
           <a href="{{ l.all }}" class="mt-8 inline-flex items-center gap-1 text-lg font-medium text-primary-500 hover:underline">{{ l.allLabel }}{% icon "arrow-narrow-right", "h-6 w-6" %}</a>

@@ -41,8 +41,9 @@ permalink: /repair-services/micro-instrument-repair/
 {# Typical Repair Charges ("Content" 35098:39067, the intro moved into the hero): 36px between the title and the tables.
    The request strip follows the last table with the tables' own gap (24px, 36px from md): #eff7fd (the Free Lifetime
    Repair eligibility card), one row from md with the title and line on the left and the primary download button
-   on the right. From lg the instruments cut-out (420px tall, cropped by the strip, fading at both ends, as the photo crops the
-   instruments on its right) runs under the button, its right edge 60px from the strip's.
+   on the right. From lg the instruments cut-out runs under the button, large enough to read as a texture rather than detail
+   (480px tall, 640px from xl, cropped by the strip and running past its right edge), fading in from the left
+   so it stays clear of the title.
    Phones: text, then the button full width.
    Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall with their 1px bottom line,
    Bold prices in a 300px column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
@@ -69,7 +70,7 @@ permalink: /repair-services/micro-instrument-repair/
     </table>
     {% endfor %}
     <section id="request-repair" aria-labelledby="request-title" class="relative isolate overflow-hidden rounded bg-[#eff7fd]">
-      <img src="{{ 'd61fe469' | img }}" alt="" loading="lazy" class="absolute right-[60px] top-1/2 -z-10 hidden h-[420px] w-auto max-w-none -translate-y-1/2 [mask-image:linear-gradient(90deg,transparent,#000_35%,#000_80%,transparent)] lg:block">
+      <img src="{{ 'd61fe469' | img }}" alt="" loading="lazy" class="absolute right-[-20px] top-1/2 -z-10 hidden h-[480px] w-auto xl:right-[-40px] xl:h-[640px] max-w-none -translate-y-1/2 [mask-image:linear-gradient(90deg,transparent,#000_35%,#000_80%,transparent)] lg:block">
       <div class="flex flex-col items-start gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-6 md:px-12 md:py-10">
         <div class="flex min-w-0 flex-col gap-2">
           <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Repair</h2>

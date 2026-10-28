@@ -529,13 +529,13 @@ const cryo = {
       ["Major Component Replacement", "We can perform complete repairs on internal components. This includes high-pressure valve service and the replacement of thermocouples, filter/housing assemblies, and Teflon delivery tubes."],
     ],
   },
-  /** "Disclaimers" (35098:39351), one line each. The pricing line is shown under the prices it qualifies. */
+  /**
+   * "Disclaimers" (35098:39351): the brands line as the title of a callout, the pricing line and the trademark
+   * notice under it as fine print.
+   */
   pricingNote: "Pricing shown is for Frigitronics Brand Ophthalmic Cryosurgical Probes. Pricing varies based on make and model of probe.",
-  disclaimers: [
-    "We repair all models of Keeler, Frigitronics, MIRA, and D.O.R.C. Cryosurgical Probes.",
-    "The above referenced companies are registered trademarks of the respective owners.",
-    "Ambler Surgical has no affiliation whatsoever with the companies, nor do we distribute their products.",
-  ],
+  brands: "We repair all models of Keeler, Frigitronics, MIRA, and D.O.R.C. Cryosurgical Probes.",
+  trademarks: "The above referenced companies are registered trademarks of the respective owners. Ambler Surgical has no affiliation whatsoever with the companies, nor do we distribute their products.",
   /** FAQ (35098:39355), in the live site's order (Figma's rows read left to right). */
   faq: [
     {

@@ -10,11 +10,10 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
      hero in Figma) and, as in the frame, the orange "Download Repair Form" button, the page's one download of the
      form (with the download icon rather than Figma's arrow). No Request a Repair strip under the prices.
    - "Typical Repair Charges": the frame's three level cards with the micro price tables' look (navy header, 1px
-     #dde7ee border, 4px corners). Under them the warranty line, not in orange text (too light on white) but with
-     an orange shield, and the first disclaimer, which says what the prices are for.
+     #dde7ee border, 4px corners). Under them the warranty line as a notice bar.
    - No Free Lifetime Repair band: cryosurgical handpieces are excluded from the programme.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
-   - "Disclaimers": the other three lines as fine print, where the frame has them.
+   - "Disclaimers": a callout where the frame has them, the brands line as its title.
    - FAQ: the shared FAQ section; it loads closed (Figma's orange question is a hover example) and the answers
      are the live page's. #}
 {% import "macros/ui.njk" as ui with context %}
@@ -58,21 +57,29 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
         </li>
         {% endfor %}
       </ul>
-      <div class="flex flex-col gap-2" data-figma="35098:39346">
-        <p class="flex items-start gap-3 text-base font-bold text-heading md:text-lg">{% icon "shield-check", "h-6 w-6 shrink-0 text-accent md:mt-0.5" %}<span>{{ cr.warranty }}</span></p>
-        <p class="text-sm text-body md:text-base">{{ cr.pricingNote }}</p>
-      </div>
+      {# Warranty note (35098:39346), the warranty line only as in Figma, as a notice bar so it reads as a condition:
+         the outline border with a 4px orange left edge on #f5f8fa, an orange info icon, Medium navy text (Figma's
+         orange text is too light on white). Picked from three options on 2026-10-28. #}
+      <p class="flex items-center gap-3 rounded border border-l-4 border-outline border-l-accent bg-menu px-4 py-3 text-base font-medium text-heading md:text-lg" data-figma="35098:39346">{% icon "info-square-rounded", "h-6 w-6 text-accent" %}<span>{{ cr.warranty }}</span></p>
     </div>
   </div>
 </section>
 
-<div class="pb-8 md:pb-10">{{ plp_ui.features(cr.seo) }}</div>
+{{ plp_ui.features(cr.seo) }}
 
-{# Disclaimers (35098:39350): fine print after the features, with the Free Lifetime Repair fine print's line above
-   it; centred from md as drawn. #}
-<section class="border-t border-outline bg-white" aria-label="Disclaimers" data-figma="35098:39350">
-  <div class="container-page flex flex-col gap-1 py-6 text-sm text-body md:py-8 md:text-center">
-    {% for d in cr.disclaimers %}<p>{{ d }}</p>{% endfor %}
+{# Disclaimers (35098:39350) as a callout under the features, in the styleguide trust badge's shape (34747:15477:
+   52px navy circle with the repair icon, title, text): the brands line as a Bold title, the pricing line and the
+   trademark notice under it as fine print. A tinted box with the price tables' outline border, like the other callouts; the text keeps the
+   756px reading width. Phones: the circle above the text. #}
+<section class="bg-white pb-8 pt-6 md:pb-10" aria-label="Brands we repair" data-figma="35098:39350">
+  <div class="container-page">
+    <div class="flex flex-col items-start gap-4 rounded border border-outline bg-secondary-100 px-5 py-6 sm:flex-row sm:items-center sm:gap-5 md:px-8">
+      <span class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">{% icon "tool", "h-7 w-7" %}</span>
+      <div class="flex min-w-0 max-w-[756px] flex-col gap-1">
+        <p class="text-base font-bold text-heading md:text-lg">{{ cr.brands }}</p>
+        <p class="text-sm text-body">{{ cr.pricingNote }} {{ cr.trademarks }}</p>
+      </div>
+    </div>
   </div>
 </section>
 

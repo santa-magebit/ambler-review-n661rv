@@ -199,41 +199,6 @@ const brandTypeHoverText = {
     ],
   },
 };
-/** Product Lines cards (old product line pages). */
-const lineHoverText = {
-  "ambler-surgical": [
-    "Our own brand of precision instruments, selected for superior materials, ergonomic design and consistent performance.",
-    "Free Lifetime Repair on most Ambler Brand ophthalmic instruments.",
-  ],
-  "duckworth-and-kent": [
-    "A world leader in reusable titanium ophthalmic instruments, with over 60 years of engineering knowledge.",
-    "Elegant, well-balanced, ergonomic handles with consistent, durable performance.",
-  ],
-  "ocular-instruments": [
-    "Creating solutions to save sight since 1966.",
-    "One of the world's largest suppliers of ophthalmic diagnostic, laser and surgical lenses, with more than 200 lenses and supporting products.",
-  ],
-  "volk-optical": [
-    "The premier designer and manufacturer of high-quality ophthalmic lenses.",
-    "Home of the double aspheric 20D, 78D and 90D lenses, the Super Series and Digital Series.",
-  ],
-  "mastel-precision": [
-    "Ophthalmic surgical instruments since 1981, specializing in ultra-thin, reduced-angle diamond knife edges.",
-    "Precise finishing for minimally invasive incisions.",
-  ],
-  epsilon: [
-    "A leading ophthalmic products manufacturer with a wide range of precision instruments.",
-    "Quality maintained at every level, from product design to after-sales support.",
-  ],
-  geuder: [
-    "Precision eye surgery products, made in Germany for over 65 years.",
-    "Surgeons in over 90 countries rely on more than 3,000 Geuder products.",
-  ],
-  "bovie-medical": [
-    "Cautery tips, handles, pencils and accessories for clean hemostasis and precise tissue work.",
-    "From fine-tip cautery and loop contouring to suction coagulation and ophthalmic burr debridement.",
-  ],
-};
 
 // Every type that gets a /browse-by-type/<type>/ page: the mega menu types, the
 // Ophthalmology quick-select list and the types of the listing products.
@@ -610,9 +575,10 @@ const productLinesPage = {
   title: "by Product Lines",
   heroText:
     "Ambler Surgical is proud to be a distributor for some of the biggest names in ophthalmic instruments and products, including Duckworth & Kent, Volk Optical, Ocular Instruments, Mastel Precision, Bovie Medical and many more. If you order ophthalmic instruments and specialty ophthalmic products, you could be saving money by ordering those products from Ambler Surgical.",
-  // "Popular Product Lines" cards (photo per line).
+  // "Popular Product Lines" cards: [line, logo tile, hover photo of the line's products]. Figma draws only the
+  // Duckworth & Kent hover (34907:8389) and no tile for it, so that card shows the line's logo at its drawn width.
   popular: [
-    ["ambler-surgical", "cd1d303a"], ["duckworth-and-kent", "b7a3c44f"], ["ocular-instruments", "eb36808d"], ["volk-optical", "2df98bc7"],
+    ["ambler-surgical", "cd1d303a"], ["duckworth-and-kent", null, "b7a3c44f"], ["ocular-instruments", "eb36808d"], ["volk-optical", "2df98bc7"],
     ["mastel-precision", "5d62af3b"], ["epsilon", "a5e4aafa"], ["geuder", "5266a0eb"], ["bovie-medical", "88a31f74"],
   ],
 };
@@ -834,9 +800,13 @@ const brandPages = lines.map((b) => {
 const featuredLines = ["ambler-surgical", "duckworth-and-kent", "ocular-instruments", "volk-optical"];
 const productLinePage = {
   ...productLinesPage,
-  popular: productLinesPage.popular.map(([slug, image]) => {
+  popular: productLinesPage.popular.map(([slug, tile, photo]) => {
     const b = lines.find((x) => x.slug === slug);
-    return { name: b.name, href: b.url, image: images[image], count: ownCount((p) => p.brand === slug), hover: lineHoverText[slug] || null };
+    return {
+      name: b.name, href: b.url, count: ownCount((p) => p.brand === slug),
+      ...(tile ? { image: images[tile] } : { logo: { src: b.logo, width: logoWidths[slug] } }),
+      hoverImage: photo ? images[photo] : null,
+    };
   }),
   // "All Product Lines" in the drawn "Featured" order: four lines first, then A to Z.
   all: [...featuredLines.map((slug) => lines.find((b) => b.slug === slug)), ...sortByName(lines.filter((b) => !featuredLines.includes(b.slug)))].map(

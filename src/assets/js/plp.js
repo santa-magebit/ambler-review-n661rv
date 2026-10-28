@@ -33,9 +33,8 @@ document.addEventListener("alpine:init", () => {
     active: cfg.active,
     applied: [],
     allChips: false,
-    // Chips that fit on the strip's first row (fitChips); measuring shows them all for a moment to measure.
+    // Chips that fit on the strip's first row (fitChips measures a hidden copy of the row).
     fit: Infinity,
-    measuring: false,
     query: "",
     within: "",
     sort: "name-asc",
@@ -64,13 +63,11 @@ document.addEventListener("alpine:init", () => {
         this.page = 1;
         this.fitChips();
       });
-      let frame = 0;
-      window.addEventListener("resize", () => {
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => this.fitChips());
+      // Refit when the row changes width (resize, or the strip showing its first chip) and once the fonts are in.
+      this.$nextTick(() => {
+        if (this.$refs.chips) new ResizeObserver(() => this.fitChips()).observe(this.$refs.chips);
       });
       if (document.fonts) document.fonts.ready.then(() => this.fitChips());
-      this.fitChips();
     },
 
     // --- product sets ---------------------------------------------------
@@ -173,29 +170,25 @@ document.addEventListener("alpine:init", () => {
     },
     /** Filter strip: chips stay on one row; the ones that don't fit wait behind "+x more". */
     chipShown(i) {
-      return this.allChips || this.measuring || i < this.fit;
+      return this.allChips || i < this.fit;
     },
     get hiddenChips() {
       return this.allChips ? 0 : Math.max(0, this.applied.length - this.fit);
     },
+    /** Measures the hidden copy of the row (x-ref="measure"), never the visible chips, so trying a fit never shows
+        extra chips on screen. Runs after Alpine has rendered the change and before the browser paints. */
     fitChips() {
-      if (this.allChips) return;
-      this.measuring = true;
-      this.$nextTick(() => {
-        const ul = this.$refs.chips;
-        const widths = ul ? [...ul.querySelectorAll("[data-chip]")].map((li) => li.getBoundingClientRect().width) : [];
-        const room = ul ? ul.clientWidth : 0;
-        if (room) {
-          const gap = parseFloat(getComputedStyle(ul).columnGap) || 0;
-          const more = this.$refs.more.getBoundingClientRect().width;
-          // k chips, plus the "+x more" link when some are left over
-          const rowWidth = (k) => widths.slice(0, k).reduce((sum, w) => sum + w + gap, 0) + (k < widths.length ? more : -gap);
-          let k = widths.length;
-          while (k > 0 && rowWidth(k) > room + 0.5) k--;
-          this.fit = k;
-        }
-        this.measuring = false;
-      });
+      const ul = this.$refs.chips, copy = this.$refs.measure;
+      const room = ul ? ul.clientWidth : 0;
+      if (this.allChips || !room || !copy) return;
+      const widths = [...copy.querySelectorAll("[data-copy]")].map((li) => li.getBoundingClientRect().width);
+      const gap = parseFloat(getComputedStyle(ul).columnGap) || 0;
+      const more = copy.querySelector("[data-more]").getBoundingClientRect().width;
+      // k chips, plus the "+x more" link when some are left over
+      const rowWidth = (k) => widths.slice(0, k).reduce((sum, w) => sum + w + gap, 0) + (k < widths.length ? more : -gap);
+      let k = widths.length;
+      while (k > 0 && rowWidth(k) > room + 0.5) k--;
+      this.fit = k;
     },
     remove(key) {
       this.applied = this.applied.filter((k) => k !== key);

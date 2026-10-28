@@ -292,11 +292,12 @@ const lifetime = {
     { figma: "35126:1386", title: "Purchased after July 1, 2007", text: "From AmblerSurgical.com" },
     { figma: "35126:1393", title: "Up to 50 free repairs", text: "Per customer, per fiscal year" },
   ],
-  /** What's Included cards (35122:1317), photo by Figma image hash. The flat needle holder and hook photos get the
-      category cards' 45° turn (plp.diagonal); the forceps, drawn at 50°, is eased to 45°. */
+  /** What's Included cards (35122:1317), photo by Figma image hash. Figma's forceps photo is a cropped close-up, so the
+      card shows the site's forceps photo (the Forceps category card's) with that card's turn, as the cards share its
+      366x310 box; the flat needle holder and hook photos get the category cards' 45° turn (plp.diagonal). */
   included: [
     { figma: "35122:1318", title: "Scissor Sharpening", image: images["1907881e"] },
-    { figma: "35122:1323", title: "Forceps Alignment", image: images["478dcae3"], style: "transform: rotate(-5deg)" },
+    { figma: "35122:1323", title: "Forceps Alignment", image: images[plp.typePhotos.forceps], style: plp.turnFor("forceps", plp.typePhotos.forceps).style },
     { figma: "35122:1328", title: "Needle Holder Re-Setting", image: images["393cbe8d"], style: plp.diagonal },
     { figma: "35122:1333", title: "Hook Straightening", image: images["a9a5e53d"], style: plp.diagonal },
   ],

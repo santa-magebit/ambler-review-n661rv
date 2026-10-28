@@ -865,6 +865,8 @@ export default {
   diagonal,
   turn,
   turnStyle,
+  turnFor,
+  typePhotos,
   gradients,
   logoWidths,
   trust,

@@ -33,7 +33,6 @@ export default {
   "408eb6d1": "/img/408eb6d1.jpg", // mobile-header 366x310
   "41a72661": "/img/41a72661.jpg", // img 108x108
   "473743f3": "/img/473743f3.jpg", // mobile-header 366x200
-  "478dcae3": "/img/478dcae3.png", // mobile-header 366x310 (Free Lifetime Repair forceps)
   "47ab7959": "/img/47ab7959.jpg", // mobile-header 366x200
   "4e0a54ee": "/img/4e0a54ee.jpg", // image 3 37x24
   "4e1fbba9": "/img/4e1fbba9.jpg", // mobile-header 366x310

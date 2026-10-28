@@ -48,8 +48,8 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
     <h2 id="charges-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1" data-figma="35098:39329">Typical Repair Charges</h2>
     {# The levels in one band, each heading its column with a strip that darkens with the level (#dee7ed with navy
        text, #4e6284 and #004776 with white text): the level as a Medium line, the price range in Bold 24/32 (phones
-       20/28), the text in body grey on white below, 32px sides (phones 20px). Outline border around the band, no
-       rules between the columns; side by side from xl, stacked below. The warranty note (35098:39346, the line only,
+       20/28), the text in body grey on white below, 32px sides (phones 20px). Outline border around the band and
+       outline rules between the texts, none between the strips; side by side from xl, stacked below. The warranty note (35098:39346, the line only,
        as in Figma) is the band's last row, across all three levels as it applies to all of them: #f5f8fa under an
        outline rule, centred Medium navy 14/20 (16/24 from md) with the orange info icon. Both picked from options on
        2026-10-28. #}
@@ -62,7 +62,7 @@ permalink: /repair-services/cryosurgical-handpiece-repair/
             <span class="text-base font-medium md:text-lg">{{ lv.name }}</span>
             <span class="text-h4 font-bold md:text-h3">{{ lv.price }}</span>
           </h3>
-          <p class="flex-1 bg-white px-5 py-6 text-base text-body md:px-8 md:text-lg">{{ lv.text }}</p>
+          <p class="flex-1 bg-white px-5 py-6 text-base text-body md:px-8 md:text-lg {{ 'xl:border-l xl:border-outline' if not loop.first }}">{{ lv.text }}</p>
         </li>
         {% endfor %}
       </ol>

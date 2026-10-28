@@ -9,12 +9,13 @@
 <h1 class="inline-block bg-bottom bg-no-repeat pb-2.5 text-h2 font-medium text-white md:text-hero" style="background-image: {{ contentPages.gradients.titleLine }}; background-size: 100% 2px">{{ title }}</h1>
 {% endmacro %}
 
-{# Hero, one component for Home (34141:37899), About (34971:47249), Repair Services (34799:68558) and Free Lifetime
-   Repair (35122:1294): a photo under a navy fade from the left, 593px column with the title, intro and optional caller
+{# Hero, one component for Home (34141:37899), About (34971:47249), Repair Services (34799:68558), Free Lifetime
+   Repair (35122:1294) and Micro Instrument Repair (35098:39055):a photo under a navy fade from the left, 593px column with the title, intro and optional caller
    content (buttons). A photo that starts partway across fades in over its first 10% (mask in `photo`) so no line shows
    where it meets the fade.
    Phones (mobile 34141:38087, 34974:121015, 34897:7756): the phone fade over the photo, 16/24 intro.
-   h: { title, text, image (hash8), photo (placement classes), figma, fade? (web gradient, default heroFade),
+   h: { title, text? (Micro Instrument 35098:39055 has none), image (hash8), photo (placement classes), figma,
+        fade? (web gradient, default heroFade),
         bg? (under the photo), pad? (phone padding), gap? (phone gap),
         eyebrow? (Medium 18/28 line 12px above the title, Free Lifetime Repair 35122:1299),
         footnote? { href, label } (a "*" after the intro linking to the fine print),
@@ -35,7 +36,7 @@
       {% else %}
       {{ heroTitle(h.title) }}
       {% endif %}
-      <p class="text-base text-white md:text-lg">{{ h.text }}{% if h.footnote %}<a href="{{ h.footnote.href }}" aria-label="{{ h.footnote.label }}" class="-mx-1 px-1 text-white hover:text-secondary-200">*</a>{% endif %}</p>
+      {% if h.text %}<p class="text-base text-white md:text-lg">{{ h.text }}{% if h.footnote %}<a href="{{ h.footnote.href }}" aria-label="{{ h.footnote.label }}" class="-mx-1 px-1 text-white hover:text-secondary-200">*</a>{% endif %}</p>{% endif %}
       {% if caller %}{{ caller() }}{% endif %}
     </div>
   </div>

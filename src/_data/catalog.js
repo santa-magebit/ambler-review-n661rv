@@ -199,9 +199,14 @@ const sterilization = [
   "Jars", "Trays", "Ultrasonic Cleaners",
 ].map((name) => ({ name, slug: slugify(name) }));
 
+// href: the service's own page; the others link to their card on /repair-services/#<slug>.
+const repairPages = { "micro-instrument": "/repair-services/micro-instrument-repair/" };
 const repairServices = [
   "Cryosurgical Handpiece", "Diamond Knife", "General Instrument", "Micro Instrument", "Phaco Handpiece", "Surgical/Diagnostic Lenses",
-].map((name) => ({ name, slug: slugify(name) }));
+].map((name) => {
+  const slug = slugify(name);
+  return { name, slug, href: repairPages[slug] || `/repair-services/#${slug}` };
+});
 
 // ---------------------------------------------------------------------------
 // Products: [itemNumber, name, description, price, imageHash8, typeSlug, productLineSlug?, extra?]

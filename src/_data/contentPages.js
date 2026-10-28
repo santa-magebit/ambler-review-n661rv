@@ -16,6 +16,9 @@ import images from "./images.js";
  * titleLine: 2px line under hero titles, orange with a white highlight and clear ends.
  * valueFade: Free Lifetime Repair value band (35122:1354), Figma's clear at 10-12% and solid navy at 50%, but never
  *   later than 950px before the right edge, so the 886px text column always sits on solid navy (from 1280px).
+ * microFade: Micro Instrument hero (35098:39058), solid navy to 38.9%, clear at 94.5%, but solid at least to the end of
+ *   the 593px text column (625px, or 50% - 175px once the container is centred) and fading over 300px or more.
+ *   Past 1920px it stays where it is at 1920 relative to the centre (clear at 50% + 854px), like the hero photo.
  */
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
@@ -23,6 +26,7 @@ const gradients = {
   aboutFade: "linear-gradient(90deg, #004776 14%, rgba(0, 71, 118, 0) 64%)",
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
   valueFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) min(12%, 100% - 1130px), #004776 min(50%, 100% - 950px))",
+  microFade: "linear-gradient(90deg, #004776 max(38.9%, 625px, 50% - 175px), rgba(0, 71, 118, 0) max(min(94.5%, 50% + 854px), 925px))",
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
 };
@@ -230,8 +234,11 @@ const repairCards = [
   ["general-instrument", "General Surgical Instrument", "31a47e5d", "34799:68576", "!object-contain", plp.turnStyle(plp.turn(8, -25, 44, 0.9))],
   ["surgical-diagnostic-lenses", "Surgical/Diagnostic Lens", "cef4ff5f", "34799:68577", "!object-contain scale-[1.22]"],
 ].map(([slug, title, image, figma, imgClass, style]) => {
-  if (!catalog.repairServices.some((s) => s.slug === slug)) throw new Error(`Unknown repair service "${slug}"`);
-  return { slug, title, image: images[image], figma, imgClass, style };
+  const service = catalog.repairServices.find((s) => s.slug === slug);
+  if (!service) throw new Error(`Unknown repair service "${slug}"`);
+  // A service with its own page links there; the card keeps its id for old /repair-services/#<slug> links.
+  const href = service.href.startsWith("/repair-services/#") ? "" : service.href;
+  return { slug, title, image: images[image], figma, imgClass, style, href };
 });
 
 const repair = {
@@ -362,4 +369,99 @@ const lifetime = {
   ],
 };
 
-export default { gradients, trust, home, about, repair, lifetime };
+// ---------------------------------------------------------------------------
+// Micro Instrument Repair
+
+/**
+ * Repair - Micro Instrument (Figma 35098:38988, the client's 1600px frame). Copy from the frame; the FAQ answers Figma
+ * leaves out are word for word from amblersurgical.com/repair-services/micro-instrument-repair.
+ */
+const micro = {
+  intro:
+    "Restore your delicate microsurgical instruments to original manufacturer specifications with Ambler Surgical. Our lab-based technicians use high-quality tools to align forceps, sharpen scissors, and retip needle holders with a level of precision that mobile vans cannot match. Whether you need rust removal, parts replacement, or microscopic tip alignment, we extend the life of your inventory for a fraction of the replacement cost. See our flat-rate pricing and fill in the repair form below to get started.",
+  /** Typical Repair Charges (Box 1-4, 35098:39070 / 39098 / 39111 / 39134): [repair, price in USD]. */
+  charges: [
+    {
+      figma: "35098:39070",
+      name: "Forceps",
+      work: "Realign, Adjust, Refurbish",
+      rows: [
+        ["Tying/Suturing/Capsulorhexis", 44],
+        ["Castroviejo Suturing, Replace Teeth", 107],
+        ["Jeweler's/Tissue/Dressing", 16],
+        ["IOL - Inserters/Folders", 46],
+        ["Bipolar, Repot, Test", 137],
+      ],
+    },
+    {
+      figma: "35098:39098",
+      name: "Scissors",
+      work: "Sharpen, Adjust, Refurbish",
+      rows: [
+        ["Vannas/Westcott/Corneal - Spring Handle", 44],
+        ["Iris/Tenotomy/Strabismus - Ring Handle", 14],
+      ],
+    },
+    {
+      figma: "35098:39111",
+      name: "Needle Holders",
+      work: "Realign, Adjust, Refurbish",
+      rows: [
+        ["Castroviejo/Barraquer", 44],
+        ["Castroviejo/Barraquer, Replace Parts", 116],
+        ["Webster/Halsey/Mayo", 23],
+        ["Webster/Halsey/Mayo, Replace TC Inserts", 65],
+      ],
+    },
+    {
+      figma: "35098:39134",
+      name: "Others",
+      work: "Repair, Realign, Refurbish",
+      rows: [
+        ["Manipulators/Rotators/Choppers", 22],
+        ["LRI, Toric, O-Z Markers", 25],
+        ["Castroviejo Caliper", 37],
+        ["Lieberman Wire Lid Retractor", 26],
+        ["Lieberman Wire Lid Retractor, Laser-weld Parts", 56],
+        ["I/A Tips, Remove Occlusion", 159],
+      ],
+    },
+  ],
+  /** "SEO Text" (35098:39176), in the shape of the PLP features list (plp_ui.features). */
+  seo: {
+    figma: "35098:39176",
+    title: "Micro and Ophthalmic Instrument Repair Services for Every Need",
+    intro: "Our repair capabilities cover the full spectrum of microsurgical items found in your trays.",
+    items: [
+      ["Forceps", "We realign and refurbish tying, suturing, capsulorhexis, and jeweler's forceps. We also service IOL inserters, replace teeth on Castroviejo suturing forceps, and repot and test bipolar forceps."],
+      ["Scissors", "We sharpen and adjust spring handle scissors (Vannas, Westcott, corneal) and ring handle models (iris, tenotomy, strabismus) to restore precision cutting."],
+      ["Needle Holders", "We repair Castroviejo and Barraquer holders, including parts replacement. We also refurbish Webster, Halsey, and Mayo holders by realigning jaws and replacing worn TC inserts."],
+      ["Others", "We service manipulators, rotators, choppers, LRI/toric markers, and Castroviejo calipers. We also laser-weld Lieberman lid retractors and remove occlusions from I/A tips."],
+    ],
+  },
+  /** FAQ (35098:39182), in the live site's order (Figma's rows read left to right). */
+  faq: [
+    {
+      id: "needle-holder",
+      q: "How do I know if my needle holder needs repair?",
+      a: ['If you experience "needle rotation" (the needle twists when locked) or if the ratchet springs pop open unexpectedly, the instrument is compromised. We typically replace the Tungsten Carbide inserts to restore a non-slip grip.'],
+    },
+    {
+      id: "send",
+      q: "How do I send my instruments in for repair?",
+      a: ["The process is simple and requires no RMA number. Just download the Micro Instrument Repair Form, fill it out, and include it in the box with your sterilized instruments. Ship the package to our facility, and we will contact you."],
+    },
+    {
+      id: "titanium",
+      q: "Do you repair titanium instruments?",
+      a: ["Yes, we service both stainless steel and titanium microsurgical instruments. Titanium requires specific handling during sharpening to prevent material fatigue, and our technicians are trained for it."],
+    },
+    {
+      id: "lab",
+      q: "Why do you recommend lab repair over mobile vans?",
+      a: ['Microsurgical repair requires stability and high magnification that is difficult to achieve in a mobile van. Our dedicated lab environment allows for microscopic alignment and passivation that ensures the instrument is truly restored, not just "touched up."'],
+    },
+  ],
+};
+
+export default { gradients, trust, home, about, repair, lifetime, micro };

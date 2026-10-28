@@ -19,14 +19,25 @@ import images from "./images.js";
  * microFade: Micro Instrument hero (35098:39058), solid navy to 38.9%, clear at 94.5%, but solid at least to the end of
  *   the 593px text column (625px, or 50% - 175px once the container is centred) and fading over 300px or more.
  *   Past 1920px it stays where it is at 1920 relative to the centre (clear at 50% + 854px), like the hero photo.
+ *   The fade eases in and out (smoothstep), as a straight fade showed a line where the solid navy ends.
  */
+/** Navy from solid at `from` to clear at `to` (CSS lengths), eased in and out over 11 stops. */
+function easedFade(from, to) {
+  const stops = Array.from({ length: 11 }, (_, i) => {
+    const t = i / 10;
+    const alpha = Math.round((1 - t * t * (3 - 2 * t)) * 1000) / 1000;
+    return `rgba(0, 71, 118, ${alpha}) calc(${from} + (${to} - ${from}) * ${t})`;
+  });
+  return `linear-gradient(90deg, ${stops.join(", ")})`;
+}
+
 const gradients = {
   heroFade: "linear-gradient(90deg, #004776 0%, rgba(0, 71, 118, 0) 59%)",
   heroFadePhone: "linear-gradient(90deg, #004776 30%, rgba(0, 71, 118, 0) 100%)",
   aboutFade: "linear-gradient(90deg, #004776 14%, rgba(0, 71, 118, 0) 64%)",
   whyFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) 12%, #004776 50%)",
   valueFade: "linear-gradient(90deg, rgba(0, 71, 118, 0) min(12%, 100% - 1130px), #004776 min(50%, 100% - 950px))",
-  microFade: "linear-gradient(90deg, #004776 max(38.9%, 625px, 50% - 175px), rgba(0, 71, 118, 0) max(min(94.5%, 50% + 854px), 925px))",
+  microFade: easedFade("max(38.9%, 625px, 50% - 175px)", "max(min(94.5%, 50% + 854px), 925px)"),
   titleLine:
     "linear-gradient(90deg, rgba(245, 130, 32, 0) 0%, #f58220 16%, #f58220 30%, #ffffff 50%, #f58220 70%, #f58220 84%, rgba(245, 130, 32, 0) 100%)",
 };

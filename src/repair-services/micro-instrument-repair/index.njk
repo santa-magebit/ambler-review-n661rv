@@ -7,7 +7,8 @@ permalink: /repair-services/micro-instrument-repair/
    site's. No redesigned or phone frame exists, so the sections use the redesign's components and type scale:
    - Hero: the shared content hero with the frame's photo and fade, the title and the "Download Repair Form" button.
    - Intro and "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and
-     #f5f8fa, price column behind a navy line), as real tables. The intro asks to "fill in the repair form below", so
+     #f5f8fa), as real tables. Every cell border is the same light outline, including the line before the price
+     column that Figma draws navy. The intro asks to "fill in the repair form below", so
      the download button repeats under the prices, with "No RMA number needed." from the FAQ answer.
    - Free Lifetime Repair band: the PLP banner (34777:59015), the same seal, copy and button.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
@@ -34,12 +35,13 @@ permalink: /repair-services/micro-instrument-repair/
   {{ c.arrowButton("Download Repair Form", "#", "data-proto", "w-full md:w-auto") }}
 {% endcall %}
 
-{# Intro and Typical Repair Charges ("Content" 35098:39067): 36px between the intro, the title and the tables.
+{# Intro and Typical Repair Charges ("Content" 35098:39067): 36px between the intro, the title and the tables. The intro
+   keeps the 756px reading width of the PLP intros rather than Figma's full width.
    Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall, Bold prices in a 300px
    column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39067">
   <div class="container-page flex flex-col gap-6 py-10 md:gap-9 md:py-[50px]">
-    <p class="text-base text-body md:text-lg" data-figma="35098:39068">{{ m.intro }}</p>
+    <p class="max-w-[756px] text-base text-body md:text-lg" data-figma="35098:39068">{{ m.intro }}</p>
     <h2 id="charges-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold lg:text-h1" data-figma="35098:39069">Typical Repair Charges</h2>
     {% for box in m.charges %}
     <table class="w-full table-fixed border-collapse text-left" data-figma="{{ box.figma }}">
@@ -53,7 +55,7 @@ permalink: /repair-services/micro-instrument-repair/
         {% for row in box.rows %}
         <tr class="even:bg-menu">
           <th scope="row" class="border-b border-l border-outline px-4 py-3 font-normal md:py-[18px]">{{ row[0] | escape | replace("/", "/<wbr>") | safe }}</th>
-          <td class="border-b border-l border-r border-b-outline border-l-primary-500 border-r-outline px-4 py-3 font-bold md:py-[18px]">{{ row[1] | money }}</td>
+          <td class="border-b border-l border-r border-outline px-4 py-3 font-bold md:py-[18px]">{{ row[1] | money }}</td>
         </tr>
         {% endfor %}
       </tbody>

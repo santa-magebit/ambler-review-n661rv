@@ -5,13 +5,14 @@ permalink: /repair-services/micro-instrument-repair/
 ---
 {# Repair - Micro Instrument (Figma 35098:38988, the client's 1600px frame on the WIP page); the URL is the live
    site's. No redesigned or phone frame exists, so the sections use the redesign's components and type scale:
-   - Hero: the shared content hero with the frame's photo and fade, the title, the frame's intro (drawn under the
-     hero in Figma) and the "Download Repair Form" button.
+   - Hero: the shared content hero with the frame's photo and fade, the title and the frame's intro (drawn under the
+     hero in Figma). Figma's hero button "Download Repair Form" is left out: the form is downloaded from the request
+     strip under the prices, which the intro points to ("fill in the repair form below").
    - "Typical Repair Charges": the frame's four price tables (navy header, rows alternating white and #f5f8fa), as
      real tables. Every cell border is the same light outline, including the line before the price column that Figma
      draws navy, and the tables get the 4px corners.
-   - "Request a Repair" under the prices (not in the frame), so the repair form is offered again once the prices are
-     read: a light blue strip with the hero's instruments cut-out, picked from three options on 2026-10-28, drawn in
+   - "Request a Repair" under the prices (not in the frame), the page's one download of the repair form, once the
+     prices are read: a light blue strip with the hero's instruments cut-out, picked from three options on 2026-10-28, drawn in
      Figma as "Request a Repair - Web" (35194:1189, WIP page) for design tweaks.
    - Free Lifetime Repair band: the PLP banner (34777:59015), the same seal, copy and button.
    - "SEO Text": the PLP features list (bold lead-in, orange dashes).
@@ -30,22 +31,22 @@ permalink: /repair-services/micro-instrument-repair/
    (right edge at 50% + 991px), with white beyond it. The intro is longer than on the other heroes, so the hero grows
    past its 480px (the photo still reaches the bottom from lg; below lg it ends on white). Phones: navy behind the photo, which sits on the right under
    a 60% navy tint so the white title stays readable over the light instruments. #}
-{% call c.hero({
+{{ c.hero({
   title: "Micro / Ophthalmic Instrument Repair", text: m.intro, figma: "35098:39055", image: "d61fe469",
   bg: "bg-primary-500 md:bg-white", fade: contentPages.gradients.microFade,
   photo: "right-[-20%] top-0 h-full w-auto max-w-none md:right-[min(-1.6%,calc(100%_-_1183px))] md:top-[3px] md:h-[446px] md:w-[558px] lg:right-[max(min(-1.6%,calc(100%_-_1372px)),calc(50%_-_991px))] lg:h-[597px] lg:w-[747px]",
   scrim: "bg-primary-500/60 md:hidden"
-}) %}
-  {{ c.arrowButton("Download Repair Form", "#", "data-proto", "w-full md:w-auto") }}
-{% endcall %}
+}) }}
 
 {# Typical Repair Charges ("Content" 35098:39067, the intro moved into the hero): 36px between the title and the tables.
    The request strip follows the last table with the tables' own gap (24px, 36px from md): #eff7fd (the Free Lifetime
    Repair eligibility card) with the tables' 1px #dde7ee border, one row from md with the title and line on the left
-   and the primary download button on the right. From lg the instruments cut-out runs under the button as in the Figma strip (35194:1189):
-   598x478, turned 29.14deg clockwise around its top-left corner, which sits 372px left of the strip's right edge and
-   248px above its top; the strip crops the rest.
-   Phones: text, then the button full width.
+   and the primary download button on the right. The instruments cut-out runs under the button as in the Figma strip
+   (35194:1189): 598x478, turned 29.14deg clockwise around its top-left corner, which sits 372px left of the strip's
+   right edge and 248px above its top from lg; the strip crops the rest. From md to lg the corner moves to 230px from
+   the right edge, so the instruments start after the title. Phones: text, then the button full width, the cut-out
+   at 60% (359x287) coming in from the top-right corner (corner 40px from the right edge, 170px above the top) and
+   running under the button.
    Tables: Medium 24/32 white header (Bold service name), Regular 18/28 navy rows 64px tall with their 1px bottom line,
    Bold prices in a 300px column. Phones: 20/28 header, 16/24 rows, 112px price column; names may break after a "/". #}
 <section class="bg-white" aria-labelledby="charges-title" data-figma="35098:39067">
@@ -71,7 +72,7 @@ permalink: /repair-services/micro-instrument-repair/
     </table>
     {% endfor %}
     <section id="request-repair" aria-labelledby="request-title" class="relative isolate overflow-hidden rounded border border-outline bg-[#eff7fd]" data-figma="35194:1189">
-      <img src="{{ 'd61fe469' | img }}" alt="" loading="lazy" class="absolute left-[calc(100%_-_372px)] top-[-248px] -z-10 hidden h-[478px] w-[598px] max-w-none origin-top-left rotate-[29.14deg] lg:block">
+      <img src="{{ 'd61fe469' | img }}" alt="" loading="lazy" class="absolute left-[calc(100%_-_40px)] top-[-170px] -z-10 h-[287px] w-[359px] max-w-none origin-top-left rotate-[29.14deg] md:left-[calc(100%_-_230px)] md:top-[-248px] md:h-[478px] md:w-[598px] lg:left-[calc(100%_-_372px)]">
       <div class="flex flex-col items-start gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-6 md:px-12 md:py-10">
         <div class="flex min-w-0 flex-col gap-2">
           <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Repair</h2>

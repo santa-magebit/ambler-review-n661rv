@@ -220,7 +220,7 @@
 
 {# "Request a Repair" strip under the repair price lists (Micro Instrument 35194:1189, Cryosurgical Handpiece), the
    page's one download of the repair form: #eff7fd with the price tables' 1px #dde7ee border, one row from md with the
-   title and line on the left and the primary download button on the right, a photo of the page's instruments
+   title and line on the left and the orange download button on the right, a photo of the page's instruments
    running under the button (the strip crops it).
    r: { image (hash8), photo (classes placing the photo), figma? } #}
 {% macro requestStrip(r) %}
@@ -231,7 +231,7 @@
       <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Repair</h2>
       <p class="text-base text-body md:text-lg">No RMA number needed.</p>
     </div>
-    <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto">Download Repair Form{% icon "download" %}</a>
+    <a href="#" data-proto class="btn-accent w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto">Download Repair Form{% icon "download" %}</a>
   </div>
 </section>
 {% endmacro %}

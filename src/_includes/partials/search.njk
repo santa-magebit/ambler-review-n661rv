@@ -2,6 +2,8 @@
   Header search (styleguide "Search" input + Figma Search page):
   focused & empty = "Search - Suggestions" (34194:128358), typing = "Search - Results" (34194:128283),
   nothing found = "Search - No Search Results" (34194:128402). Logic: Alpine.data("searchBox").
+  The result sections come from the query: terms (types, names, brands) and sizes with real result counts, the
+  category pages of the matching types; a size opens the results with that Length filter. Empty sections hide.
   searchMobile: the mobile header's 52px white search row (34739:21830) instead of the rounded web field,
   and the mobile panel ("Mobile - Search - Suggestions / Results" 34194:128381, 34194:128322): flush under
   the row, 20px padding, term chips on one scrolling line, top-aligned product rows 16px apart.
@@ -45,12 +47,12 @@
     <p x-show="needle && hits.length === 0" class="py-4 text-center text-sm text-heading">We couldn&rsquo;t find anything for your search</p>
     {# Results #}
     <div x-show="needle && hits.length > 0" class="flex flex-col {{ 'gap-5' if searchMobile else 'gap-6' }}">
-      <section>
+      <section x-show="terms.length">
         <h3 class="mb-4 text-sm font-bold text-heading">Search Terms</h3>
         <div class="{{ chipRow }}">
-          {% for t in site.search.termCounts %}
-          <button type="button" @click="go('{{ t[0] }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base hover:border-primary-500 {{ 'font-medium text-ink' if searchMobile else 'text-body' }}">{{ t[0] }}<span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink">{{ t[1] }}</span></button>
-          {% endfor %}
+          <template x-for="t in terms" :key="t.label">
+            <button type="button" @click="go(t.label)" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base hover:border-primary-500 {{ 'font-medium text-ink' if searchMobile else 'text-body' }}"><span x-text="t.label"></span><span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink" x-text="t.count"></span></button>
+          </template>
         </div>
       </section>
       <section>
@@ -58,26 +60,25 @@
         <ul class="flex flex-col {{ 'gap-4' if searchMobile else 'gap-2' }}">
           <template x-for="p in hits" :key="p.slug">{% include "partials/search-row.njk" %}</template>
         </ul>
+        <button type="button" x-show="found.length > hits.length" @click="go(q)" class="link mt-4 text-base">View all <span x-text="found.length"></span> results</button>
       </section>
-      <section>
+      <section x-show="categories.length">
         <h3 class="mb-4 text-sm font-bold text-heading">Categories</h3>
         <ul class="flex flex-col gap-4 text-base">
-          <li>
-            <a href="/browse-by-specialty/ophthalmology/instruments/scissors/" class="text-body hover:text-primary-500">Surgical Scissors</a>
-            <span class="mt-0.5 flex items-center gap-1 text-sm italic text-body">in Ophthalmology {% icon "chevron-right", "h-5 w-5" %} General Surgery</span>
-          </li>
-          <li>
-            <a href="/browse-by-type/needle-holders/" class="text-body hover:text-primary-500">Needle Holders</a>
-            <span class="mt-0.5 block text-sm italic text-body">in Orthopedics</span>
-          </li>
+          <template x-for="c in categories" :key="c.url">
+            <li>
+              <a :href="url(c.url)" class="text-body hover:text-primary-500" x-text="c.name"></a>
+              <span class="mt-0.5 block text-sm italic text-body" x-text="'in ' + c.specialty"></span>
+            </li>
+          </template>
         </ul>
       </section>
-      <section>
+      <section x-show="sizes.length">
         <h3 class="mb-4 text-sm font-bold text-heading">Size</h3>
         <div class="flex flex-wrap {{ 'gap-3' if searchMobile else 'gap-2' }}">
-          {% for t in site.search.sizes %}
-          <button type="button" @click="go(q + ' {{ t[0] | replace('"', '') }}')" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500">{{ t[0] }}<span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink">{{ t[1] }}</span></button>
-          {% endfor %}
+          <template x-for="z in sizes" :key="z.label">
+            <button type="button" @click="go(q, { length: z.label })" class="flex items-center gap-2 rounded border border-secondary-200 px-5 py-3 text-base text-body hover:border-primary-500"><span x-text="z.label"></span><span class="rounded border border-secondary-200 bg-white px-1 py-0.5 text-sm font-bold text-ink" x-text="z.count"></span></button>
+          </template>
         </div>
       </section>
     </div>

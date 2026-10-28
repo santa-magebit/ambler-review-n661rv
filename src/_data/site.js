@@ -40,7 +40,5 @@ export default {
   // Search dropdown content (Figma "Search - Suggestions" / "Search - Results").
   search: {
     popularTerms: ["Forceps", "Scissors", "Retractors", "Needle Holders", "Rongeurs", "Clamps"],
-    termCounts: [["Forceps", 82], ["Scissors", 56], ["Retractors", 34]],
-    sizes: [['5"', 42], ['6"', 67], ['7"', 31], ['8"', 19], ['9"', 25]],
   },
 };

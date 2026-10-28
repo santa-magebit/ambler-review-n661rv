@@ -21,8 +21,8 @@ document.addEventListener("alpine:init", () => {
     { value: "price-desc", label: "Price high to low" },
   ];
   const lower = (s) => String(s || "").toLowerCase();
-  /** Same fields as the header search (app.js searchBox): name, item number, description, type. */
-  const matches = (p, needle) => !needle || [p.name, p.sku, p.description, p.typeName].some((v) => lower(v).includes(needle));
+  /** Same fields as the header search (app.js searchBox): name, item number, description, type, brand. */
+  const matches = (p, needle) => !needle || [p.name, p.sku, p.description, p.typeName, p.brandName].some((v) => lower(v).includes(needle));
   const groupOf = (key) => key.slice(0, key.indexOf(":"));
   const byName = (a, b) => a.p.name.localeCompare(b.p.name, "en", { sensitivity: "base" });
 

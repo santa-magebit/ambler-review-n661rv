@@ -838,6 +838,15 @@ const browseTypeIndex = {
 /** Search results: every catalog product can match (the header search uses the same set). */
 const search = listing(products, { title: "results", id: "search-results", search: true });
 
+/**
+ * What the header search dropdown suggests besides products (app.js searchBox): the specialty category pages
+ * (Categories) and the instrument names the filters know (Search Terms, with types and brands from the catalog).
+ */
+const searchIndex = {
+  categories: typePages.map((t) => ({ name: t.name, url: t.url, specialty: t.specialty.name })),
+  names: eponyms,
+};
+
 export default {
   diagonal,
   turn,
@@ -858,4 +867,5 @@ export default {
   brandPages,
   productLinePage,
   search,
+  searchIndex,
 };

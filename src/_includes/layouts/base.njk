@@ -16,6 +16,7 @@
   <script>
     window.BASE = "{{ base }}";
     window.CATALOG = {{ catalog.products | json | safe }};
+    window.SEARCH = {{ plp.searchIndex | json | safe }};
     window.TEST_ACCOUNT = {{ site.testAccount | json | safe }};
   </script>
   {# Store/component registration must run before Alpine starts. #}

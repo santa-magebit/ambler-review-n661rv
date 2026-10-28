@@ -243,6 +243,21 @@
       };
     });
 
+    const SEARCH = window.SEARCH || { categories: [], names: [] };
+    const searchMatches = (n) =>
+      n ? CATALOG.filter((p) => [p.name, p.sku || "", p.description, p.typeName, p.brandName].some((v) => v.toLowerCase().includes(n))) : [];
+    /** A product's length as the listing's Length filter writes it (plp.js facetsOf), e.g. '4 3/8"'. */
+    const lengthOf = (p) => {
+      const m = (p.description || "").split(/,\s*/).map((s) => s.trim().match(/^(\d+(?: \d+\/\d+)?)(?:''|")$/)).find(Boolean);
+      return m ? `${m[1]}"` : null;
+    };
+    /** '4 3/8"' -> 4.375, to list sizes from short to long. */
+    const inches = (label) =>
+      label.replace('"', "").split(" ").reduce((sum, part) => {
+        const [a, b] = part.split("/");
+        return sum + (b ? a / b : Number(a));
+      }, 0);
+
     Alpine.data("searchBox", () => ({
       q: "",
       open: false,
@@ -253,14 +268,47 @@
       get recent() {
         return CATALOG.filter((p) => !p.sku);
       },
+      /** Every product the search page would list for the query (same fields as plp.js `matches`). */
+      get found() {
+        return searchMatches(this.needle);
+      },
       get hits() {
+        return this.found.slice(0, 3);
+      },
+      /** Search Terms: instrument types, names and brands containing the query, with their result counts. */
+      get terms() {
         const n = this.needle;
         if (!n) return [];
-        return CATALOG.filter((p) => [p.name, p.sku || "", p.description, p.typeName].some((v) => v.toLowerCase().includes(n))).slice(0, 3);
+        const words = [...new Set([...CATALOG.flatMap((p) => [p.typeName, p.brandName]), ...SEARCH.names])];
+        return words
+          .filter((w) => w.toLowerCase().includes(n))
+          .map((w) => ({ label: w, count: searchMatches(w.toLowerCase()).length }))
+          .filter((t) => t.count)
+          .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+          .slice(0, 4);
       },
-      go(term) {
+      /** Categories: the specialty category pages of the types the query names, then of the types with most results. */
+      get categories() {
+        const n = this.needle;
+        if (!n) return [];
+        const perType = new Map();
+        for (const p of this.found) perType.set(p.typeName.toLowerCase(), (perType.get(p.typeName.toLowerCase()) || 0) + 1);
+        const rank = (c) => (c.name.toLowerCase().includes(n) ? 1000 : 0) + (perType.get(c.name.toLowerCase()) || 0);
+        return SEARCH.categories.filter((c) => rank(c) > 0).sort((a, b) => rank(b) - rank(a)).slice(0, 4);
+      },
+      /** Size: the lengths of the results with their counts; each opens the results with that Length filter. */
+      get sizes() {
+        const counts = new Map();
+        for (const p of this.found) {
+          const len = lengthOf(p);
+          if (len) counts.set(len, (counts.get(len) || 0) + 1);
+        }
+        return [...counts].map(([label, count]) => ({ label, count })).sort((a, b) => inches(a.label) - inches(b.label));
+      },
+      go(term, params = {}) {
         this.open = false;
-        window.location.href = url(`/search/?q=${encodeURIComponent(String(term).trim())}`);
+        const qs = new URLSearchParams({ q: String(term).trim(), ...params });
+        window.location.href = url(`/search/?${qs}`);
       },
     }));
 

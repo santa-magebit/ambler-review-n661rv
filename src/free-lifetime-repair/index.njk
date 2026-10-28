@@ -8,8 +8,8 @@ permalink: /free-lifetime-repair/
    requested:
    - Hero: the "*" after the intro links to the fine print (the frame's hidden "btn" 35122:1303 stays hidden).
    - "What's Included" cards are information, not links: no arrow and no hover, so they don't promise a page.
-   - "Request a Free Repair" (35122:1338) adds the three steps from amblersurgical.com/repair-services ("No RMA number
-     needed") under the band, and has one download button instead of a button and an inline link to the same form.
+   - "Request a Free Repair" (35122:1338) is the repair pages' request strip with the client's title and line, with
+     one download button instead of a button and an inline link to the same form.
    - "See all restrictions & exclusions" and the FAQ link jump to the fine print at the end.
    - The FAQ loads closed (Figma's open third answer is an example state); every question has an answer.
    No copy is added beyond what helps the visitor act: the rest is the client's (35098:38806) or the old site's. #}
@@ -92,36 +92,17 @@ permalink: /free-lifetime-repair/
       </ul>
     </section>
 
+    {# Request a Free Repair (client 35098:38904): the repair pages' Request a Repair strip (c.requestStrip) with the
+       client's title and line and the Micro Instrument strip's instruments photo at its md size and angle, 140px
+       further right so it runs only under the button: the client's line is longer than "No RMA number needed." and
+       would run under the photo. Phones have no room beside the text, so no photo there. #}
+    {{ c.requestStrip({
+      title: "Request a Free Repair", text: l.request, image: "d61fe469", figma: "35122:1338",
+      photo: "hidden md:block left-[calc(100%_-_90px)] top-[-248px] h-[478px] w-[598px] origin-top-left rotate-[29.14deg] lg:left-[calc(100%_-_232px)]"
+    }) }}
+
   </div>
 </div>
-
-{# Request a Free Repair (35122:1338): a full-width band in Figma's secondary-100
-   (#f1f5f8, like the badge band under the hero), title and text left, the client's download button right. Under an
-   outline-colour line the three steps, numbered 01-03 in large light navy rather than with the badge band's icon
-   circles, so the two bands don't read as one component: one row from xl, split by outline-colour rules, and
-   stacked below that with the numeral beside each step. #}
-<section id="request-repair" aria-labelledby="request-title" class="{{ anchor }} bg-secondary-100" data-figma="35122:1338">
-  <div class="container-page flex flex-col gap-6 py-8 md:gap-8 md:py-10">
-    <div class="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
-      <div class="flex min-w-0 flex-col gap-2" data-figma="35122:1341">
-        <h2 id="request-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Request a Free Repair</h2>
-        <p class="text-base text-body md:text-lg">No RMA number needed. You only pay the shipping.</p>
-      </div>
-      <a href="#" data-proto class="btn-primary w-full shrink-0 whitespace-nowrap pr-[30px] md:w-auto" data-figma="35122:1344">Download Repair Form{% icon "download" %}</a>
-    </div>
-    <ol class="grid divide-y divide-outline border-t border-outline xl:grid-cols-3 xl:divide-x xl:divide-y-0">
-      {% for s in l.steps %}
-      <li class="flex min-w-0 items-start gap-5 py-6 last:pb-0 md:py-8 md:last:pb-0 xl:flex-col xl:gap-3 xl:px-8 xl:pb-0 xl:first:pl-0 xl:last:pr-0">
-        <span aria-hidden="true" class="w-12 shrink-0 text-[40px] font-bold leading-none text-primary-500/30 md:text-5xl xl:w-auto">0{{ loop.index }}</span>
-        <div class="flex min-w-0 flex-col gap-1">
-          <h3 class="text-lg font-bold text-heading"><span class="sr-only">Step {{ loop.index }}: </span>{{ s.title }}</h3>
-          <p class="text-base text-body">{{ s.text }}</p>
-        </div>
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-</section>
 
 {# Quality Instruments. Long-Term Value. ("SEO Section" 35122:1354): the hands photo under a navy fade, text on the
    right, as drawn. From xl the fade (valueFade) is solid navy before the

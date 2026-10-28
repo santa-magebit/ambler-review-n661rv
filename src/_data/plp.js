@@ -575,11 +575,16 @@ const productLinesPage = {
   title: "by Product Lines",
   heroText:
     "Ambler Surgical is proud to be a distributor for some of the biggest names in ophthalmic instruments and products, including Duckworth & Kent, Volk Optical, Ocular Instruments, Mastel Precision, Bovie Medical and many more. If you order ophthalmic instruments and specialty ophthalmic products, you could be saving money by ordering those products from Ambler Surgical.",
-  // "Popular Product Lines" cards: [line, logo tile, hover photo of the line's products]. Figma draws only the
-  // Duckworth & Kent hover (34907:8389) and no tile for it, so that card shows the line's logo at its drawn width.
+  // "Popular Product Lines" cards: [line, logo tile, hover photo of the line's products, how the photo sits:
+  // "contain" whole, "turn" whole and turned to the category cards' diagonal (a long, flat instrument)].
+  // Figma draws only the Duckworth & Kent hover (34907:8389) and no tile for it, so that card shows the line's logo at
+  // its drawn width. Ambler, Volk and Mastel reuse Repair Services card photos (Ambler instruments, lenses, a diamond
+  // knife); Ocular, Epsilon, Geuder and Bovie use a product photo from their amblersurgical.com product line pages.
   popular: [
-    ["ambler-surgical", "cd1d303a"], ["duckworth-and-kent", null, "b7a3c44f"], ["ocular-instruments", "eb36808d"], ["volk-optical", "2df98bc7"],
-    ["mastel-precision", "5d62af3b"], ["epsilon", "a5e4aafa"], ["geuder", "5266a0eb"], ["bovie-medical", "88a31f74"],
+    ["ambler-surgical", "cd1d303a", "d61fe469"], ["duckworth-and-kent", null, "b7a3c44f"],
+    ["ocular-instruments", "eb36808d", "b6d1bd41", "contain"], ["volk-optical", "2df98bc7", "cef4ff5f", "contain"],
+    ["mastel-precision", "5d62af3b", "c565e376", "contain"], ["epsilon", "a5e4aafa", "dba36ba3", "turn"],
+    ["geuder", "5266a0eb", "21df6061", "turn"], ["bovie-medical", "88a31f74", "39414cc1", "turn"],
   ],
 };
 
@@ -800,12 +805,14 @@ const brandPages = lines.map((b) => {
 const featuredLines = ["ambler-surgical", "duckworth-and-kent", "ocular-instruments", "volk-optical"];
 const productLinePage = {
   ...productLinesPage,
-  popular: productLinesPage.popular.map(([slug, tile, photo]) => {
+  popular: productLinesPage.popular.map(([slug, tile, photo, photoFit]) => {
     const b = lines.find((x) => x.slug === slug);
     return {
       name: b.name, href: b.url, count: ownCount((p) => p.brand === slug),
       ...(tile ? { image: images[tile] } : { logo: { src: b.logo, width: logoWidths[slug] } }),
       hoverImage: photo ? images[photo] : null,
+      hoverFit: photoFit ? "contain" : null,
+      hoverStyle: photoFit === "turn" ? diagonal : null,
     };
   }),
   // "All Product Lines" in the drawn "Featured" order: four lines first, then A to Z.

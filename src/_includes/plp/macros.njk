@@ -81,7 +81,7 @@
   and the description replaces the photo when Figma draws one. Phones ("category-card" 34726:18657):
   350x200, 44px strip with title 20/28 and count 16/24.
   Product lines (34907:8389): the hover shows a photo of the brand's products in place of its logo instead.
-  c: { name, href, count?, image, fit ("cover"|"contain"), hover?: [paragraphs], hoverImage?,
+  c: { name, href, count?, image, fit ("cover"|"contain"), hover?: [paragraphs], hoverImage?, hoverFit? ("contain"), hoverStyle? (a turn, plp.diagonal),
        logo?: { src, width } (the logo at its drawn width, centred, when there is no logo tile) }
 #}
 {% macro categoryCard(c, figma="34719:11312") %}
@@ -98,7 +98,7 @@
     <img src="{{ c.image }}" alt="" loading="lazy" class="h-full w-full {{ 'object-contain' if c.fit == 'contain' else 'object-cover' }} {{ 'max-md:object-contain' if c.mobileFit == 'contain' }} {{ 'object-[50%_30%] md:object-top' if c.position == 'top' }} {{ 'group-hover:opacity-0 group-focus-visible:opacity-0' if c.hover or c.hoverImage }} {{ 'mix-blend-multiply max-md:![transform:var(--m)]' if c.style }}" {% if c.style %}style="{{ c.style }}{% if c.mobileTransform %}; --m: {{ c.mobileTransform }}{% endif %}"{% endif %}>
     {% endif %}
     {% if c.hoverImage %}
-    <img src="{{ c.hoverImage }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+    <img src="{{ c.hoverImage }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full {{ 'object-contain' if c.hoverFit == 'contain' else 'object-cover' }} {{ 'p-4' if c.hoverFit == 'contain' and not c.hoverStyle }} opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100" {% if c.hoverStyle %}style="{{ c.hoverStyle }}"{% endif %}>
     {% endif %}
     {% if c.hover %}
     <span class="absolute inset-0 flex flex-col gap-2 p-5 text-base text-primary-500 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">

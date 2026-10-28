@@ -16,6 +16,7 @@ export default {
   "1e1f2c9e": "/img/1e1f2c9e.jpg", // mobile-header 366x310
   "209da060": "/img/209da060.jpg", // mobile-header 366x200
   "2198b407": "/img/2198b407.png", // image 108x108
+  "21df6061": "/img/21df6061.jpg", // Geuder D.D. Koch aspiration handpiece G-22100, amblersurgical.com product photo 1400x313 (Product Lines hover)
   "21fc3c67": "/img/21fc3c67.png", // Eye Image 1920x480
   "2578dcdb": "/img/2578dcdb.jpg", // Eye Image 1960x490
   "272be983": "/img/272be983.png", // image 195x32
@@ -25,6 +26,7 @@ export default {
   "31a47e5d": "/img/31a47e5d.png", // mobile-header 496x286
   "35ef7b05": "/img/35ef7b05.jpg", // mobile-header 366x258
   "393cbe8d": "/img/393cbe8d.png", // mobile-header 366x310 (Free Lifetime Repair needle holder)
+  "39414cc1": "/img/39414cc1.jpg", // Bovie Aaron Ophthalmic Burr II 3491E, amblersurgical.com product photo 1400x328 (Product Lines hover)
   "3971ee67": "/img/3971ee67.jpg", // img 108x108
   "3a05cae8": "/img/3a05cae8.jpg", // image 5 37x24
   "3b03abda": "/img/3b03abda.jpg", // volk_optical_logo 1 141x44
@@ -88,6 +90,7 @@ export default {
   "ae00e760": "/img/ae00e760.jpg", // mobile-header 366x200
   "af014b52": "/img/af014b52.jpg", // Brand Image 134x38
   "b36bba42": "/img/b36bba42.png", // ambler.logo 2 165x42
+  "b6d1bd41": "/img/b6d1bd41.jpg", // Ocular MaxAC 20D lens OI-20A, amblersurgical.com product photo 600x400 (Product Lines hover)
   "b7a3c44f": "/img/b7a3c44f.png", // mobile-header 366x310
   "b92bdf3f": "/img/b92bdf3f.jpg", // mobile-header 366x310
   "bdd345e8": "/img/bdd345e8.jpg", // Oph Forceps Header Graphic 1081x636
@@ -110,6 +113,7 @@ export default {
   "d61fe469": "/img/d61fe469.png", // mobile-header 496x286
   "d76b9f33": "/img/d76b9f33.png", // mobile-header 496x286
   "db601ef3": "/img/db601ef3.png", // mobile-header 496x286
+  "dba36ba3": "/img/dba36ba3.jpg", // Epsilon Castroviejo tying forceps ECF-02, amblersurgical.com product photo 1400x365 (Product Lines hover)
   "de7cda38": "/img/de7cda38.jpg", // Hero 1920x424
   "e1b2ee1e": "/img/e1b2ee1e.jpg", // mobile-header 366x200
   "e239b139": "/img/e239b139.png", // image 195x32

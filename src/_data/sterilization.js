@@ -26,15 +26,31 @@ export default {
    * of an Ophthalmology card) and its Cleaning Brushes card shows a forceps, so Trays gets the 93-200 tray and
    * Cleaning Brushes the 243001BBG brush from the live site; Instrument Guards and Ultrasonic Cleaners keep the
    * frame's photos.
+   * Hover: the description in place of the photo, as the drawn Trays card, two lines like the PLP category cards:
+   * what the category is for, then what it includes. From the live category pages
+   * (amblersurgical.com/sterilization-cleaning/sterilization-cleaning-<slug>, 2026-10-29): their text, or the meta
+   * description where a page has none (Instrument Guards, Ultrasonic Cleaners), and their product names.
    */
   cards: [
-    ["trays", "446ebfcc"],
-    ["instrument-guards", "2c25871a"],
-    ["cleaning-brushes", "622363e5"],
-    ["ultrasonic-cleaners", "1582796d"],
-  ].map(([slug, image]) => {
+    ["trays", "446ebfcc", [
+      "Durable sterilization and cleaning trays engineered for repeated autoclave use, instrument protection and contamination control.",
+      "Includes micro-surgical trays, scope sterilization trays and K-wire dispensers, with silicone mat inserts.",
+    ]],
+    ["instrument-guards", "2c25871a", [
+      "Instrument guards for sterilization and cleaning, in different designs and sizes.",
+      "Sizes 1 to 9, vented and non-vented, clear or solid colors, latex-free, plus osteotome tip protectors.",
+    ]],
+    ["cleaning-brushes", "622363e5", [
+      "Small hand brushes used to scrub soil from surgical instruments by hand before sterilization.",
+      "Includes SafeClean, toothbrush-style and Fan-Tip designs, cleaning stylets, tracheostomy brushes and kits.",
+    ]],
+    ["ultrasonic-cleaners", "1582796d", [
+      "Ultrasonic cleaners for sterilization, in different designs and sizes.",
+      "Bransonic® tabletop cleaners with digital or mechanical timers, plus trays, mesh baskets and support racks.",
+    ]],
+  ].map(([slug, image, hover]) => {
     const c = catalog.sterilization.find((s) => s.slug === slug);
-    return { name: c.name, href: c.href, image: images[image], fit: "contain", proto: true };
+    return { name: c.name, href: c.href, image: images[image], fit: "contain", proto: true, hover };
   }),
   /**
    * Popular Products (35098:39550): the frame repeats one cannula as a placeholder; these are eight of the live page's

@@ -58,12 +58,14 @@ eleventyComputed:
 {{ plp_ui.listing(bt.listing, "34723:17181", false, "pb-8 pt-10") }}
 {% if bt.band %}{{ plp_ui.infoBand(bt.band, "py-10") }}{% endif %}
 {% if bt.seo %}
-<section class="border-outline bg-white md:border-t md:bg-[#f5f7fa]" data-figma="{{ bt.seo.figma }}">
+<section class="border-outline bg-white md:bg-[#f5f7fa] {{ 'md:border-t' if not bt.band }}" data-figma="{{ bt.seo.figma }}">
   <div class="container-page py-10 md:pb-5">
     <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">{{ bt.seo.title }}</h2>
     <div class="mt-4 flex max-w-[856px] flex-col gap-4 md:mt-6">{% for p in bt.seo.paragraphs %}<p class="text-base text-body md:text-lg">{{ p }}</p>{% endfor %}</div>
   </div>
 </section>
 {% endif %}
-{# From md the SEO text and the FAQ are one tinted block: its top line is on the SEO section, none between them. #}
-{{ plp_ui.faq(plp.faq.general, "34887:118753", "wide", "#f5f7fa", "pt-10 md:pt-5" if bt.seo else "pt-10", "border-y md:border-t-0" if bt.seo else "border-y") }}
+{# From md the SEO text and the FAQ are one tinted block: its top line is on the SEO section, none between them
+   (on phones the SEO text is white, so the FAQ keeps its own). No top line right under the navy info band. #}
+{% if bt.seo %}{% set faqBorder = "border-y md:border-t-0" %}{% else %}{% set faqBorder = "border-b" if bt.band else "border-y" %}{% endif %}
+{{ plp_ui.faq(plp.faq.general, "34887:118753", "wide", "#f5f7fa", "pt-10 md:pt-5" if bt.seo else "pt-10", faqBorder) }}

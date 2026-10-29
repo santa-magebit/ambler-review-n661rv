@@ -34,7 +34,7 @@
       </li>
       {% endfor %}
       <li>
-        <button type="button" @click="$store.auth.signOut(); window.location.href = url('/')"
+        <button type="button" @click="$store.auth.signOut(); window.location.href = url('/customer/account/logoutSuccess/')"
                 class="flex h-[57px] w-full items-center gap-3 border-b border-secondary-200 px-5 text-left text-base font-medium text-body hover:text-ink md:h-16 md:border-b-0">
           {% icon "door-exit", "h-6 w-6 md:text-primary-500" %}Sign Out
         </button>

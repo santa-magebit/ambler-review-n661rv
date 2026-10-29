@@ -91,15 +91,22 @@
 </div>
 {% endmacro %}
 
-{# Empty state (Address Book 23115:35472, My Orders 32215:84211): white box, #dde7ee border, 160px illustration.
+{# Empty state (Address Book 23115:35472, My Orders 32215:84211, Signed Out 29434:83823): white box, #dde7ee
+   border, 160px illustration.
    Phones (23115:35480, 21071:136476): 40px padding, 24px under the illustration, Medium 20/28 ink title;
-   btnGap: space above the button on phones (24px Address Book, 32px My Orders). #}
-{% macro emptyState(image, title, text, href, linkLabel, figma="", padding="md:py-[60px]", btnGap="mt-6") %}
+   btnGap: space above the button on phones (24px Address Book, 32px My Orders); no href, no button.
+   size "md": a sentence as the title (Signed Out), Medium 18/28 ink, 20/28 from md, title and text 376px wide as
+   drawn. #}
+{% macro emptyState(image, title, text, href="", linkLabel="", figma="", padding="md:py-[60px]", btnGap="mt-6", size="lg") %}
+{% set sizes = {
+  lg: ["text-h4 font-medium tracking-title text-ink md:text-h2 md:font-bold md:tracking-normal md:text-heading", "max-w-[500px]"],
+  md: ["max-w-[376px] text-lg font-medium tracking-title text-ink md:text-h4", "max-w-[376px]"]
+}[size] %}
 <div class="flex flex-col items-center rounded border border-outline bg-white p-[39px] text-center md:px-6 {{ padding }}" {% if figma %}data-figma="{{ figma }}"{% endif %}>
   <img src="{{ image }}" alt="" width="160" height="160" class="h-40 w-40">
-  <h2 class="mt-6 text-h4 font-medium tracking-title text-ink md:mt-8 md:text-h2 md:font-bold md:tracking-normal md:text-heading">{{ title }}</h2>
-  <p class="mt-2 max-w-[500px] text-base text-body">{{ text }}</p>
-  <a href="{{ href }}" class="btn-primary {{ btnGap }} md:mt-8">{{ linkLabel }}</a>
+  <h2 class="mt-6 md:mt-8 {{ sizes[0] }}">{{ title }}</h2>
+  <p class="mt-2 text-base text-body {{ sizes[1] }}">{{ text }}</p>
+  {% if href %}<a href="{{ href }}" class="btn-primary {{ btnGap }} md:mt-8">{{ linkLabel }}</a>{% endif %}
 </div>
 {% endmacro %}
 

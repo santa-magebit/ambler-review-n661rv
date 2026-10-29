@@ -31,6 +31,7 @@ come from the "Styleguide and Spacing" page (`14714:56317`) and live in
 | `/customer/account/login/` | My Account | Login | `14714:118247` |
 | `/customer/account/create/` | My Account | Creating New Account | `14714:118278` |
 | `/customer/account/forgotpassword/` | My Account | Password Reset | `14714:118400` |
+| `/customer/account/logoutSuccess/` | (section Signed Out) | Signed Out, Mobile - Signed Out (where Sign Out leads; home after 5 s) | `29434:83818`, `29434:83809` |
 | `/customer/account/` | My Account | Dashboard | `14714:137050` |
 | `/customer/address/` | My Account | Dashboard - Address Book | `14714:137202` |
 | `/customer/address/new/` | My Account | Dashboard - New Address | `14714:137391` |

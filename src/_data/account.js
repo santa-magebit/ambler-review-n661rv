@@ -101,9 +101,11 @@ export default {
   ],
 
   // Empty-state illustrations, exported from Figma as SVG:
-  // "No Addresses" (23115:35474) and "illustration_empty-box" (32215:84213).
+  // "No Addresses" (23115:35474), "illustration_empty-box" (32215:84213) and "illustration_empty-clock"
+  // (17024:402183, Signed Out).
   illustrations: {
     noAddresses: "/img/illustrations/no-addresses.svg",
     emptyBox: "/img/illustrations/empty-box.svg",
+    emptyClock: "/img/illustrations/empty-clock.svg",
   },
 };

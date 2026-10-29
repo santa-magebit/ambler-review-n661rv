@@ -82,6 +82,23 @@
       },
     }));
 
+    /**
+     * Signed Out (29434:83818), Magento's /customer/account/logoutSuccess/: home after 5 seconds, as the page
+     * says. Only when reached by Sign Out (app.js auth.signOut leaves a mark), so the page can be opened for review.
+     */
+    Alpine.data("signedOut", () => ({
+      init() {
+        let fromSignOut = false;
+        try {
+          fromSignOut = sessionStorage.getItem("ambler-proto-signed-out") === "1";
+          sessionStorage.removeItem("ambler-proto-signed-out");
+        } catch {
+          /* storage blocked: the page stays */
+        }
+        if (fromSignOut) setTimeout(() => go("/"), 5000);
+      },
+    }));
+
     /** Forgot Your Password? (14714:118400): show the confirmation in place of the form. */
     Alpine.data("forgotPassword", () => ({
       email: "",

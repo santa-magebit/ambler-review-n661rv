@@ -1,0 +1,16 @@
+---
+layout: layouts/base.njk
+title: You have signed out
+permalink: /customer/account/logoutSuccess/
+---
+{% import "account/macros.njk" as acc with context %}
+{# Signed Out (Figma 29434:83818; phones "Mobile - Signed Out" 29434:83809), Magento's logout success page, where
+   Sign Out leads. Built from the Ambler account pages' parts: the centred page title of Customer Login (Bold 40/48,
+   phones Medium 28/36) and the account empty state (white box, #dde7ee border, 160px illustration) with the frame's
+   two lines and no button, as the page sends the visitor home itself (account.js signedOut). The redirect line is
+   the box title in Figma's Medium 20/28 ink (phones 18/28), not the empty state's 32px, as the page title above
+   already says it. 40px between the title and the box, 80px under it (phones 32px all round). #}
+<div x-data="signedOut" class="container-page flex flex-col gap-8 py-8 md:gap-10 md:pb-20 md:pt-10" data-figma="29434:83821">
+  <h1 class="text-center text-mobile-h1 font-medium tracking-title text-heading md:text-h1 md:font-bold md:tracking-normal">You have signed out</h1>
+  {{ acc.emptyState(account.illustrations.emptyClock, "You have signed out and will be redirected to our homepage in 5 seconds.", "Thank you for your visit, we’re looking forward to seeing you again soon.", figma="29434:83823", size="md") }}
+</div>

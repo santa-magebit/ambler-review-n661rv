@@ -54,15 +54,16 @@ permalink: /free-lifetime-repair/
   <div class="container-page flex flex-col gap-10 py-10 md:gap-[60px] md:py-[60px]">
 
     {# Confidence block, as the client's frame (35098:38871): on white, no box, the seal (248x260 at 1600) beside the
-       title and text from md, the restrictions link under the text. Phones, compact: an 80px seal beside the title,
-       the text and link full width under them, 12px apart. #}
-    <section id="eligibility" aria-labelledby="eligibility-title" class="{{ anchor }} grid grid-cols-[80px_minmax(0,1fr)] items-center gap-x-4 gap-y-3 md:flex md:flex-row md:items-center md:gap-8 xl:gap-11" data-figma="35098:38871">
-      <span class="relative block h-[84px] w-20 shrink-0 overflow-hidden md:h-[168px] md:w-40 xl:h-[260px] xl:w-[248px]">
+       title and text from md, the restrictions link under the text. Phones, compact: the title on the left with an
+       80px seal in the top-right corner beside it, the text and link full width under them, 12px apart. The text
+       keeps the 756px reading width. #}
+    <section id="eligibility" aria-labelledby="eligibility-title" class="{{ anchor }} grid grid-cols-[minmax(0,1fr)_80px] items-start gap-x-4 gap-y-3 md:flex md:flex-row md:items-center md:gap-8 xl:gap-11" data-figma="35098:38871">
+      <span class="relative col-start-2 row-start-1 block h-[84px] w-20 shrink-0 overflow-hidden md:h-[168px] md:w-40 xl:h-[260px] xl:w-[248px]">
         <img src="{{ 'a3c1af5e' | img }}" alt="Free Lifetime Repair seal" class="absolute left-[-7.41%] top-[-3.98%] h-[107.96%] w-[112.96%] max-w-none">
       </span>
       <div class="contents md:flex md:min-w-0 md:flex-1 md:flex-col md:items-start md:gap-6">
-        <h2 id="eligibility-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">{{ l.confidence.title }}</h2>
-        <p class="col-span-2 text-base text-body md:text-lg">{{ l.confidence.text }}</p>
+        <h2 id="eligibility-title" class="col-start-1 row-start-1 text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">{{ l.confidence.title }}</h2>
+        <p class="col-span-2 max-w-[756px] text-base text-body md:text-lg">{{ l.confidence.text }}</p>
         <a href="#restrictions" class="link col-span-2 justify-self-start text-base">See all restrictions &amp; exclusions</a>
       </div>
     </section>
@@ -127,12 +128,12 @@ permalink: /free-lifetime-repair/
 {{ c.faqSection(l.faq, { section: "35122:1381", list: "35122:1384", card: "35122:1406" }, "") }}
 
 {# Restrictions & Exclusions: the fine print the "*" and the restriction links jump to, straight under the FAQ band
-   with no line between them (the band has no lines on this page). #}
+   with no line between them (the band has no lines on this page), in the 756px reading width. #}
 <section id="restrictions" aria-labelledby="restrictions-title" class="{{ anchor }} bg-white" data-figma="35122:1416">
   <div class="container-page flex flex-col gap-4 pb-10 pt-8 md:pb-[60px] md:pt-10">
     <h2 id="restrictions-title" class="text-base font-bold text-heading">*Restrictions &amp; Exclusions of the Free Lifetime Repair Program</h2>
     {% for r in l.restrictions %}
-    <p class="text-sm text-body"><strong class="font-bold text-heading">{{ r.label }}</strong> {{ r.text }}{% if r.link %} <a href="{{ r.link.href }}" class="link">{{ r.link.label }}</a>{{ r.after }}{% endif %}</p>
+    <p class="max-w-[756px] text-sm text-body"><strong class="font-bold text-heading">{{ r.label }}</strong> {{ r.text }}{% if r.link %} <a href="{{ r.link.href }}" class="link">{{ r.link.label }}</a>{{ r.after }}{% endif %}</p>
     {% endfor %}
   </div>
 </section>

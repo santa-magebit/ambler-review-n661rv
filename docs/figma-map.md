@@ -45,6 +45,7 @@ come from the "Styleguide and Spacing" page (`14714:56317`) and live in
 | `/repair-services/micro-instrument-repair/` | WIP | Repair - Micro Instrument (client's 1600px frame, built with the redesign's components; FAQ answers from the live page) | `35098:38988` |
 | `/repair-services/cryosurgical-handpiece-repair/` | WIP | Repair - Cryosurgical Handpiece (client's 1600px frame, built like Micro Instrument; FAQ answers from the live page) | `35098:39248` |
 | `/sterilization-cleaning/` | WIP | Sterilation Products (client's 1600px frame, built with the PLP Category page components; products and SEO copy from the live page) | `35098:39421` |
+| `/404.html` (missing pages) | (sketch) | 404 page, web and mobile (built from the redesign's blocks and photos instead of the sketch's box and illustration) | `29434:83743` |
 | `/conditions-of-sale/` | WIP | Conditions of Sale (client's 1600px frame drawing sections 1, 2 and 4.7; the full text and anchors are the live page's) | `35098:39725` |
 
 Not designed in Figma, built in the same style: `/browse-by-specialty/`,

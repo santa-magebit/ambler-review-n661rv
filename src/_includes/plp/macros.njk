@@ -150,10 +150,11 @@
   "Popular Products" (34777:59002): title + "Show all Products", a grid of `count` product cards.
   "Show all Products" reveals the rest of the page's products in place. Phones (34777:58812): one column,
   gap 8, the button full width under the list and no bottom padding (the next section has 32px on top).
+  bottom: keep the 32px on phones too, when the next section starts flush (the info band's photo strip).
 #}
-{% macro popularProducts(products, count, figma, top=false) %}
+{% macro popularProducts(products, count, figma, top=false, bottom=false) %}
 <section class="bg-white" data-figma="{{ figma }}" x-data="{ all: false }">
-  <div class="container-page md:pb-10 {{ 'pt-8 md:pt-10' if top }}">
+  <div class="container-page md:pb-10 {{ 'pt-8 md:pt-10' if top }} {{ 'pb-8' if bottom }}">
     {% call titleRow("Popular Products", "md") %}
       {% if products.length > count %}<button type="button" x-show="!all" @click="all = true" class="btn-secondary hidden md:inline-flex">Show all Products</button>{% endif %}
     {% endcall %}

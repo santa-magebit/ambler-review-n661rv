@@ -554,9 +554,11 @@
   layout: "wide" (971 + 525, gap 40) or "narrow" (886 + 590, gap 60).
   Phones (34777:58812): the "Can't find your answer?" box is a full-width navy band closing the section.
   pt: top padding classes (phone and md:).
+  border: the outline-colour lines along the band's edges, top and bottom like the content pages' FAQ band; a band
+  that continues a tinted section above it (Browse by Type SEO text) drops the top one from md.
 #}
-{% macro faq(items, figma, layout="wide", tint="#f5f8fa", pt="pt-8 md:pt-10") %}
-<section style="background-color: {{ tint }}" data-figma="{{ figma }}">
+{% macro faq(items, figma, layout="wide", tint="#f5f8fa", pt="pt-8 md:pt-10", border="border-y") %}
+<section class="border-outline {{ border }}" style="background-color: {{ tint }}" data-figma="{{ figma }}">
   <div class="container-page {{ pt }} md:pb-10">
     <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Frequently Asked Questions</h2>
     <div class="{{ 'mt-4 gap-8 md:mt-10 md:gap-10 lg:grid-cols-[minmax(0,971fr)_minmax(0,525fr)]' if layout == 'wide' else 'mt-4 gap-8 md:mt-8 md:gap-10 lg:grid-cols-[minmax(0,886fr)_minmax(0,590fr)] lg:gap-[60px]' }} grid items-start" x-data="{ open: null }">

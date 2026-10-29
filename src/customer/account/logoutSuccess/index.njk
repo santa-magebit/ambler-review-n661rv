@@ -3,22 +3,19 @@ layout: layouts/base.njk
 title: You have signed out
 permalink: /customer/account/logoutSuccess/
 ---
-{% import "account/macros.njk" as acc with context %}
 {% import "content/macros.njk" as c with context %}
 {# Signed Out (Figma 29434:83818; phones "Mobile - Signed Out" 29434:83809), Magento's logout success page, where
-   Sign Out leads. Like the 404 from the same sketches, in the redesign's blocks:
-   - Hero: the content hero with the 404's Browse by Specialty photo, the frame's title, and its thank-you line as
-     the intro.
-   - The account empty state (white box, #dde7ee border, 160px illustration) with the frame's redirect line, without
-     "You have signed out and" as the hero says it, and no button: the page sends the visitor home itself
-     (account.js signedOut). The line in Figma's Medium 20/28 ink (phones 18/28), not the empty state's 32px.
-   40px above the box and 80px under it (phones 32px). #}
-{{ c.hero({
+   Sign Out leads. Like the 404 from the same sketches, in the redesign's blocks instead of the sketch's bordered box
+   and illustration: the content hero with the 404's Browse by Specialty photo, the frame's title, and its two lines
+   under it. The redirect line (without "You have signed out and", as the title says it) in Medium, its seconds
+   counting down to the redirect home (account.js signedOut; ?stay keeps the page for review), then the thank-you
+   line. #}
+{% call c.hero({
   title: "You have signed out", figma: "29434:83818", image: "21fc3c67",
-  text: "Thank you for your visit, we’re looking forward to seeing you again soon.",
   photo: "inset-0 h-full w-full object-cover object-[72%_50%] md:object-right"
-}) }}
-
-<div x-data="signedOut" class="container-page py-8 md:pb-20 md:pt-10" data-figma="29434:83821">
-  {{ acc.emptyState(account.illustrations.emptyClock, "You will be redirected to our homepage in 5 seconds.", "", figma="29434:83823", size="md") }}
-</div>
+}) %}
+  <div x-data="signedOut" class="flex flex-col gap-2 text-base text-white md:text-lg" data-figma="29434:83826">
+    <p class="font-medium">You will be redirected to our homepage in <span class="whitespace-nowrap"><span class="font-bold tabular-nums" x-text="seconds">5</span> <span x-text="seconds === 1 ? 'second' : 'seconds'">seconds</span>.</span></p>
+    <p>Thank you for your visit, we’re looking forward to seeing you again soon.</p>
+  </div>
+{% endcall %}

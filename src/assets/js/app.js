@@ -166,12 +166,6 @@
       signOut() {
         this.loggedIn = false;
         write("ambler-proto-auth", false);
-        // The Signed Out page sends the visitor home only when reached from here (account.js signedOut).
-        try {
-          sessionStorage.setItem("ambler-proto-signed-out", "1");
-        } catch {
-          /* storage blocked: the page stays */
-        }
       },
     });
 

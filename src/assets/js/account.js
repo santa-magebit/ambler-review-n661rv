@@ -83,19 +83,19 @@
     }));
 
     /**
-     * Signed Out (29434:83818), Magento's /customer/account/logoutSuccess/: home after 5 seconds, as the page
-     * says. Only when reached by Sign Out (app.js auth.signOut leaves a mark), so the page can be opened for review.
+     * Signed Out (29434:83818), Magento's /customer/account/logoutSuccess/: counts the hero's seconds down from 5,
+     * then goes home. ?stay keeps the page for review (like ?empty on the list pages).
      */
     Alpine.data("signedOut", () => ({
+      seconds: 5,
       init() {
-        let fromSignOut = false;
-        try {
-          fromSignOut = sessionStorage.getItem("ambler-proto-signed-out") === "1";
-          sessionStorage.removeItem("ambler-proto-signed-out");
-        } catch {
-          /* storage blocked: the page stays */
-        }
-        if (fromSignOut) setTimeout(() => go("/"), 5000);
+        if (new URLSearchParams(window.location.search).has("stay")) return;
+        const timer = setInterval(() => {
+          this.seconds -= 1;
+          if (this.seconds > 0) return;
+          clearInterval(timer);
+          go("/");
+        }, 1000);
       },
     }));
 

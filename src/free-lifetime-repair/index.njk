@@ -122,8 +122,9 @@ permalink: /free-lifetime-repair/
 
 {{ c.faqSection(l.faq, { section: "35122:1381", list: "35122:1384", card: "35122:1406" }) }}
 
-{# Restrictions & Exclusions: the fine print the "*" and the restriction links jump to. #}
-<section id="restrictions" aria-labelledby="restrictions-title" class="{{ anchor }} border-t border-outline bg-white" data-figma="35122:1416">
+{# Restrictions & Exclusions: the fine print the "*" and the restriction links jump to. The FAQ band's bottom line
+   separates it from the FAQ. #}
+<section id="restrictions" aria-labelledby="restrictions-title" class="{{ anchor }} bg-white" data-figma="35122:1416">
   <div class="container-page flex flex-col gap-4 pb-10 pt-8 md:pb-[60px] md:pt-10">
     <h2 id="restrictions-title" class="text-base font-bold text-heading">*Restrictions &amp; Exclusions of the Free Lifetime Repair Program</h2>
     {% for r in l.restrictions %}

@@ -168,12 +168,14 @@
 {% endmacro %}
 
 {# Frequently Asked Questions + contact card (Repair Services 34799:68629, Free Lifetime Repair 35122:1381).
+   A full-width #f5f8fa band with an outline-colour line along its top and bottom edges, so it stands apart from
+   white sections and the footer.
    Phones (mobile 34897:7756): Medium 24/32 title 16px above the list; the navy card runs edge to edge under the
    section, 32px padding, full-width button.
    faq: [{ id, q, a: [paragraphs] | null (answer not written: data-proto), link?: { label, href } }]
    figma: { section, list, card } node ids. #}
 {% macro faqSection(faq, figma) %}
-<section class="bg-menu" data-figma="{{ figma.section }}">
+<section class="border-y border-outline bg-menu" data-figma="{{ figma.section }}">
   <div class="container-page flex flex-col gap-4 py-10 md:gap-8">
     <h2 class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Frequently Asked Questions</h2>
     <div class="grid items-start gap-10 lg:grid-cols-[886fr_590fr] lg:gap-[60px]">

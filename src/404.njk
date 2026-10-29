@@ -3,9 +3,50 @@ layout: layouts/base.njk
 title: Page not found
 permalink: /404.html
 ---
-<div class="container-page py-20 text-center">
-  <p class="text-base font-bold text-accent">404</p>
-  <h1 class="mt-2 text-h2 font-bold">We can&rsquo;t find that page</h1>
-  <p class="mt-3">The page may have moved, or it isn&rsquo;t part of the prototype yet.</p>
-  <a href="/" class="btn-primary mt-8">Go to the home page</a>
-</div>
+{# 404 (Figma sketch 29434:83743, web and mobile): the sketch's text (Magento's default 404 copy, with "Magento Store"
+   as Ambler Surgical) in the redesign's blocks and images instead of its bordered box and illustration
+   (amblersurgical.com sends missing pages to its home page, so there is no live page to follow):
+   - Hero: the content hero with the Browse by Specialty photo; "404" as the eyebrow over the title, the reasons as
+     orange-dash bullets under the intro.
+   - "Have no fear, help is near!": title and intro like the PLP features list, its three ways back as bullets; "search
+     bar" puts the cursor in the header search, which opens its suggestions (after the click, which would close them). Then the PLP "Popular Categories" grid
+     with the catalog's four ways in (photos from their pages, Product Lines with the Duckworth & Kent one).
+   Phones: the phone hero, then one column of 200px cards like the PLP pages. #}
+{% import "macros/ui.njk" as ui with context %}
+{% import "content/macros.njk" as c with context %}
+{% import "plp/macros.njk" as plp_ui with context %}
+{% set forceps = plp.browseTypeIndex.popular | find("slug", "forceps") %}
+{% set cards = [
+  { name: "Browse by Specialty", href: "/browse-by-specialty/", image: images["d61fe469"], fit: "contain" },
+  { name: "Browse by Type", href: "/browse-by-type/", image: forceps.image, fit: forceps.fit, style: forceps.style, mobileTransform: forceps.mobileTransform },
+  { name: "Product Lines", href: "/product-lines/", image: images["b7a3c44f"], fit: "contain" },
+  { name: "Sterilization Products", href: "/sterilization-cleaning/", image: images["446ebfcc"], fit: "contain" }
+] %}
+
+{{ ui.breadcrumbs([{ label: "Page not found" }]) }}
+
+{% call c.hero({
+  eyebrow: "404", title: "Page not found", figma: "29434:83743", image: "21fc3c67",
+  text: "The page you requested was not found, and we have a fine guess why.",
+  photo: "inset-0 h-full w-full object-cover object-[72%_50%] md:object-right"
+}) %}
+  <ul class="-mt-2 flex flex-col gap-2 text-base text-white md:-mt-3 md:text-lg">
+    {% call c.bullet() %}If you typed the URL directly, please make sure the spelling is correct.{% endcall %}
+    {% call c.bullet() %}If you clicked on a link to get here, the link is outdated.{% endcall %}
+  </ul>
+{% endcall %}
+
+<section class="bg-white" aria-labelledby="help-title">
+  <div class="container-page py-8 md:py-10">
+    <div class="flex max-w-[756px] flex-col gap-4 md:gap-3">
+      <h2 id="help-title" class="text-h3 font-medium text-heading md:text-h2 md:font-bold">Have no fear, help is near!</h2>
+      <p class="text-base text-body md:text-lg">There are many ways you can get back on track with Ambler Surgical.</p>
+    </div>
+    <ul class="mt-4 flex max-w-[908px] flex-col gap-2 text-base text-body md:p-4 md:text-lg">
+      {% call c.bullet() %}<a href="/" @click.prevent="history.length > 1 ? history.back() : (location.href = url('/'))" class="link">Go back</a> to the previous page.{% endcall %}
+      {% call c.bullet() %}Use the <button type="button" @click="setTimeout(() => [...document.querySelectorAll('header input[name=q]')].find((i) => i.offsetParent)?.focus())" class="link">search bar</button> at the top of the page to search for your products.{% endcall %}
+      {% call c.bullet() %}Follow these links to get you back on track! <a href="/" class="link">Go To Home</a> | <a href="/customer/account/" class="link">My Account</a>{% endcall %}
+    </ul>
+    <div class="mt-4 md:mt-8">{{ plp_ui.cardGrid(cards) }}</div>
+  </div>
+</section>

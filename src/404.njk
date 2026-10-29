@@ -6,8 +6,8 @@ permalink: /404.html
 {# 404 (Figma sketch 29434:83743, web and mobile): the sketch's text (Magento's default 404 copy, with "Magento Store"
    as Ambler Surgical) in the redesign's blocks and images instead of its bordered box and illustration
    (amblersurgical.com sends missing pages to its home page, so there is no live page to follow):
-   - Hero: the content hero with the Browse by Specialty photo; "404" as the eyebrow over the title, the reasons as
-     orange-dash bullets under the intro.
+   - Hero: the content hero with the Browse by Specialty photo and the sketch's title, the reasons as orange-dash
+     bullets under the intro.
    - "Have no fear, help is near!": title and intro like the PLP features list, its three ways back as bullets; "search
      bar" puts the cursor in the header search, which opens its suggestions (after the click, which would close them). Then the PLP "Popular Categories" grid
      with the catalog's four ways in (photos from their pages, Product Lines with the Duckworth & Kent one).
@@ -26,7 +26,7 @@ permalink: /404.html
 {{ ui.breadcrumbs([{ label: "Page not found" }]) }}
 
 {% call c.hero({
-  eyebrow: "404", title: "Page not found", figma: "29434:83743", image: "21fc3c67",
+  title: "404 - Page not found", figma: "29434:83743", image: "21fc3c67",
   text: "The page you requested was not found, and we have a fine guess why.",
   photo: "inset-0 h-full w-full object-cover object-[72%_50%] md:object-right"
 }) %}

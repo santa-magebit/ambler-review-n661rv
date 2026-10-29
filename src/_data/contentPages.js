@@ -225,6 +225,37 @@ const about = {
       name: "Jennifer Morales",
       place: "Riverside Ambulatory Surgery Center · Austin, TX",
     },
+    // The rest of amblersurgical.com/customer-testimonials (Carlina Smith above is its first), word for word.
+    {
+      quote:
+        "Ambler Surgical is our first choice for all of our Eye Instruments and Ophthalmic needs. Their Quality and Value have been proven time and time again.",
+      name: "Dana Spender, Materials Manager",
+      place: "McGee Eye Surgery Center · Oklahoma City, OK",
+    },
+    {
+      quote:
+        "We've used Ambler Surgical for our surgical instrument needs and diamond knife repair for several years and are always pleased with the service, pricing and quality time and time again.",
+      name: "Colette Smith, R.N.",
+      place: "Mullis Eye Institute · Panama City, FL",
+    },
+    {
+      quote:
+        "Ambler Surgical has been a money-saving source for us for all our Ophthalmic Instruments. Many of these items are not covered under our contract, and I know that I can always look to Ambler as a cost-effective alternative. In addition, their customer service is second to none.",
+      name: "Lynn Reyes, Materials Manager",
+      place: "Gramercy Outpatient Surgery Center · Houston, TX",
+    },
+    {
+      quote:
+        "Ambler Surgical's instrument line and repair services have saved us time and money without sacrificing quality. Plus, Ambler's 30-day instrument evaluation guarantees our satisfaction.",
+      name: "Michael Giardina, Surgical Tech.",
+      place: "Constitution Eye Surgery Center · Newington, CT",
+    },
+    {
+      quote:
+        "We compare and save with Ambler Surgical for our ophthalmic disposable needs and consistently find the pricing, quality and delivery to be excellent.",
+      name: "Jeanne Koppinger",
+      place: "Cheyenne Eye Surgery · Cheyenne, WY",
+    },
   ],
   /** "More from Ambler" cards (34974:1332). action: proto = not designed, search = focus the header search. */
   ctas: [

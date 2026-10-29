@@ -72,24 +72,46 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
-  /** Horizontal card slider (About "Customer Testimonials" 34974:1295 + controls 34974:1323). x-ref="track". */
+  /**
+   * Horizontal card slider (About "Customer Testimonials" 34974:1295 + controls 34974:1323). x-ref="track".
+   * Loops forward: next on the last card goes back to the first (previous stops at the first), and it moves on by
+   * itself every 6s while on screen, unless the visitor is reading it (hover, focus, a touch in the last 10s) or
+   * prefers reduced motion.
+   */
   Alpine.data("slider", () => ({
     progress: 0,
+    // Width of the progress line's thumb, in %: the share of the cards in view.
+    thumb: 24.36,
     atStart: true,
     atEnd: false,
+    hold: false,
+    touchedAt: 0,
+    inView: false,
     init() {
       this.update();
       window.addEventListener("resize", () => this.update());
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      new IntersectionObserver(([e]) => (this.inView = e.isIntersecting), { threshold: 0.4 }).observe(this.$el);
+      setInterval(() => {
+        if (this.inView && !this.hold && !document.hidden && Date.now() - this.touchedAt > 10000) this.step(1);
+      }, 6000);
+    },
+    touched() {
+      this.touchedAt = Date.now();
     },
     update() {
       const el = this.$refs.track;
       const max = el.scrollWidth - el.clientWidth;
       this.progress = max > 0 ? Math.min(1, el.scrollLeft / max) : 0;
-      this.atStart = el.scrollLeft <= 1;
-      this.atEnd = max <= 1 || el.scrollLeft >= max - 1;
+      this.thumb = Math.max(10, Math.min(100, (el.clientWidth / el.scrollWidth) * 100));
+      // Snapping can stop a couple of pixels short of either end, so allow a little slack.
+      this.atStart = el.scrollLeft <= 8;
+      this.atEnd = max <= 8 || el.scrollLeft >= max - 8;
     },
     step(dir) {
-      carouselStep(this.$refs.track, dir);
+      const el = this.$refs.track;
+      if (dir > 0 && this.atEnd) el.scrollTo({ left: 0, behavior: "smooth" });
+      else carouselStep(el, dir);
     },
   }));
 

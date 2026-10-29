@@ -88,7 +88,8 @@ permalink: /about-ambler-surgical/
   </div>
 </section>
 
-{# Executive Board: headshot placeholders with initials, name, role, email and bio.
+{# Executive Board: headshot placeholders with initials, name, role, email and bio. The text column keeps the 756px
+   reading width of text on white, so the bios don't run 140 characters to a line.
    Phones (mobile 34974:121015): a 96px photo beside name, role and email, the bio under them cut to five lines
    with "Read more" (opens the whole bio), people 16px apart. #}
 <section id="executive-board" class="scroll-mt-[57px] bg-[#f5f7fa] md:scroll-mt-[69px]" data-figma="34974:1257">
@@ -101,7 +102,7 @@ permalink: /about-ambler-surgical/
         <div class="flex aspect-square w-full max-w-[240px] shrink-0 items-center justify-center rounded border border-outline bg-secondary-100 md:max-w-[280px] xl:max-w-[360px]" role="img" aria-label="Photo of {{ p.name }} coming soon">
           <span aria-hidden="true" class="text-h2 font-bold text-primary-500/25 md:text-[64px] md:leading-none xl:text-[96px] xl:leading-[112px]">{{ p.initials }}</span>
         </div>
-        <div class="contents md:flex md:min-w-0 md:max-w-[1000px] md:flex-col md:gap-4">
+        <div class="contents md:flex md:min-w-0 md:max-w-[756px] md:flex-col md:gap-4">
           <div class="flex flex-col gap-1">
             <h3 class="text-h4 font-medium text-accent md:text-h3">{{ p.name }}</h3>
             <p class="text-[18px] leading-[26px] text-primary-500 md:text-h4">{{ p.role }}</p>
@@ -137,12 +138,14 @@ permalink: /about-ambler-surgical/
   </div>
 </section>
 
-{# Customer Testimonials slider: cards run off the right edge; progress line + previous/next. #}
-<section id="customer-testimonials" x-data="slider" class="flex scroll-mt-[57px] flex-col gap-4 bg-white pb-10 pt-5 md:scroll-mt-[69px] md:gap-8" aria-labelledby="testimonials-title" data-figma="34974:1292">
+{# Customer Testimonials slider: cards run off the right edge; progress line + previous/next. It loops forward: next
+   on the last card goes back to the first, and it moves on by itself every few seconds, pausing while hovered, focused
+   or touched. Previous stays disabled on the first card. #}
+<section id="customer-testimonials" x-data="slider" @mouseenter="hold = true" @mouseleave="hold = false" @focusin="hold = true" @focusout="hold = false" class="flex scroll-mt-[57px] flex-col gap-4 bg-white pb-10 pt-5 md:scroll-mt-[69px] md:gap-8" aria-labelledby="testimonials-title" data-figma="34974:1292">
   <div class="container-page"><h2 id="testimonials-title" class="text-h3 font-medium tracking-title text-heading md:text-h2 md:font-bold md:tracking-normal">Customer Testimonials</h2></div>
-  <ul x-ref="track" @scroll.passive="update()" class="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 [scroll-padding-inline:20px] [scrollbar-width:none] md:gap-6 md:px-[max(2rem,calc((100%-1536px)/2))] md:[scroll-padding-inline:max(2rem,calc((100%-1536px)/2))] [&::-webkit-scrollbar]:hidden" data-figma="34974:1295">
+  <ul x-ref="track" @scroll.passive="update()" @pointerdown="touched()" class="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 [scroll-padding-inline:20px] [scrollbar-width:none] md:gap-6 md:px-[max(2rem,calc((100%-1536px)/2))] md:[scroll-padding-inline:max(2rem,calc((100%-1536px)/2))] [&::-webkit-scrollbar]:hidden" data-figma="34974:1295">
     {% for t in a.testimonials %}
-    <li class="flex w-[310px] shrink-0 snap-start flex-col gap-4 rounded border border-card bg-secondary-100 px-5 py-6 md:w-[min(744px,85vw)] md:gap-6 md:p-8" data-figma="{{ t.figma }}">
+    <li class="flex w-[310px] shrink-0 snap-start flex-col gap-4 rounded border border-card bg-secondary-100 px-5 py-6 md:w-[min(744px,85vw)] md:gap-6 md:p-8" {% if t.figma %}data-figma="{{ t.figma }}"{% endif %}>
       {{ c.quoteMark() }}
       <blockquote class="flex-1 text-base text-heading md:text-lg">{{ t.quote }}</blockquote>
       <hr class="border-outline">
@@ -157,11 +160,11 @@ permalink: /about-ambler-surgical/
   <div class="container-page hidden md:block">
     <div class="flex items-center gap-6" data-figma="34974:1323">
       <div class="relative h-0.5 flex-1 bg-grayscale-300" aria-hidden="true">
-        <span class="absolute inset-y-0 w-[24.36%] bg-primary-500 transition-[left] duration-150" :style="`left: ${progress * 75.64}%`"></span>
+        <span class="absolute inset-y-0 w-[24.36%] bg-primary-500 transition-[left] duration-150" :style="`left: ${progress * (100 - thumb)}%; width: ${thumb}%`"></span>
       </div>
       <div class="flex gap-3">
         <button type="button" @click="step(-1)" :disabled="atStart" aria-label="Previous testimonial" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100 disabled:text-secondary-300 disabled:hover:bg-white">{% icon "arrow-left" %}</button>
-        <button type="button" @click="step(1)" :disabled="atEnd" aria-label="Next testimonial" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100 disabled:text-secondary-300 disabled:hover:bg-white">{% icon "arrow-right" %}</button>
+        <button type="button" @click="step(1)" aria-label="Next testimonial" class="flex h-[52px] w-[52px] items-center justify-center rounded border border-secondary-200 bg-white text-primary-500 hover:bg-secondary-100 disabled:text-secondary-300 disabled:hover:bg-white">{% icon "arrow-right" %}</button>
       </div>
     </div>
   </div>

@@ -142,33 +142,35 @@ permalink: /conditions-of-sale/
   <p class="text-sm text-white md:text-base"><span class="font-medium">Effective Date:</span> {{ t.effective }}</p>
 {% endcall %}
 
-{# Section bar: SemiBold 18/28 #3a526d links (16/24 on phones), orange for the section in view and on hover, spread
-   across the container from xl as in the frame. #}
-<nav x-data="aboutSubnav" aria-label="Sections" class="sticky top-[var(--header-h,0px)] z-30 border-b border-outline bg-menu" data-figma="35098:39780">
+{# Section bar: the About page's sticky bar (34974:1154) rather than the frame's own: white, Medium 16/24 navy links
+   40px apart (24px on phones), a 3px orange underline on the section in view and a light one on hover; same 57/69px
+   height, so the sections' scroll offsets still fit. #}
+<nav x-data="aboutSubnav" aria-label="Sections" class="sticky top-[var(--header-h,0px)] z-30 border-b border-outline bg-white" data-figma="35098:39780">
   <div class="container-page">
-    <ul x-ref="tabs" class="-mx-5 flex gap-6 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:gap-8 md:px-0 xl:justify-between xl:gap-4 [&::-webkit-scrollbar]:hidden" data-figma="35098:39781">
+    <ul x-ref="tabs" class="-mx-5 flex gap-6 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:gap-10 md:px-0 [&::-webkit-scrollbar]:hidden" data-figma="35098:39781">
       {% for s in t.sections %}
       <li class="shrink-0">
         <a href="#{{ s.id }}" data-section="{{ s.id }}" @click="go('{{ s.id }}')"
            :aria-current="active === '{{ s.id }}' ? 'location' : null"
-           :class="active === '{{ s.id }}' ? 'text-accent' : 'text-card hover:text-accent'"
-           class="block whitespace-nowrap py-4 text-base font-semibold transition-colors md:py-5 md:text-lg">{{ s.title }}</a>
+           :class="active === '{{ s.id }}' ? '!border-accent' : 'hover:border-secondary-200'"
+           class="block whitespace-nowrap border-b-[3px] border-transparent pb-[13px] pt-4 text-base font-medium text-primary-500 transition-colors md:pb-[19px] md:pt-[22px]">{{ s.title }}</a>
       </li>
       {% endfor %}
     </ul>
   </div>
 </nav>
 
-{# Search: right-aligned as in the frame (full width on phones, under it the result line), 40px under the bar like the
-   sections' padding (32px on phones). #}
-<div x-data="termsSearch" class="container-page flex flex-col-reverse gap-3 pt-8 md:flex-row md:items-center md:justify-between md:gap-6 md:pt-10" data-figma="35098:39790">
+{# Search: on the left, where the eye starts under the section bar (the frame right-aligns it, where it was easy to
+   miss), the result line beside it (under it on phones); 40px under the bar like the sections' padding (32px on
+   phones). #}
+<div x-data="termsSearch" class="container-page flex flex-col gap-3 pt-8 md:flex-row md:items-center md:gap-6 md:pt-10" data-figma="35098:39790">
+  {{ searchField("I am looking for…", "Search the terms and conditions", "q", "go()") }}
   <p aria-live="polite" class="text-base text-body md:text-lg">
     <span x-show="needle" x-cloak>
       <span x-text="hits ? (hits === 1 ? '1 subsection mentions' : hits + ' subsections mention') + ' “' + q.trim() + '”.' : 'No subsection mentions “' + q.trim() + '”.'"></span>
       <button type="button" @click="clear()" class="link ml-2">Clear search</button>
     </span>
   </p>
-  {{ searchField("Search Terms & Conditions", "Search the terms and conditions", "q", "go()") }}
 </div>
 
 {# The sections share one Back to Top button (the frame's "Back to Top" 35098:39814), sticky at the bottom right of the
@@ -198,13 +200,14 @@ permalink: /conditions-of-sale/
         </article>
         {% endfor %}
       </div>
-      {# Subsection index, level with the first H3; links 8px apart like the styleguide's list items. #}
-      <nav aria-label="{{ s.title }} subsections" class="sticky top-[calc(var(--header-h,0px)_+_93px)] mt-6 hidden self-start xl:block">
+      {# Subsection index, level with the first H3; links 8px apart like the styleguide's list items. The subsection
+         being read is marked like the active section tab: orange text and an orange rule (Alpine.data("termIndex")). #}
+      <nav x-data="termIndex" aria-label="{{ s.title }} subsections" class="sticky top-[calc(var(--header-h,0px)_+_93px)] mt-6 hidden self-start xl:block">
         <p class="text-base font-medium text-ink">In this section</p>
         <ul class="mt-3 flex flex-col border-l border-outline">
           {% for it in s.items %}
           <li data-term-link="{{ it.id }}">
-            <a href="#{{ it.id }}" class="-ml-px flex gap-2 border-l-2 border-transparent py-1 pl-4 text-base text-primary-500 transition-colors hover:border-accent hover:text-accent"><span class="w-8 shrink-0 font-semibold">{{ it.num }}</span><span class="min-w-0">{{ it.short or it.title }}</span></a>
+            <a href="#{{ it.id }}" :aria-current="active === '{{ it.id }}' ? 'location' : null" :class="active === '{{ it.id }}' && '!border-accent !text-accent'" class="-ml-px flex gap-2 border-l-2 border-transparent py-1 pl-4 text-base text-primary-500 transition-colors hover:border-accent hover:text-accent"><span class="w-8 shrink-0 font-semibold">{{ it.num }}</span><span class="min-w-0">{{ it.short or it.title }}</span></a>
           </li>
           {% endfor %}
         </ul>

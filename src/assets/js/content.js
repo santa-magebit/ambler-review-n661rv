@@ -141,6 +141,37 @@ document.addEventListener("alpine:init", () => {
   }));
 
   /**
+   * "In this section" index of a Conditions of Sale section: marks the subsection being read, the last one whose
+   * top has passed the reading line 24px under the section bar (where a link click lands it). Subsections the
+   * terms search hides are skipped.
+   */
+  Alpine.data("termIndex", () => ({
+    active: null,
+    // Declared so each index keeps its own (Alpine puts undeclared properties on the outermost shared scope).
+    ids: [],
+    bar: null,
+    frame: 0,
+    init() {
+      this.ids = [...this.$el.querySelectorAll("[data-term-link]")].map((li) => li.dataset.termLink);
+      this.bar = document.querySelector('nav[aria-label="Sections"]');
+      const onScroll = () => {
+        if (!this.frame) this.frame = requestAnimationFrame(() => this.update());
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      this.update();
+    },
+    update() {
+      this.frame = 0;
+      const line = (this.bar ? this.bar.getBoundingClientRect().bottom : 0) + 24 + 1;
+      const shown = this.ids.map((id) => document.getElementById(id)).filter((el) => el && el.offsetParent);
+      let current = shown[0]?.id ?? null;
+      for (const el of shown) if (el.getBoundingClientRect().top <= line) current = el.id;
+      this.active = current;
+    },
+  }));
+
+  /**
    * Conditions of Sale search ("Search Terms & Conditions", Figma 35098:39790). Two letters or more show only the
    * subsections ([data-term]) that contain the words, hide sections ([data-term-section]) and index links
    * ([data-term-link]) left without one, dim the section bar's tabs of hidden sections and mark the matches with the

@@ -8,8 +8,7 @@ permalink: /free-lifetime-repair/
    requested:
    - Hero: the "*" after the intro links to the fine print (the frame's hidden "btn" 35122:1303 stays hidden).
    - "What's Included" cards are information, not links: no arrow and no hover, so they don't promise a page.
-   - "Request a Free Repair" (35122:1338) is the repair pages' request strip with the client's title and line, with
-     one download button instead of a button and an inline link to the same form.
+   - "Request a Free Repair" (35122:1338) is removed at the client's request.
    - "See all restrictions & exclusions" and the FAQ link jump to the fine print at the end.
    - The FAQ loads closed (Figma's open third answer is an example state); every question has an answer.
    No copy is added beyond what helps the visitor act: the rest is the client's (35098:38806) or the old site's. #}
@@ -94,17 +93,6 @@ permalink: /free-lifetime-repair/
         {% endfor %}
       </ul>
     </section>
-
-    {# Request a Free Repair (client 35098:38904): the repair pages' Request a Repair strip (c.requestStrip) with the
-       client's title and line and the Micro Instrument strip's instruments photo at its md size and angle, 140px
-       further right so it runs only under the button: the client's line is longer than "No RMA number needed." and
-       would run under the photo. Phones: the Micro strip's 60% photo at its angle, its corner 110px from the right edge
-       and 75px down (the line runs three lines), so the instruments show beside the short last line and under the
-       button, clear of the text. #}
-    {{ c.requestStrip({
-      title: "Request a Free Repair", text: l.request, image: "d61fe469", figma: "35122:1338",
-      photo: "left-[calc(100%_-_110px)] top-[75px] h-[287px] w-[359px] origin-top-left rotate-[29.14deg] md:left-[calc(100%_-_90px)] md:top-[-248px] md:h-[478px] md:w-[598px] lg:left-[calc(100%_-_232px)]"
-    }) }}
 
   </div>
 </div>

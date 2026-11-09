@@ -376,8 +376,6 @@ const lifetime = {
     { figma: "35122:1328", title: "Needle Holder Re-Setting", image: images["393cbe8d"], style: plp.diagonal },
     { figma: "35122:1333", title: "Hook Straightening", image: images["a9a5e53d"], style: plp.diagonal },
   ],
-  /** "Request a Free Repair" line (client frame 35098:38908). */
-  request: "Download and complete the instrument repair form to submit your instrument for a free repair.",
   /** "SEO Section" band (35122:1354). */
   value: {
     title: "Quality Instruments.",

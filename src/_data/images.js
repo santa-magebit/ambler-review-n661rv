@@ -3,6 +3,7 @@
 export default {
   "03b29f40": "/img/03b29f40.jpg", // image 4 37x24
   "050f5724": "/img/050f5724.png", // mobile-header 268x192
+  "05b4b2ec": "/img/05b4b2ec.jpg", // Instrument Pic 1600x244 (ENT "Disposables" card, 35406:1389, the 3200px Figma fill scaled down)
   "06d43d81": "/img/06d43d81.jpg", // mobile-header 366x310
   "077f3d82": "/img/077f3d82.jpg", // image 24 2048x768 (Cryosurgical Handpiece Repair hero)
   "0c03b05c": "/img/0c03b05c.png", // image 108x108
@@ -13,6 +14,7 @@ export default {
   "0fd85d1e": "/img/0fd85d1e.png", // Fiegert 1 147x40
   "11463f33": "/img/11463f33.png", // image 195x32
   "1582796d": "/img/1582796d.jpg", // MaxAC 20D Lens 1000x963 (Sterilization Products "Ultrasonic Cleaners" card, the 1672px Figma fill as JPEG)
+  "17193ea2": "/img/17193ea2.png", // Instrument Pic 750x430 (ENT "Sinus" and "General Nasal" cards, 35406:1338)
   "1907881e": "/img/1907881e.png", // mobile-header 366x258
   "1e1f2c9e": "/img/1e1f2c9e.jpg", // mobile-header 366x310
   "209da060": "/img/209da060.jpg", // mobile-header 366x200
@@ -55,6 +57,7 @@ export default {
   "6350c6a1": "/img/6350c6a1.jpg", // duckworth__kent_ltd_logo 1 67x48
   "637dbdfb": "/img/637dbdfb.jpg", // mobile-header 366x310
   "64181590": "/img/64181590.jpg", // mobile-header 366x200
+  "66345f26": "/img/66345f26.jpg", // image 8 1800x1199 (ENT SEO band, 35406:1552, the 4096px Figma fill scaled down)
   "66e4e59f": "/img/66e4e59f.png", // mobile-header 369x313
   "6790e919": "/img/6790e919.jpg", // Instrument guards 092001BBG, amblersurgical.com product photo 1400x640
   "698c2272": "/img/698c2272.jpg", // mobile-header 366x200
@@ -76,6 +79,7 @@ export default {
   "88a31f74": "/img/88a31f74.png", // mobile-header 366x310
   "8a3fae28": "/img/8a3fae28.png", // image 108x108
   "8c9b5f40": "/img/8c9b5f40.jpg", // Why Us image 1250x732
+  "8d9bd5b2": "/img/8d9bd5b2.png", // Instrument Pic 1600x217 (ENT "Laryngeal" and "General Throat" cards, 35406:1348, the 4096px Figma fill scaled down)
   "91e2c639": "/img/91e2c639.jpg", // Hero Image Oph 1289x484
   "930848f8": "/img/930848f8.jpg", // mobile-header 366x200
   "93209bbc": "/img/93209bbc.jpg", // mobile-header 366x200
@@ -102,6 +106,7 @@ export default {
   "b6d1bd41": "/img/b6d1bd41.jpg", // Ocular MaxAC 20D lens OI-20A, amblersurgical.com product photo 600x400 (Product Lines hover)
   "b7a3c44f": "/img/b7a3c44f.png", // mobile-header 366x310
   "b92bdf3f": "/img/b92bdf3f.jpg", // mobile-header 366x310
+  "bbd147f3": "/img/bbd147f3.png", // Instrument Pic 738x900 (ENT "General Ear" and "Middle/Inner Ear" cards, 35406:1328, the 3568px Figma fill scaled down)
   "bdd345e8": "/img/bdd345e8.jpg", // Oph Forceps Header Graphic 1081x636
   "be970610": "/img/be970610.jpg", // Eye Image 1920x480
   "becc0b30": "/img/becc0b30.jpg", // mobile-header 366x258
@@ -133,6 +138,7 @@ export default {
   "eb36808d": "/img/eb36808d.png", // mobile-header 366x310
   "ec2b7392": "/img/ec2b7392.jpg", // Brand Image 175x44
   "f188b990": "/img/f188b990.jpg", // Eye Image 2064x492 (Free Lifetime Repair hero)
+  "f9ef9b10": "/img/f9ef9b10.jpg", // Hero Image Oph 2600x867 (ENT hero otoscope, 35406:1309, the 4096px Figma fill scaled down)
   "fb1d6319": "/img/fb1d6319.jpg", // Eye Image 1600x800
   "fc756c22": "/img/fc756c22.jpg", // Mini plastic instrument sterilization tray 93-230, amblersurgical.com product photo 1206x1400
   "fc765b3e": "/img/fc765b3e.png", // Rumex_LOGO_97804edd-f911-4b3a-87fb-4434e 162x38

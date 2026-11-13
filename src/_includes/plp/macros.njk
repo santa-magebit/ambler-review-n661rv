@@ -12,22 +12,26 @@
   Hero (PLP heroes, e.g. 34719:11294): 480px, photo + navy gradient, text column 593px. A photo on the right half fades
   in over its first 10% so no line shows where it starts (as on the content heroes).
   Phones (mobile PLP heroes, e.g. 34726:18657): content height, padding 40/32, title Medium 32/40, text 16/24.
-  h: { eyebrow?, title, text?, image (hash8), flip?, placement? ("right": photo on the right half), wide? (navy reaches further) }
+  h: { eyebrow?, title, text?, image (hash8), flip?, placement? ("right": photo on the right half), wide? (navy reaches further),
+       photo? (classes placing the photo, instead of the above), bg? (under the photo, default white), fade? (web gradient),
+       nowrap? (the title stays on one line from lg, past the text column, as on ENT 35438:10025) }
 #}
 {% macro hero(h, figma) %}
-<section class="relative overflow-hidden bg-white" data-figma="{{ figma }}">
-  {% if h.placement == "right" %}
+<section class="relative overflow-hidden {{ h.bg or 'bg-white' }}" data-figma="{{ figma }}">
+  {% if h.photo %}
+  <img src="{{ h.image | img }}" alt="" class="absolute {{ h.photo }}">
+  {% elif h.placement == "right" %}
   <img src="{{ h.image | img }}" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-right md:w-[58%] md:[mask-image:linear-gradient(90deg,transparent,#000_10%)]">
   {% else %}
   <img src="{{ h.image | img }}" alt="" class="absolute inset-0 h-full w-full object-cover {{ '-scale-x-100 object-[50%_88%]' if h.flip }}">
   {% endif %}
-  <div class="absolute inset-0" style="background-image: {{ plp.gradients.heroWide if h.wide else plp.gradients.hero }}"></div>
+  <div class="absolute inset-0" style="background-image: {{ h.fade or (plp.gradients.heroWide if h.wide else plp.gradients.hero) }}"></div>
   <div class="absolute inset-0 bg-primary-500/70 md:hidden"></div>
   <div class="container-page relative flex items-center pb-8 pt-10 md:min-h-[480px] md:py-12">
     <div class="flex max-w-[593px] flex-col {{ 'gap-3' if h.eyebrow else 'gap-5' }} md:gap-7">
       <div class="flex flex-col gap-3">
         {% if h.eyebrow %}<p class="text-base text-white md:text-lg md:font-medium">{{ h.eyebrow }}</p>{% endif %}
-        <h1 class="self-start bg-bottom bg-no-repeat pb-2 text-h2 font-medium text-white md:pb-2.5 md:text-hero" style="background-image: {{ plp.gradients.titleLine }}; background-size: 100% 2px">{{ h.title }}</h1>
+        <h1 class="self-start bg-bottom bg-no-repeat pb-2 text-h2 font-medium text-white md:pb-2.5 md:text-hero {{ 'lg:whitespace-nowrap' if h.nowrap }}" style="background-image: {{ plp.gradients.titleLine }}; background-size: 100% 2px">{{ h.title }}</h1>
       </div>
       {% if h.text %}<p class="text-base text-white md:text-lg">{{ h.text }}</p>{% endif %}
     </div>
@@ -443,10 +447,11 @@
   Info band (34777:59028, 34719:11393, 34888:121815): photo on the left, navy on the right,
   white copy column (856/886px) with an optional orange second title line and orange-dash bullets.
   Phones (34726:18657): the photo is a 132px strip above the navy block. pad: phone padding of the copy.
+  b.photo: classes placing the photo, instead of the default (ENT 35438:10061 shows the whole photo).
 #}
 {% macro infoBand(b, pad="py-8") %}
 <section class="relative overflow-hidden bg-primary-500" data-figma="{{ b.figma }}">
-  <img src="{{ b.image | img }}" alt="" loading="lazy" class="block h-[132px] w-full object-cover object-left md:absolute md:inset-y-0 md:left-0 md:h-full md:w-[62%]">
+  <img src="{{ b.image | img }}" alt="" loading="lazy" class="{{ b.photo or 'block h-[132px] w-full object-cover object-left md:absolute md:inset-y-0 md:left-0 md:h-full md:w-[62%]' }}">
   <div class="absolute inset-0 hidden md:block" style="background-image: {{ plp.gradients.band }}"></div>
   <div class="absolute inset-x-0 top-0 h-[132px] md:hidden" style="background-image: {{ plp.gradients.bandMobile }}"></div>
   <div class="container-page relative flex justify-end {{ pad }} md:py-10">

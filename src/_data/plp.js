@@ -422,6 +422,64 @@ const ophthalmologyPage = {
   },
 };
 
+/**
+ * ENT specialty page - Adjusted (Figma 35438:10021, the client's 35406:1258 in the Ophthalmology page's components).
+ * The client's seven categories; their "Select a Category" lists are the old site's
+ * (amblersurgical.com/browse-by-specialty/ent, 2026-11-13), Disposables the ENT menu's. A type with a page in the
+ * prototype links there, the rest are data-proto. The client repeats three card photos (ear speculum, sinus forceps,
+ * laryngeal mirror). No Free Lifetime Repair banner (ophthalmic only) and no product lines, as in the frame; Popular
+ * Products stays the catalog's (no ENT products yet). The FAQ answers its first question from the old site's ENT
+ * intro; the client gives no other answers.
+ */
+const entPage = {
+  figma: { hero: "35438:10025", categories: "35438:10026", products: "35438:10033", faq: "35438:10116" },
+  // The otoscope sits right of the text: the photo starts 17% in at the hero's width (its first 10% fading in) over
+  // navy, under a fade that is solid to 25% and clear from 65%. Phones: the photo behind the phone tint, ear side.
+  hero: {
+    title: "ENT Surgical Instruments",
+    text: "Premium surgical instruments for ear, nose, throat, sinus and laryngeal procedures.",
+    image: "f9ef9b10",
+    nowrap: true,
+    bg: "bg-primary-500",
+    fade: "linear-gradient(90deg, #004776 25%, rgba(0, 71, 118, 0) 65%)",
+    photo: "inset-0 h-full w-full object-cover object-[75%_50%] md:inset-auto md:left-[17%] md:top-1/2 md:h-auto md:min-h-full md:w-full md:max-w-none md:-translate-y-1/2 md:[mask-image:linear-gradient(90deg,transparent,#000_10%)]",
+  },
+  categoriesTitle: "ENT Product Categories",
+  categories: [
+    { title: "General Ear", image: "bbd147f3", items: ["Adaptors", "Clamps", "Curettes", "Cutting Blocks", "Diagnostic Apparatus", "Elevators", "Forceps", "Gouges", "Hooks", "Loops", "Perforators", "Retractors", "Rongeurs", "Scissors", "Snares", "Speculum", "Spoons", "Suction Irrigators", "Suction Tubes", "Syringes"] },
+    { title: "Sinus", image: "17193ea2", items: ["Adapters", "Cannulas", "Curettes", "Forceps", "Gouges", "Knives", "Lightcords", "Needles", "Probes", "Rongeurs", "Scissors", "Scopes", "Seekers", "Suction Irrigators", "Suction Tubes", "Trocars"] },
+    { title: "Laryngeal", image: "8d9bd5b2", items: ["Aspirating Tubes", "Elevators", "Forceps", "Handles", "Hooks", "Knife Handles", "Knives", "Laryngoscopes", "Light Carriers", "Mirrors", "Needles", "Probes", "Scissors", "Suction Tubes"] },
+    { title: "Middle/Inner Ear", image: "bbd147f3", items: ["Augers", "Calipers", "Chisels", "Curettes", "Dissectors", "Elevators", "Excavators", "Forceps", "Gouges", "Guides", "Hooks", "Inserters", "Knife Handles", "Knives", "Markers", "Mirrors", "Mobilizers", "Needles", "Picks", "Presses", "Rasps", "Scissors", "Scrapers", "Separators", "Spatulas", "Spuds"] },
+    { title: "General Nasal", image: "17193ea2", items: ["Applicators", "Breakers", "Calipers", "Cannulas", "Chisels", "Curettes", "Cutting Blocks", "Dissectors", "Elevators", "Enucleators", "Forceps", "Forks", "Gouges", "Hooks", "Knife Guides", "Knife Handles", "Knives", "Lightcords", "Mallets", "Mirrors", "Morselizers", "Needle Holders", "Needles", "Osteotomes", "Perforators", "Raspatories", "Rasps", "Retractors", "Rongeurs", "Saws", "Scissors", "Snares", "Speculum", "Spoons", "Spreaders", "Strippers", "Suction Tubes", "Trocars", "Turbinate System", "Wire Twisters"] },
+    // The old site spells it "Adentomes"; its "Mouth Gags" are the prototype's Gags.
+    { title: "General Throat", image: "8d9bd5b2", items: ["Adenotomes", "Chisels", "Depressors", "Dissectors", "Forceps", "Holders", "Hooks", "Knives", "Mirrors", { label: "Mouth Gags", slug: "gags" }, "Needles", "Retractors", "Scissors", "Snares", "Suction Tubes", "Tracheal Tubes"] },
+    { title: "Disposables", image: "05b4b2ec", items: ["Blades", "Electrodes", "Knives"] },
+  ],
+  band: {
+    figma: "35438:10061",
+    image: "66345f26",
+    // The whole photo on the left as drawn (115% of the band's height), at least half the band wide so the band's
+    // fade (navy from 50%) always covers its right edge. Phones: the strip shows the faces.
+    photo: "block h-[132px] w-full object-cover object-[0%_20%] md:absolute md:left-0 md:top-[-7.5%] md:h-[115%] md:w-auto md:min-w-[50%] md:max-w-none",
+    title: "ENT Surgical Instruments & Supplies",
+    accent: "Precision Tools for Ear, Nose, Throat and Sinus Procedures",
+    paragraphs: [
+      "Ambler Surgical offers an extensive selection of ENT surgical instruments and supplies for otolaryngologists, surgeons, hospitals and ambulatory surgery centers. Our online catalog includes reusable and disposable instruments for a wide range of ear, nose, throat, sinus and laryngeal procedures.",
+      "Explore ENT forceps, curettes, scissors, retractors, specula, suction tubes, elevators, probes and other specialty surgical instruments. From delicate ear procedures to nasal and sinus surgery, Ambler Surgical provides instruments for tissue manipulation, dissection, examination and surgical access.",
+      "Our selection includes instruments for otologic procedures, endoscopic sinus surgery, nasal procedures, throat surgery and general ENT applications. Whether replacing frequently used instruments or equipping an operating room, Ambler Surgical makes it easy to find the products your facility needs.",
+    ],
+  },
+  faq: [
+    {
+      q: "What instruments are commonly used in ENT surgery?",
+      a: ["ENT surgical instruments may be used in procedures like tonsillectomy, adenoidectomy, tracheotomy and tympanoplasty. In addition to forceps, scissors, specula and knives, they include suction tubes and curettes for general ear surgery, gouges, elevators and hooks for middle/inner ear surgery, seekers, probes and lightcords for sinus surgery, retractors, rasps and chisels for general nasal surgery, mouth gags, adenotomes and depressors for general throat surgery, and laryngoscopes and aspirating tubes for laryngeal surgery."],
+    },
+    { q: "Are reusable and disposable ENT instruments available?", a: null },
+    { q: "Does Ambler Surgical offer ENT instrument repair services?", a: null },
+    { q: "What types of ENT suction instruments are available?", a: null },
+  ],
+};
+
 /** Ophthalmology > Instruments category page (34719:11290). */
 const ophthalmicInstruments = {
   heroText:
@@ -650,7 +708,17 @@ const specialtyPages = specialties.map((s) => {
   const { list } = productsFor(inSpecialty(s));
   const instrumentsUrl = `${s.url}instruments/`;
   const typeMenu = typesOf(s).map((t) => ({ label: t.name, href: `${instrumentsUrl}${t.slug}/` }));
-  const categories = isOph
+  const page = s.slug === "ent" ? entPage : null;
+  // ENT: a menu item links to the specialty's type page when the prototype has one, otherwise it is data-proto.
+  const pageMenu = (items) =>
+    items.map((i) => {
+      const label = i.label || i;
+      const slug = i.slug || slugify(label);
+      return s.types.some((t) => t.slug === slug) ? { label, href: `${instrumentsUrl}${slug}/` } : { label, href: instrumentsUrl, proto: true };
+    });
+  const categories = page
+    ? page.categories.map((c) => ({ title: c.title, href: instrumentsUrl, image: images[c.image], fit: "contain", menu: pageMenu(c.items) }))
+    : isOph
     ? ophthalmologyPage.categories.map((c) => {
         const cat = ophthalmologyCategories.find((x) => x.slug === c.slug);
         // Instruments lists its type pages; the other categories list the old site's sub-categories, which have no
@@ -683,11 +751,17 @@ const specialtyPages = specialties.map((s) => {
     isOph,
     breadcrumbs: [{ label: "Browse by Specialty", href: "/browse-by-specialty/" }, { label: s.name }],
     description: s.description,
-    hero: { title: s.name, text: intros.specialties[s.slug] || s.description, image: "21fc3c67" },
+    hero: page ? page.hero : { title: s.name, text: intros.specialties[s.slug] || s.description, image: "21fc3c67" },
+    categoriesTitle: page ? page.categoriesTitle : "Shop By Categories",
     categories,
     products: list,
     popularCount: 8,
-    band: isOph ? ophthalmologyPage.band : null,
+    band: page ? page.band : isOph ? ophthalmologyPage.band : null,
+    // ENT (35438:10021) leaves out the Free Lifetime Repair banner and the product lines and has its own FAQ.
+    repairBanner: !page,
+    brands: !page,
+    faq: page ? page.faq : null,
+    figma: page ? page.figma : null,
   };
 });
 

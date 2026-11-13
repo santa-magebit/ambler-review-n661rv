@@ -8,26 +8,29 @@ permalink: "{{ sp.url }}"
 eleventyComputed:
   title: "{{ sp.name | safe }}"
 ---
-{#- Browse by Specialty > <Specialty>: Figma "PLP - 2nd level - 1920px" (34777:58990), drawn for Ophthalmology. -#}
+{#- Browse by Specialty > <Specialty>: Figma "PLP - 2nd level - 1920px" (34777:58990), drawn for Ophthalmology.
+    ENT has its own adjusted frame (35438:10021, data in plp.js entPage): its hero photo and copy, seven categories,
+    an SEO band and FAQ, and no Free Lifetime Repair banner or product lines. -#}
 {% import "macros/ui.njk" as ui with context %}
 {% import "plp/macros.njk" as plp_ui with context %}
+{% set fig = sp.figma or {} %}
 
 {{ ui.breadcrumbs(sp.breadcrumbs) }}
-{{ plp_ui.hero(sp.hero, "34777:58994") }}
+{{ plp_ui.hero(sp.hero, fig.hero or "34777:58994") }}
 
 {# Shop By Categories (phones 34777:58812: one column of 350x200 cards, gap 8) #}
-<section class="bg-white" data-figma="34777:58995">
+<section class="bg-white" data-figma="{{ fig.categories or '34777:58995' }}">
   <div class="container-page py-8 md:py-10">
-    <h2 class="text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">Shop By Categories</h2>
+    <h2 class="text-mobile-h1 font-medium text-heading md:text-h1 md:font-bold">{{ sp.categoriesTitle }}</h2>
     <ul class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-8 md:gap-6 lg:grid-cols-3 xl:grid-cols-4" data-figma="34777:58997">
       {% for c in sp.categories %}<li class="min-w-0">{{ plp_ui.navCard(c) }}</li>{% endfor %}
     </ul>
   </div>
 </section>
 
-{{ plp_ui.popularProducts(sp.products, sp.popularCount, "34777:59002") }}
-{{ plp_ui.repairBanner() }}
+{{ plp_ui.popularProducts(sp.products, sp.popularCount, fig.products or "34777:59002") }}
+{% if sp.repairBanner %}{{ plp_ui.repairBanner() }}{% endif %}
 {{ plp_ui.trustRow() }}
 {% if sp.band %}{{ plp_ui.infoBand(sp.band) }}{% endif %}
-{{ plp_ui.brandsStrip("white", "34777:59035") }}
-{{ plp_ui.faq(plp.faq.general, "34777:59083", "wide", "#f5f8fa") }}
+{% if sp.brands %}{{ plp_ui.brandsStrip("white", "34777:59035") }}{% endif %}
+{{ plp_ui.faq(sp.faq or plp.faq.general, fig.faq or "34777:59083", "wide", "#f5f8fa") }}

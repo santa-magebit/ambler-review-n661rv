@@ -6,7 +6,8 @@
   "description": "Clickable prototype of the Ambler Surgical redesign (Venta/Hyvä): static HTML, Alpine.js, Tailwind CSS.",
   "scripts": {
     "dev": "eleventy --serve --port=8431",
-    "build": "eleventy"
+    "build": "eleventy",
+    "build:artifact": "node scripts/build-artifact.mjs"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.5",

@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "eleventy --serve --port=8431",
     "build": "eleventy",
-    "build:artifact": "node scripts/build-artifact.mjs"
+    "build:artifact": "node scripts/build-artifact.mjs",
+    "build:portal": "node scripts/build-portal.mjs"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.5",

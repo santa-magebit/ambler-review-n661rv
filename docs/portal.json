@@ -1,0 +1,7 @@
+{
+  "artifact_id": "01m7abmsdm7h1b54f08f81gqhp",
+  "url": "https://portal.magebit.com/artifacts/01m7abmsdm7h1b54f08f81gqhp",
+  "version": 3,
+  "visibility": "org",
+  "build": "npm run build:portal -- <folder>, then artifact-upload's command from that folder and artifact-publish with artifact_id + base_version (the version above)"
+}
